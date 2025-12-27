@@ -138,6 +138,49 @@ _This is an automated message from Scrum Insights Dashboard_
 	return w.sendMessage(msg)
 }
 
+// SendRiskAlert sends an alert for at-risk item
+func (w *WebexService) SendRiskAlert(email, userName, sprintName string, risk AtRiskItem) error {
+	if !w.IsConfigured() {
+		return fmt.Errorf("Webex bot not configured - set WEBEX_BOT_TOKEN")
+	}
+
+	typeEmoji := "📖"
+	typeName := "Story"
+	if risk.Type == "defect" {
+		typeEmoji = "🐛"
+		typeName = "Defect"
+	}
+
+	riskEmoji := "🟡"
+	if risk.RiskLevel == RiskHigh {
+		riskEmoji = "🔴"
+	}
+
+	markdown := fmt.Sprintf(`%s **Sprint Risk Alert!**
+
+%s **%s** - %s
+> %s
+
+⚠️ **Risk:** %s
+📋 **Status:** %s
+⏰ **Days Left:** %d
+
+**This %s may not complete in time for %s**
+
+Please provide an update on the progress or escalate if needed.
+
+---
+_This is an automated alert from Scrum Insights Dashboard_
+`, riskEmoji, typeEmoji, risk.Key, typeName, risk.Title, risk.Reason, risk.Status, risk.DaysLeft, typeName, sprintName)
+
+	msg := WebexMessage{
+		ToPersonEmail: email,
+		Markdown:      markdown,
+	}
+
+	return w.sendMessage(msg)
+}
+
 // sendMessage sends message via Webex API
 func (w *WebexService) sendMessage(msg WebexMessage) error {
 	jsonData, err := json.Marshal(msg)

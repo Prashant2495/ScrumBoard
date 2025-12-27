@@ -32,6 +32,11 @@ func main() {
 	scrumMasterHandler := handlers.NewScrumMasterHandler(scrumMasterService, jiraService, webexService)
 	homeHandler := handlers.NewHomeHandler()
 
+	// Start daily risk scheduler (9 AM daily, notifies you)
+	schedulerConfig := services.GetSchedulerConfig()
+	scheduler := services.NewScheduler(jiraService, schedulerConfig)
+	scheduler.Start()
+
 	// Create Fiber app
 	app := fiber.New(fiber.Config{
 		AppName: "Scrum Insights",
@@ -62,6 +67,8 @@ func main() {
 	app.Post("/engineer/api/ping", engineerHandler.PingEngineer)
 	app.Post("/engineer/api/ping/respond", engineerHandler.RespondToPing)
 	app.Get("/engineer/api/pings", engineerHandler.GetPings)
+	app.Get("/api/risk/items", engineerHandler.GetAtRiskItems)
+	app.Post("/api/risk/alert", engineerHandler.AlertAtRiskItems)
 
 	// Scrum Master Dashboard Routes
 	app.Get("/scrum-master", scrumMasterHandler.Dashboard)
@@ -78,6 +85,12 @@ func main() {
 
 	// Webex Webhook for receiving replies
 	app.Post("/api/webex/webhook", scrumMasterHandler.WebexWebhook)
+
+	// Manual trigger for daily risk report (for testing)
+	app.Post("/api/risk/daily-report", func(c *fiber.Ctx) error {
+		scheduler.RunNow()
+		return c.JSON(fiber.Map{"success": true, "message": "Daily risk report triggered"})
+	})
 
 	// Get port from env or default
 	port := os.Getenv("PORT")

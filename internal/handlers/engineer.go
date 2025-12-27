@@ -221,3 +221,100 @@ func (h *EngineerHandler) GetPings(c *fiber.Ctx) error {
 		"pings":   pings,
 	})
 }
+
+// GetAtRiskItems returns items at risk of not completing in sprint
+func (h *EngineerHandler) GetAtRiskItems(c *fiber.Ctx) error {
+	sprintIDStr := c.Query("sprint")
+
+	sprintID := 0
+	if sprintIDStr != "" {
+		var err error
+		sprintID, err = strconv.Atoi(sprintIDStr)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid sprint ID"})
+		}
+	}
+
+	// Get sprint info
+	sprint, err := h.jiraService.GetSprintByID(sprintID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to get sprint"})
+	}
+
+	// Get all stories and defects for the sprint
+	stories, _ := h.jiraService.GetSprintIssuesByJQL(sprintID)
+	defects, _ := h.jiraService.GetSprintDefects("6991", sprintID)
+
+	// Analyze risks
+	riskService := services.NewRiskPredictionService()
+	risks := riskService.AnalyzeSprintRisks(sprint, stories, defects)
+
+	log.Printf("⚠️ Found %d at-risk items in sprint %d", len(risks), sprintID)
+
+	return c.JSON(fiber.Map{
+		"success": true,
+		"risks":   risks,
+		"count":   len(risks),
+	})
+}
+
+// AlertAtRiskItems sends Webex alerts for at-risk items
+func (h *EngineerHandler) AlertAtRiskItems(c *fiber.Ctx) error {
+	sprintIDStr := c.FormValue("sprint")
+
+	sprintID := 0
+	if sprintIDStr != "" {
+		var err error
+		sprintID, err = strconv.Atoi(sprintIDStr)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid sprint ID"})
+		}
+	}
+
+	// Get sprint info
+	sprint, err := h.jiraService.GetSprintByID(sprintID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to get sprint"})
+	}
+
+	// Get all stories and defects
+	stories, _ := h.jiraService.GetSprintIssuesByJQL(sprintID)
+	defects, _ := h.jiraService.GetSprintDefects("6991", sprintID)
+
+	// Analyze risks
+	riskService := services.NewRiskPredictionService()
+	risks := riskService.AnalyzeSprintRisks(sprint, stories, defects)
+
+	if len(risks) == 0 {
+		return c.JSON(fiber.Map{
+			"success": true,
+			"message": "No at-risk items found",
+			"sent":    0,
+		})
+	}
+
+	// Send alerts via Webex
+	webexService := services.NewWebexService()
+	sent := 0
+
+	for _, risk := range risks {
+		if risk.AssigneeEmail == "" {
+			continue
+		}
+
+		err := webexService.SendRiskAlert(risk.AssigneeEmail, risk.Assignee, sprint.Name, risk)
+		if err != nil {
+			log.Printf("❌ Failed to send risk alert to %s: %v", risk.AssigneeEmail, err)
+			continue
+		}
+		sent++
+		log.Printf("🚨 Risk alert sent to %s for %s", risk.AssigneeEmail, risk.Key)
+	}
+
+	return c.JSON(fiber.Map{
+		"success": true,
+		"message": "Risk alerts sent",
+		"sent":    sent,
+		"total":   len(risks),
+	})
+}

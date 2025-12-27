@@ -137,6 +137,27 @@ templ ScrumMasterDashboardContent(data models.ScrumMasterDashboardData) {
 		@BlockersCard(data.Blockers)
 	</div>
 
+
+	<!-- At-Risk Prediction Section -->
+	<div class="glass rounded-2xl p-6 card-hover animate-fade-in mb-8">
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">🔮</span>
+			<span>Sprint Completion Prediction</span>
+			<div class="ml-auto flex gap-2">
+				<button onclick="analyzeRisks()" class="px-3 py-1 bg-purple-500 hover:bg-purple-600 text-white text-xs font-semibold rounded-lg transition-all">
+					🔍 Analyze
+				</button>
+				<button id="alert-risk-btn" onclick="sendRiskAlerts()" class="px-3 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold rounded-lg transition-all hidden">
+					📣 Alert All via Webex
+				</button>
+			</div>
+		</h3>
+		<p class="text-sm text-slate-500 mb-4">AI predicts which stories/bugs may not complete before sprint ends based on status, days left, and activity.</p>
+		<div id="risk-prediction-list" class="space-y-3 max-h-96 overflow-y-auto">
+			<p class="text-slate-500 text-center py-4">Click "Analyze" to check for at-risk items...</p>
+		</div>
+	</div>
+
 	<!-- Info Requests Section -->
 	<div class="glass rounded-2xl p-6 card-hover animate-fade-in mb-8">
 		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
@@ -196,6 +217,83 @@ templ ScrumMasterDashboardContent(data models.ScrumMasterDashboardData) {
 
 		// Load info requests on page load
 		loadAllInfoRequests();
+
+		// Risk prediction functions
+		function analyzeRisks() {
+			var riskList = document.getElementById('risk-prediction-list');
+			riskList.innerHTML = '<p class="text-slate-500 text-center py-4">🔄 Analyzing sprint risks...</p>';
+
+			var sprintId = document.getElementById('sprint-selector').value || '0';
+			fetch('/api/risk/items?sprint=' + sprintId)
+				.then(function(res) { return res.json(); })
+				.then(function(data) {
+					if (!data.risks || data.risks.length === 0) {
+						riskList.innerHTML = '<div class="text-center py-8"><div class="text-4xl mb-2">✅</div><div class="text-green-600 font-semibold">All items on track!</div><div class="text-slate-500 text-sm">No items predicted to miss sprint completion.</div></div>';
+						document.getElementById('alert-risk-btn').classList.add('hidden');
+						return;
+					}
+
+					document.getElementById('alert-risk-btn').classList.remove('hidden');
+
+					riskList.innerHTML = data.risks.map(function(risk) {
+						var riskColor = risk.riskLevel === 'high' ? 'border-red-400 bg-red-50' : 'border-yellow-400 bg-yellow-50';
+						var riskBadge = risk.riskLevel === 'high' ? 'bg-red-500 text-white' : 'bg-yellow-500 text-white';
+						var typeEmoji = risk.type === 'story' ? '📖' : '🐛';
+						return '<div class="rounded-xl p-4 border-2 ' + riskColor + '">' +
+							'<div class="flex items-center justify-between mb-2">' +
+							'<div class="flex items-center gap-2">' +
+							'<span class="text-lg">' + typeEmoji + '</span>' +
+							'<span class="font-bold text-slate-800">' + risk.key + '</span>' +
+							'<span class="px-2 py-0.5 rounded text-xs font-bold ' + riskBadge + '">' + risk.riskLevel.toUpperCase() + '</span>' +
+							'</div>' +
+							'<span class="text-xs text-slate-500">⏰ ' + risk.daysLeft + ' days left</span>' +
+							'</div>' +
+							'<p class="text-sm text-slate-700 mb-1">' + risk.title + '</p>' +
+							'<div class="flex items-center gap-4 text-xs">' +
+							'<span class="text-orange-600">⚠️ ' + risk.reason + '</span>' +
+							'<span class="text-slate-500">👤 ' + (risk.assignee || 'Unassigned') + '</span>' +
+							'</div>' +
+							'</div>';
+					}).join('');
+				})
+				.catch(function(err) {
+					console.error('Error analyzing risks:', err);
+					riskList.innerHTML = '<p class="text-red-500 text-center py-4">Error analyzing risks</p>';
+				});
+		}
+
+		function sendRiskAlerts() {
+			if (!confirm('Send Webex alerts to all assignees of at-risk items?')) return;
+
+			var alertBtn = document.getElementById('alert-risk-btn');
+			alertBtn.textContent = '⏳ Sending...';
+			alertBtn.disabled = true;
+
+			var sprintId = document.getElementById('sprint-selector').value || '0';
+			var formData = new FormData();
+			formData.append('sprint', sprintId);
+
+			fetch('/api/risk/alert', {
+				method: 'POST',
+				body: formData
+			})
+				.then(function(res) { return res.json(); })
+				.then(function(data) {
+					alertBtn.textContent = '📣 Alert All via Webex';
+					alertBtn.disabled = false;
+
+					if (data.success) {
+						alert('✅ Sent ' + data.sent + ' of ' + data.total + ' alerts successfully!');
+					} else {
+						alert('❌ Failed: ' + data.message);
+					}
+				})
+				.catch(function(err) {
+					alertBtn.textContent = '📣 Alert All via Webex';
+					alertBtn.disabled = false;
+					alert('❌ Error sending alerts');
+				});
+		}
 	</script>
 }
 
@@ -236,11 +334,11 @@ templ VelocityChart(velocity models.VelocityData) {
 			const velocity = JSON.parse(div.getAttribute('data-velocity'));
 			const ctx = document.getElementById('velocityChart');
 			if (!ctx || !velocity.sprintVelocities) return;
-			
+
 			const labels = velocity.sprintVelocities.map(v => v.sprintName.replace('NM-', '')).reverse();
 			const committed = velocity.sprintVelocities.map(v => v.committed).reverse();
 			const completed = velocity.sprintVelocities.map(v => v.completed).reverse();
-			
+
 			new Chart(ctx.getContext('2d'), {
 				type: 'bar',
 				data: {
@@ -274,11 +372,11 @@ templ BurndownChart(burndown []models.BurndownPoint, totalPoints int) {
 			const burndown = JSON.parse(div.getAttribute('data-burndown'));
 			const ctx = document.getElementById('burndownChart');
 			if (!ctx || !burndown) return;
-			
+
 			const labels = burndown.map(b => b.date);
 			const actual = burndown.map(b => b.remainingPoints);
 			const ideal = burndown.map(b => b.idealRemaining);
-			
+
 			new Chart(ctx.getContext('2d'), {
 				type: 'line',
 				data: {
