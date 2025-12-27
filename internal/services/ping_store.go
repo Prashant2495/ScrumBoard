@@ -101,3 +101,31 @@ func (ps *PingStore) GetPingByID(id string) *models.PingMessage {
 	}
 	return nil
 }
+
+// UpdateResponseByEmail finds the most recent pending ping for an email and updates it with response
+func (ps *PingStore) UpdateResponseByEmail(email, response string) bool {
+	ps.mu.Lock()
+	defer ps.mu.Unlock()
+
+	// Find the most recent pending ping for this email
+	var latestPing *models.PingMessage
+	var latestTime time.Time
+
+	for _, ping := range ps.messages {
+		if ping.EngineerEmail == email && ping.Status == "pending" {
+			sentTime, err := time.Parse("2006-01-02 15:04:05", ping.SentAt)
+			if err == nil && (latestPing == nil || sentTime.After(latestTime)) {
+				latestPing = ping
+				latestTime = sentTime
+			}
+		}
+	}
+
+	if latestPing != nil {
+		latestPing.Response = response
+		latestPing.RespondedAt = time.Now().Format("2006-01-02 15:04:05")
+		latestPing.Status = "responded"
+		return true
+	}
+	return false
+}

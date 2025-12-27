@@ -172,3 +172,45 @@ func (w *WebexService) sendMessage(msg WebexMessage) error {
 	log.Printf("✅ Webex message sent to %s", msg.ToPersonEmail)
 	return nil
 }
+
+// GetMessageResponse represents the response from getting a message
+type GetMessageResponse struct {
+	ID          string `json:"id"`
+	Text        string `json:"text"`
+	PersonEmail string `json:"personEmail"`
+	Created     string `json:"created"`
+}
+
+// GetMessage retrieves a message by ID from Webex API
+func (w *WebexService) GetMessage(messageID string) (string, error) {
+	if !w.IsConfigured() {
+		return "", fmt.Errorf("Webex bot not configured")
+	}
+
+	req, err := http.NewRequest("GET", w.baseURL+"/messages/"+messageID, nil)
+	if err != nil {
+		return "", fmt.Errorf("failed to create request: %w", err)
+	}
+
+	req.Header.Set("Authorization", "Bearer "+w.botToken)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("failed to get message: %w", err)
+	}
+	defer resp.Body.Close()
+
+	body, _ := io.ReadAll(resp.Body)
+
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("Webex API error: status %d", resp.StatusCode)
+	}
+
+	var msgResp GetMessageResponse
+	if err := json.Unmarshal(body, &msgResp); err != nil {
+		return "", fmt.Errorf("failed to parse response: %w", err)
+	}
+
+	return msgResp.Text, nil
+}

@@ -76,6 +76,9 @@ func main() {
 	// Request Info API (per story/defect)
 	app.Post("/api/request-info", scrumMasterHandler.RequestInfo)
 
+	// Webex Webhook for receiving replies
+	app.Post("/api/webex/webhook", scrumMasterHandler.WebexWebhook)
+
 	// Get port from env or default
 	port := os.Getenv("PORT")
 	if port == "" {

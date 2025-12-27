@@ -230,3 +230,56 @@ func (h *ScrumMasterHandler) RequestInfo(c *fiber.Ctx) error {
 		"ping_id": ping.ID,
 	})
 }
+
+// WebexWebhookPayload represents incoming Webex webhook data
+type WebexWebhookPayload struct {
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Resource string `json:"resource"`
+	Event    string `json:"event"`
+	Data     struct {
+		ID          string `json:"id"`
+		RoomId      string `json:"roomId"`
+		RoomType    string `json:"roomType"`
+		PersonId    string `json:"personId"`
+		PersonEmail string `json:"personEmail"`
+		Created     string `json:"created"`
+	} `json:"data"`
+}
+
+// WebexWebhook handles incoming Webex webhook for message replies
+func (h *ScrumMasterHandler) WebexWebhook(c *fiber.Ctx) error {
+	var payload WebexWebhookPayload
+	if err := c.BodyParser(&payload); err != nil {
+		log.Printf("❌ Webhook parse error: %v", err)
+		return c.Status(400).JSON(fiber.Map{"error": "Invalid webhook payload"})
+	}
+
+	log.Printf("📩 Webex webhook received: %s from %s", payload.Event, payload.Data.PersonEmail)
+
+	// Only process message created events
+	if payload.Resource != "messages" || payload.Event != "created" {
+		return c.JSON(fiber.Map{"status": "ignored", "reason": "not a message event"})
+	}
+
+	// Get the actual message content from Webex API
+	messageText, err := h.webexService.GetMessage(payload.Data.ID)
+	if err != nil {
+		log.Printf("❌ Failed to get message: %v", err)
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to get message"})
+	}
+
+	log.Printf("📨 Message from %s: %s", payload.Data.PersonEmail, messageText)
+
+	// Find pending ping for this user and update with response
+	pingStore := services.GetPingStore()
+	updated := pingStore.UpdateResponseByEmail(payload.Data.PersonEmail, messageText)
+
+	if updated {
+		log.Printf("✅ Response saved for %s", payload.Data.PersonEmail)
+		return c.JSON(fiber.Map{"status": "success", "message": "Response recorded"})
+	}
+
+	log.Printf("⚠️ No pending request found for %s", payload.Data.PersonEmail)
+	return c.JSON(fiber.Map{"status": "no_pending", "message": "No pending request found"})
+}
