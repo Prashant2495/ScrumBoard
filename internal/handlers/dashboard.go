@@ -28,9 +28,10 @@ func render(c *fiber.Ctx, component templ.Component) error {
 
 // Index renders the main dashboard page
 func (h *DashboardHandler) Index(c *fiber.Ctx) error {
-	boardID := c.Query("board", h.dashboardService.GetBoardID())
+	boardID := h.dashboardService.GetBoardID() // Always use default board
+	sprintID := c.QueryInt("sprint", 0)        // 0 = active sprint
 
-	data, err := h.dashboardService.GetDashboardData(boardID)
+	data, err := h.dashboardService.GetDashboardDataForSprint(boardID, sprintID)
 	if err != nil {
 		return c.Status(500).SendString("Error fetching dashboard data: " + err.Error())
 	}
@@ -40,12 +41,35 @@ func (h *DashboardHandler) Index(c *fiber.Ctx) error {
 
 // Refresh returns updated dashboard content (for HTMX)
 func (h *DashboardHandler) Refresh(c *fiber.Ctx) error {
-	boardID := c.Query("board", h.dashboardService.GetBoardID())
+	boardID := h.dashboardService.GetBoardID() // Always use default board
+	sprintID := c.QueryInt("sprint", 0)        // 0 = active sprint
 
-	data, err := h.dashboardService.GetDashboardData(boardID)
+	data, err := h.dashboardService.GetDashboardDataForSprint(boardID, sprintID)
 	if err != nil {
 		return c.Status(500).SendString("Error refreshing data: " + err.Error())
 	}
 
 	return render(c, templates.DashboardContent(*data))
+}
+
+// GetBoards returns all boards as JSON
+func (h *DashboardHandler) GetBoards(c *fiber.Ctx) error {
+	boards, err := h.dashboardService.GetBoards()
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to fetch boards"})
+	}
+
+	return c.JSON(boards)
+}
+
+// GetSprints returns all sprints for the board as JSON
+func (h *DashboardHandler) GetSprints(c *fiber.Ctx) error {
+	boardID := c.Query("board", h.dashboardService.GetBoardID())
+
+	sprints, err := h.dashboardService.GetAllSprints(boardID)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to fetch sprints"})
+	}
+
+	return c.JSON(sprints)
 }

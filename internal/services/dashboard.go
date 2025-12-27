@@ -1,8 +1,8 @@
 package services
 
 import (
-	"os"
 	"ScrumBoard/internal/models"
+	"os"
 )
 
 // DashboardService processes sprint data for the dashboard
@@ -96,16 +96,44 @@ func (d *DashboardService) GetBoardID() string {
 	return boardID
 }
 
-// GetDashboardData fetches and processes all dashboard data
+// GetBoards returns all boards
+func (d *DashboardService) GetBoards() ([]models.Board, error) {
+	return d.jira.GetBoards()
+}
+
+// GetAllSprints returns all sprints for a board
+func (d *DashboardService) GetAllSprints(boardID string) ([]models.Sprint, error) {
+	return d.jira.GetAllSprints(boardID)
+}
+
+// GetDashboardData fetches and processes all dashboard data (active sprint)
 func (d *DashboardService) GetDashboardData(boardID string) (*models.DashboardData, error) {
+	return d.GetDashboardDataForSprint(boardID, 0)
+}
+
+// GetDashboardDataForSprint fetches dashboard data for a specific sprint (0 = active sprint)
+func (d *DashboardService) GetDashboardDataForSprint(boardID string, sprintID int) (*models.DashboardData, error) {
 	// For demo, return mock data if Jira is not configured
 	if d.jira.BaseURL == "" {
 		return d.GetMockData(), nil
 	}
 
-	sprint, err := d.jira.GetActiveSprint(boardID)
-	if err != nil {
-		return nil, err
+	var sprint *models.Sprint
+	var err error
+
+	if sprintID == 0 {
+		// Get active sprint
+		sprint, err = d.jira.GetActiveSprint(boardID)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		// Get specific sprint by ID
+		sprintData, err := d.jira.GetSprintByID(sprintID)
+		if err != nil {
+			return nil, err
+		}
+		sprint = &sprintData
 	}
 
 	stories, err := d.jira.GetSprintIssues(boardID, sprint.ID)

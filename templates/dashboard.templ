@@ -22,10 +22,20 @@ templ Dashboard(data models.DashboardData) {
 					</div>
 					
 					<div class="flex items-center gap-4">
+						<!-- Sprint Selector -->
 						<div class="glass-dark px-4 py-2 rounded-xl">
-							<p class="text-xs text-white/70">Current Sprint</p>
-							<p class="font-semibold">{ data.Sprint.Name }</p>
+							<p class="text-xs text-white/70 mb-1">Sprint</p>
+							<select id="sprint-selector" class="bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30">
+								<option value="0">🟢 Active Sprint</option>
+							</select>
 						</div>
+						<a
+							href="/engineer"
+							class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2"
+						>
+							<span>👨‍💻</span>
+							<span>Engineer Dashboard</span>
+						</a>
 						<a
 							href="/defects"
 							class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2"
@@ -51,6 +61,38 @@ templ Dashboard(data models.DashboardData) {
 				@DashboardContent(data)
 			</main>
 		</div>
+
+		<!-- Sprint Selector Script -->
+		<script>
+			const urlParams = new URLSearchParams(window.location.search);
+			const currentSprintId = parseInt(urlParams.get('sprint') || '0');
+
+			// Load sprints
+			fetch('/api/sprints')
+				.then(res => res.json())
+				.then(sprints => {
+					const selector = document.getElementById('sprint-selector');
+					selector.innerHTML = '<option value="0">🟢 Active Sprint</option>';
+
+					sprints.sort((a, b) => b.id - a.id).forEach(sprint => {
+						const option = document.createElement('option');
+						option.value = sprint.id;
+						const stateEmoji = sprint.state === 'active' ? '🟢' : '🔴';
+						option.textContent = `${stateEmoji} ${sprint.name}`;
+						if (sprint.id === currentSprintId) option.selected = true;
+						selector.appendChild(option);
+					});
+				})
+				.catch(err => {
+					console.error('Failed to load sprints:', err);
+				});
+
+			// Handle sprint change
+			document.getElementById('sprint-selector').addEventListener('change', (e) => {
+				const sprintId = e.target.value;
+				window.location.href = `/?sprint=${sprintId}`;
+			});
+		</script>
 	}
 }
 

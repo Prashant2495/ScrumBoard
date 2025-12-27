@@ -1,5 +1,12 @@
 package models
 
+// Board represents a Jira board
+type Board struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+	Type string `json:"type"` // scrum, kanban
+}
+
 // Story represents a user story/issue from Jira
 type Story struct {
 	ID             string   `json:"id"`

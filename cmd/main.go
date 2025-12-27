@@ -21,10 +21,12 @@ func main() {
 	jiraService := services.NewJiraService()
 	dashboardService := services.NewDashboardService(jiraService)
 	defectDashboardService := services.NewDefectDashboardService(jiraService)
+	engineerDashboardService := services.NewEngineerDashboardService(jiraService)
 
 	// Initialize handlers
 	dashboardHandler := handlers.NewDashboardHandler(dashboardService)
 	defectHandler := handlers.NewDefectHandler(defectDashboardService)
+	engineerHandler := handlers.NewEngineerHandler(engineerDashboardService, jiraService)
 
 	// Create Fiber app
 	app := fiber.New(fiber.Config{
@@ -41,11 +43,17 @@ func main() {
 	// Routes
 	app.Get("/", dashboardHandler.Index)
 	app.Get("/api/refresh", dashboardHandler.Refresh)
+	app.Get("/api/boards", dashboardHandler.GetBoards)
+	app.Get("/api/sprints", dashboardHandler.GetSprints)
 
 	// Defect Dashboard Routes
 	app.Get("/defects", defectHandler.Index)
 	app.Get("/defects/api/refresh", defectHandler.Refresh)
 	app.Get("/defects/api/sprints", defectHandler.GetSprints)
+
+	// Engineer Dashboard Routes
+	app.Get("/engineer", engineerHandler.HandleEngineerDashboard)
+	app.Get("/engineer/api/refresh", engineerHandler.HandleEngineerRefresh)
 
 	// Get port from env or default
 	port := os.Getenv("PORT")

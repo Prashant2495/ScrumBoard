@@ -1,0 +1,217 @@
+package templates
+
+import "ScrumBoard/internal/models"
+import "ScrumBoard/templates/components"
+import "fmt"
+
+templ EngineerDashboard(data models.EngineerDashboardData, engineers []models.Engineer, sprints []models.Sprint) {
+	@Layout("Engineer Dashboard") {
+		<div class="min-h-screen">
+			<!-- Header -->
+			<header class="gradient-bg text-white py-6 px-8 shadow-lg">
+				<div class="max-w-7xl mx-auto flex items-center justify-between">
+					<div class="flex items-center gap-4">
+						<div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl backdrop-blur">
+							👨‍💻
+						</div>
+						<div>
+							<h1 class="text-2xl font-bold">Engineer Dashboard</h1>
+							<p class="text-white/80 text-sm">Individual performance tracking</p>
+						</div>
+					</div>
+					
+					<div class="flex items-center gap-4">
+						<!-- Engineer Selector -->
+						<div class="glass-dark px-4 py-2 rounded-xl">
+							<p class="text-xs text-white/70 mb-1">Engineer</p>
+							<select id="engineer-selector" class="bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30">
+								<option value="">Select Engineer</option>
+								<option value="prdewang@cisco.com">Prashant Dewangan</option>
+								<option value="amitksi3@cisco.com">Amit Kumar Singh</option>
+								<option value="surasin2@cisco.com">Suraj Singh</option>
+								<option value="akbhat2@cisco.com">Akshay Bhat</option>
+								<option value="shabhart@cisco.com">Shashi Kiran Bharti</option>
+							</select>
+						</div>
+						
+						<!-- Sprint Selector -->
+						<div class="glass-dark px-4 py-2 rounded-xl">
+							<p class="text-xs text-white/70 mb-1">Sprint</p>
+							<select id="sprint-selector" class="bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30">
+								<option value="0">Loading...</option>
+							</select>
+						</div>
+						
+						<a href="/" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2">
+							<span>📊</span>
+							<span>Sprint Dashboard</span>
+						</a>
+						
+						<a href="/defects" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2">
+							<span>🐛</span>
+							<span>Defects</span>
+						</a>
+					</div>
+				</div>
+			</header>
+
+			<!-- Main Content -->
+			<main id="engineer-content" class="max-w-7xl mx-auto px-8 py-8">
+				@EngineerDashboardContent(data)
+			</main>
+		</div>
+
+		<!-- Selection Script -->
+		<script>
+			// Load sprints
+			fetch('/defects/api/sprints')
+				.then(res => res.json())
+				.then(sprints => {
+					const selector = document.getElementById('sprint-selector');
+					const urlParams = new URLSearchParams(window.location.search);
+					const currentSprintId = parseInt(urlParams.get('sprint') || '0');
+
+					selector.innerHTML = '<option value="0">🟢 Active Sprint</option>';
+
+					sprints.sort((a, b) => b.id - a.id).forEach(sprint => {
+						const option = document.createElement('option');
+						option.value = sprint.id;
+						const stateEmoji = sprint.state === 'active' ? '🟢' : '🔴';
+						option.textContent = `${stateEmoji} ${sprint.name}`;
+						if (sprint.id === currentSprintId) option.selected = true;
+						selector.appendChild(option);
+					});
+				});
+
+			// Handle engineer change
+			document.getElementById('engineer-selector').addEventListener('change', function() {
+				const engineer = this.value;
+				const sprint = document.getElementById('sprint-selector').value;
+				if (engineer) {
+					window.location.href = `/engineer?email=${engineer}&sprint=${sprint}`;
+				}
+			});
+
+			// Handle sprint change
+			document.getElementById('sprint-selector').addEventListener('change', function() {
+				const engineer = document.getElementById('engineer-selector').value;
+				const sprint = this.value;
+				if (engineer) {
+					window.location.href = `/engineer?email=${engineer}&sprint=${sprint}`;
+				}
+			});
+
+			// Set current engineer
+			const urlParams = new URLSearchParams(window.location.search);
+			const currentEngineer = urlParams.get('email');
+			if (currentEngineer) {
+				document.getElementById('engineer-selector').value = currentEngineer;
+			}
+		</script>
+	}
+}
+
+templ EngineerDashboardContent(data models.EngineerDashboardData) {
+	<!-- Engineer Info -->
+	<div class="glass rounded-2xl p-6 mb-8 flex items-center justify-between animate-fade-in">
+		<div class="flex items-center gap-4">
+			<div class={ "w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold " + data.Engineer.AvatarColor }>
+				{ getInitials(data.Engineer.Name) }
+			</div>
+			<div>
+				<h2 class="text-2xl font-bold text-slate-800">{ data.Engineer.Name }</h2>
+				<p class="text-sm text-slate-600">{ data.Engineer.Email }</p>
+				<p class="text-xs text-slate-500 mt-1">Sprint: { data.Sprint.Name }</p>
+			</div>
+		</div>
+		<div class="text-right">
+			<p class="text-sm text-slate-600">Sprint Period</p>
+			<p class="text-xs text-slate-500">{ data.Sprint.StartDate } - { data.Sprint.EndDate }</p>
+		</div>
+	</div>
+
+	<!-- Stats Grid -->
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+		@components.StatsCard("Total Stories", data.Stats.TotalStories, "assigned", "📖", "border-l-4 border-blue-500")
+		@components.StatsCard("Completed", data.Stats.CompletedStories, "stories done", "✅", "border-l-4 border-green-500")
+		@components.StatsCard("Story Points", data.Stats.StoryPoints, fmt.Sprintf("%d completed", data.Stats.CompletedPoints), "⚡", "border-l-4 border-purple-500")
+		@components.StatsCard("Defects", data.Stats.TotalDefects, fmt.Sprintf("%d resolved", data.Stats.ResolvedDefects), "🐛", "border-l-4 border-red-500")
+	</div>
+
+	<!-- Stories Section -->
+	<div class="mb-8">
+		<h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span>📖</span>
+			<span>Stories ({ fmt.Sprintf("%d", len(data.Stories)) })</span>
+		</h3>
+		
+		if len(data.Stories) > 0 {
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+				for _, story := range data.Stories {
+					@components.StoryCard(story)
+				}
+			</div>
+		} else {
+			<div class="glass rounded-xl p-8 text-center">
+				<p class="text-slate-500">No stories assigned in this sprint</p>
+			</div>
+		}
+	</div>
+
+	<!-- Defects Section -->
+	<div>
+		<h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span>🐛</span>
+			<span>Defects ({ fmt.Sprintf("%d", len(data.Defects)) })</span>
+		</h3>
+		
+		if len(data.Defects) > 0 {
+			<div class="grid grid-cols-1 gap-4">
+				for _, defect := range data.Defects {
+					@components.DefectCard(defect)
+				}
+			</div>
+		} else {
+			<div class="glass rounded-xl p-8 text-center">
+				<p class="text-slate-500">No defects assigned in this sprint</p>
+			</div>
+		}
+	</div>
+}
+
+func getInitials(name string) string {
+	if len(name) == 0 {
+		return "?"
+	}
+	initials := ""
+	words := splitName(name)
+	for i, word := range words {
+		if i >= 2 {
+			break
+		}
+		if len(word) > 0 {
+			initials += string(word[0])
+		}
+	}
+	return initials
+}
+
+func splitName(name string) []string {
+	var words []string
+	word := ""
+	for _, c := range name {
+		if c == ' ' {
+			if word != "" {
+				words = append(words, word)
+				word = ""
+			}
+		} else {
+			word += string(c)
+		}
+	}
+	if word != "" {
+		words = append(words, word)
+	}
+	return words
+}
+

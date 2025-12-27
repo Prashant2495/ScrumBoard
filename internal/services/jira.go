@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -52,6 +53,40 @@ func (j *JiraService) makeRequest(endpoint string) ([]byte, error) {
 	defer resp.Body.Close()
 
 	return io.ReadAll(resp.Body)
+}
+
+// GetBoards fetches all boards accessible to the user
+func (j *JiraService) GetBoards() ([]models.Board, error) {
+	url := fmt.Sprintf("%s/rest/agile/1.0/board?maxResults=100", j.BaseURL)
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	auth := base64.StdEncoding.EncodeToString([]byte(j.Email + ":" + j.APIToken))
+	req.Header.Set("Authorization", "Basic "+auth)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := j.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var result struct {
+		Values []models.Board `json:"values"`
+	}
+	if err := json.Unmarshal(data, &result); err != nil {
+		return nil, err
+	}
+
+	return result.Values, nil
 }
 
 // GetActiveSprint fetches the currently active sprint
@@ -153,6 +188,273 @@ func (j *JiraService) GetAllSprints(boardID string) ([]models.Sprint, error) {
 	}
 
 	return sprints, nil
+}
+
+// GetSprintByID fetches a specific sprint by ID
+func (j *JiraService) GetSprintByID(sprintID int) (models.Sprint, error) {
+	url := fmt.Sprintf("%s/rest/agile/1.0/sprint/%d", j.BaseURL, sprintID)
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return models.Sprint{}, err
+	}
+
+	auth := base64.StdEncoding.EncodeToString([]byte(j.Email + ":" + j.APIToken))
+	req.Header.Set("Authorization", "Basic "+auth)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := j.client.Do(req)
+	if err != nil {
+		return models.Sprint{}, err
+	}
+	defer resp.Body.Close()
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return models.Sprint{}, err
+	}
+
+	var sprint models.Sprint
+	if err := json.Unmarshal(data, &sprint); err != nil {
+		return models.Sprint{}, err
+	}
+
+	return sprint, nil
+}
+
+// GetStoriesByEngineerAndSprint fetches stories for a specific engineer in a sprint
+func (j *JiraService) GetStoriesByEngineerAndSprint(engineerEmail string, sprintID int) ([]models.Story, error) {
+	apiURL := fmt.Sprintf("%s/rest/api/3/search/jql", j.BaseURL)
+
+	jql := fmt.Sprintf("type=Story AND assignee='%s' AND sprint=%d ORDER BY created DESC", engineerEmail, sprintID)
+
+	requestBody := map[string]interface{}{
+		"jql":        jql,
+		"maxResults": 200,
+		"fields":     []string{"summary", "status", "assignee", "priority", "customfield_10028", "labels", "created", "updated", "description"},
+	}
+
+	jsonBody, err := json.Marshal(requestBody)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(jsonBody))
+	if err != nil {
+		return nil, err
+	}
+
+	auth := base64.StdEncoding.EncodeToString([]byte(j.Email + ":" + j.APIToken))
+	req.Header.Set("Authorization", "Basic "+auth)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := j.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var result struct {
+		Issues []struct {
+			Key    string `json:"key"`
+			Fields struct {
+				Summary     string      `json:"summary"`
+				Description interface{} `json:"description"` // Can be string or object
+				Status      struct {
+					Name           string `json:"name"`
+					StatusCategory struct {
+						Key string `json:"key"`
+					} `json:"statusCategory"`
+				} `json:"status"`
+				Assignee struct {
+					DisplayName  string `json:"displayName"`
+					EmailAddress string `json:"emailAddress"`
+				} `json:"assignee"`
+				Priority struct {
+					Name string `json:"name"`
+				} `json:"priority"`
+				StoryPoints float64  `json:"customfield_10028"`
+				Labels      []string `json:"labels"`
+				Created     string   `json:"created"`
+				Updated     string   `json:"updated"`
+			} `json:"fields"`
+		} `json:"issues"`
+	}
+
+	if err := json.Unmarshal(data, &result); err != nil {
+		return nil, err
+	}
+
+	stories := make([]models.Story, 0, len(result.Issues))
+	for _, issue := range result.Issues {
+		// Extract description as string if possible
+		desc := ""
+		if issue.Fields.Description != nil {
+			if descStr, ok := issue.Fields.Description.(string); ok {
+				desc = descStr
+			}
+		}
+
+		story := models.Story{
+			Key:            issue.Key,
+			Title:          issue.Fields.Summary,
+			Description:    desc,
+			Status:         issue.Fields.Status.Name,
+			StatusCategory: issue.Fields.Status.StatusCategory.Key,
+			Assignee: models.User{
+				Name:  issue.Fields.Assignee.DisplayName,
+				Email: issue.Fields.Assignee.EmailAddress,
+			},
+			Priority:    issue.Fields.Priority.Name,
+			StoryPoints: int(issue.Fields.StoryPoints),
+			Labels:      issue.Fields.Labels,
+			CreatedAt:   issue.Fields.Created,
+			UpdatedAt:   issue.Fields.Updated,
+		}
+		stories = append(stories, story)
+	}
+
+	log.Printf("📖 Found %d stories for %s in sprint %d", len(stories), engineerEmail, sprintID)
+	return stories, nil
+}
+
+// GetDefectsByEngineerAndSprint fetches defects for a specific engineer in a sprint
+func (j *JiraService) GetDefectsByEngineerAndSprint(engineerEmail string, sprintID int) ([]models.Defect, error) {
+	jql := fmt.Sprintf("type=Bug AND assignee='%s' AND sprint=%d ORDER BY created DESC", engineerEmail, sprintID)
+
+	apiURL := fmt.Sprintf("%s/rest/api/3/search/jql", j.BaseURL)
+
+	requestBody := map[string]interface{}{
+		"jql":        jql,
+		"maxResults": 200,
+		"fields":     []string{"summary", "description", "status", "assignee", "reporter", "priority", "labels", "created", "updated", "resolutiondate", "customfield_10031", "environment", "versions"},
+	}
+
+	jsonBody, err := json.Marshal(requestBody)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(jsonBody))
+	if err != nil {
+		return nil, err
+	}
+
+	auth := base64.StdEncoding.EncodeToString([]byte(j.Email + ":" + j.APIToken))
+	req.Header.Set("Authorization", "Basic "+auth)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := j.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var result struct {
+		Issues []struct {
+			ID     string `json:"id"`
+			Key    string `json:"key"`
+			Fields struct {
+				Summary     string      `json:"summary"`
+				Description interface{} `json:"description"` // Can be string or object
+				Status      struct {
+					Name           string `json:"name"`
+					StatusCategory struct {
+						Key string `json:"key"`
+					} `json:"statusCategory"`
+				} `json:"status"`
+				Assignee *struct {
+					DisplayName  string `json:"displayName"`
+					EmailAddress string `json:"emailAddress"`
+				} `json:"assignee"`
+				Reporter *struct {
+					DisplayName  string `json:"displayName"`
+					EmailAddress string `json:"emailAddress"`
+				} `json:"reporter"`
+				Priority struct {
+					Name string `json:"name"`
+				} `json:"priority"`
+				Severity        string      `json:"customfield_10031"`
+				Labels          []string    `json:"labels"`
+				Created         string      `json:"created"`
+				Updated         string      `json:"updated"`
+				ResolutionDate  *string     `json:"resolutiondate"`
+				Environment     interface{} `json:"environment"` // Can be string or object
+				AffectedVersion []struct {
+					Name string `json:"name"`
+				} `json:"versions"`
+			} `json:"fields"`
+		} `json:"issues"`
+	}
+
+	if err := json.Unmarshal(data, &result); err != nil {
+		return nil, err
+	}
+
+	defects := make([]models.Defect, 0, len(result.Issues))
+	for _, issue := range result.Issues {
+		// Extract description as string if possible
+		desc := ""
+		if issue.Fields.Description != nil {
+			if descStr, ok := issue.Fields.Description.(string); ok {
+				desc = descStr
+			}
+		}
+
+		// Extract environment as string if possible
+		env := ""
+		if issue.Fields.Environment != nil {
+			if envStr, ok := issue.Fields.Environment.(string); ok {
+				env = envStr
+			}
+		}
+
+		defect := models.Defect{
+			ID:             issue.ID,
+			Key:            issue.Key,
+			Summary:        issue.Fields.Summary,
+			Description:    desc,
+			Status:         issue.Fields.Status.Name,
+			StatusCategory: issue.Fields.Status.StatusCategory.Key,
+			Priority:       issue.Fields.Priority.Name,
+			Severity:       issue.Fields.Severity,
+			Labels:         issue.Fields.Labels,
+			Environment:    env,
+		}
+
+		if issue.Fields.Assignee != nil {
+			defect.Assignee = models.User{
+				Name:  issue.Fields.Assignee.DisplayName,
+				Email: issue.Fields.Assignee.EmailAddress,
+			}
+		}
+
+		if issue.Fields.Reporter != nil {
+			defect.Reporter = models.User{
+				Name:  issue.Fields.Reporter.DisplayName,
+				Email: issue.Fields.Reporter.EmailAddress,
+			}
+		}
+
+		if len(issue.Fields.AffectedVersion) > 0 {
+			defect.AffectedVersion = issue.Fields.AffectedVersion[0].Name
+		}
+
+		defects = append(defects, defect)
+	}
+
+	log.Printf("🐛 Found %d defects for %s in sprint %d", len(defects), engineerEmail, sprintID)
+	return defects, nil
 }
 
 // GetSprintIssues fetches all issues for a board (filtered by board's filter)
