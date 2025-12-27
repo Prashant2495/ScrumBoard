@@ -87,7 +87,7 @@ func (h *ScrumMasterHandler) GetTeamHealth(c *fiber.Ctx) error {
 	return c.JSON(data.TeamHealth)
 }
 
-// GetBlockers returns blockers as JSON
+// GetBlockers returns blockers as JSON (combines Jira blockers + reported blockers)
 func (h *ScrumMasterHandler) GetBlockers(c *fiber.Ctx) error {
 	sprintID := c.QueryInt("sprint", 0)
 
@@ -96,7 +96,44 @@ func (h *ScrumMasterHandler) GetBlockers(c *fiber.Ctx) error {
 		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(data.Blockers)
+	// Also include reported blockers from Webex
+	blockerStore := services.GetBlockerStore()
+	reportedBlockers := blockerStore.GetActiveBlockers()
+
+	// Convert reported blockers to model blockers
+	allBlockers := data.Blockers
+	for _, rb := range reportedBlockers {
+		allBlockers = append(allBlockers, rb.ToModelBlocker())
+	}
+
+	return c.JSON(allBlockers)
+}
+
+// GetReportedBlockers returns only Webex-reported blockers
+func (h *ScrumMasterHandler) GetReportedBlockers(c *fiber.Ctx) error {
+	blockerStore := services.GetBlockerStore()
+	blockers := blockerStore.GetActiveBlockers()
+	return c.JSON(fiber.Map{
+		"success":  true,
+		"blockers": blockers,
+		"count":    len(blockers),
+	})
+}
+
+// ResolveBlocker marks a reported blocker as resolved
+func (h *ScrumMasterHandler) ResolveBlocker(c *fiber.Ctx) error {
+	blockerID := c.Params("id")
+	if blockerID == "" {
+		return c.Status(400).JSON(fiber.Map{"error": "Blocker ID required"})
+	}
+
+	blockerStore := services.GetBlockerStore()
+	if blockerStore.ResolveBlocker(blockerID) {
+		log.Printf("✅ Blocker %s resolved", blockerID)
+		return c.JSON(fiber.Map{"success": true, "message": "Blocker resolved"})
+	}
+
+	return c.Status(404).JSON(fiber.Map{"error": "Blocker not found"})
 }
 
 // GetRisks returns risk indicators as JSON
@@ -271,6 +308,47 @@ func (h *ScrumMasterHandler) WebexWebhook(c *fiber.Ctx) error {
 
 	log.Printf("📨 Message from %s: %s", payload.Data.PersonEmail, messageText)
 
+	// Check if message contains blocker keywords
+	if services.DetectBlocker(messageText) {
+		log.Printf("🚫 Blocker detected from %s: %s", payload.Data.PersonEmail, messageText)
+
+		// Get reporter name from pending ping if exists
+		pingStore := services.GetPingStore()
+		reporterName := payload.Data.PersonEmail
+		itemKey := ""
+		itemTitle := ""
+		sprintName := ""
+
+		// Try to get context from pending request
+		pendingPings := pingStore.GetPendingPings()
+		for _, ping := range pendingPings {
+			if ping.EngineerEmail == payload.Data.PersonEmail {
+				reporterName = ping.EngineerName
+				itemKey = ping.ItemKey
+				itemTitle = ping.ItemTitle
+				sprintName = ping.SprintName
+				break
+			}
+		}
+
+		// Save the blocker
+		blockerStore := services.GetBlockerStore()
+		blocker := blockerStore.SaveBlocker(
+			payload.Data.PersonEmail,
+			reporterName,
+			messageText,
+			itemKey,
+			itemTitle,
+			sprintName,
+		)
+		log.Printf("✅ Blocker saved with ID: %s", blocker.ID)
+
+		// Notify scrum master about the blocker
+		go h.notifyBlocker(blocker)
+
+		return c.JSON(fiber.Map{"status": "blocker_detected", "blocker_id": blocker.ID})
+	}
+
 	// Find pending ping for this user and update with response
 	pingStore := services.GetPingStore()
 	updated := pingStore.UpdateResponseByEmail(payload.Data.PersonEmail, messageText)
@@ -282,4 +360,33 @@ func (h *ScrumMasterHandler) WebexWebhook(c *fiber.Ctx) error {
 
 	log.Printf("⚠️ No pending request found for %s", payload.Data.PersonEmail)
 	return c.JSON(fiber.Map{"status": "no_pending", "message": "No pending request found"})
+}
+
+// notifyBlocker sends notification to scrum master about new blocker
+func (h *ScrumMasterHandler) notifyBlocker(blocker *services.ReportedBlocker) {
+	scrumMasterEmail := "prdewang@cisco.com" // Your email
+
+	markdown := fmt.Sprintf(`🚫 **New Blocker Reported!**
+
+👤 **Reported by:** %s
+📧 **Email:** %s
+📋 **Related Item:** %s
+📝 **Description:** %s
+⏰ **Time:** %s
+
+---
+_Please check the Scrum Master Dashboard for details_`,
+		blocker.ReporterName,
+		blocker.ReporterEmail,
+		blocker.ItemKey,
+		blocker.Description,
+		blocker.ReportedAt.Format("Mon, 02 Jan 2006 15:04"),
+	)
+
+	err := h.webexService.SendCustomMessage(scrumMasterEmail, markdown)
+	if err != nil {
+		log.Printf("❌ Failed to notify scrum master about blocker: %v", err)
+	} else {
+		log.Printf("✅ Scrum master notified about blocker from %s", blocker.ReporterEmail)
+	}
 }

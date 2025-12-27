@@ -76,6 +76,8 @@ func main() {
 	app.Get("/scrum-master/api/velocity", scrumMasterHandler.GetVelocityData)
 	app.Get("/scrum-master/api/health", scrumMasterHandler.GetTeamHealth)
 	app.Get("/scrum-master/api/blockers", scrumMasterHandler.GetBlockers)
+	app.Get("/scrum-master/api/blockers/reported", scrumMasterHandler.GetReportedBlockers)
+	app.Post("/scrum-master/api/blockers/:id/resolve", scrumMasterHandler.ResolveBlocker)
 	app.Get("/scrum-master/api/risks", scrumMasterHandler.GetRisks)
 	app.Post("/scrum-master/api/ping", scrumMasterHandler.PingUser)
 	app.Get("/scrum-master/api/webex-status", scrumMasterHandler.CheckWebexStatus)

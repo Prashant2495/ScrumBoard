@@ -91,6 +91,20 @@ func (ps *PingStore) GetAllPings() []models.PingMessage {
 	return result
 }
 
+// GetPendingPings returns all pending pings (for blocker context)
+func (ps *PingStore) GetPendingPings() []models.PingMessage {
+	ps.mu.RLock()
+	defer ps.mu.RUnlock()
+
+	var result []models.PingMessage
+	for _, ping := range ps.messages {
+		if ping.Status == "pending" {
+			result = append(result, *ping)
+		}
+	}
+	return result
+}
+
 // GetPingByID returns a specific ping
 func (ps *PingStore) GetPingByID(id string) *models.PingMessage {
 	ps.mu.RLock()
