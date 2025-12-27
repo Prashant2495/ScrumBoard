@@ -1,0 +1,100 @@
+package templates
+
+import (
+	"ScrumBoard/internal/models"
+	"ScrumBoard/templates/components"
+)
+
+templ Dashboard(data models.DashboardData) {
+	@Layout("Sprint Dashboard") {
+		<div class="min-h-screen">
+			<!-- Header -->
+			<header class="gradient-bg text-white py-6 px-8 shadow-lg">
+				<div class="max-w-7xl mx-auto flex items-center justify-between">
+					<div class="flex items-center gap-4">
+						<div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl backdrop-blur">
+							🚀
+						</div>
+						<div>
+							<h1 class="text-2xl font-bold">Sprint Dashboard</h1>
+							<p class="text-white/80 text-sm">Track your team's progress</p>
+						</div>
+					</div>
+					
+					<div class="flex items-center gap-4">
+						<div class="glass-dark px-4 py-2 rounded-xl">
+							<p class="text-xs text-white/70">Current Sprint</p>
+							<p class="font-semibold">{ data.Sprint.Name }</p>
+						</div>
+						<button 
+							hx-get="/api/refresh"
+							hx-target="#dashboard-content"
+							hx-swap="innerHTML"
+							class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2"
+						>
+							<span>🔄</span>
+							<span>Refresh</span>
+						</button>
+					</div>
+				</div>
+			</header>
+			
+			<!-- Main Content -->
+			<main id="dashboard-content" class="max-w-7xl mx-auto px-8 py-8">
+				@DashboardContent(data)
+			</main>
+		</div>
+	}
+}
+
+templ DashboardContent(data models.DashboardData) {
+	<!-- Sprint Info Bar -->
+	<div class="glass rounded-2xl p-4 mb-8 flex items-center justify-between animate-fade-in">
+		<div class="flex items-center gap-6">
+			<div class="flex items-center gap-2">
+				<span class="text-lg">📅</span>
+				<span class="text-sm text-slate-600">
+					{ data.Sprint.StartDate } - { data.Sprint.EndDate }
+				</span>
+			</div>
+			<div class="flex items-center gap-2">
+				<span class="text-lg">🎯</span>
+				<span class="text-sm text-slate-600">{ data.Sprint.Goal }</span>
+			</div>
+		</div>
+		<div class="flex items-center gap-2">
+			<span class={ "px-3 py-1 rounded-full text-xs font-semibold " + getSprintStatusClass(data.Sprint.State) }>
+				{ data.Sprint.State }
+			</span>
+		</div>
+	</div>
+
+	<!-- Stats Grid -->
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+		@components.StatsCard("Total Stories", data.Stats.TotalStories, "in this sprint", "📊", "border-l-4 border-secondary-500")
+		@components.StatsCard("Total Points", data.Stats.TotalPoints, "story points", "⚡", "border-l-4 border-primary-500")
+		@components.StatsCard("Completed", data.Stats.CompletedPoints, "points done", "✅", "border-l-4 border-emerald-500")
+		@components.StatsCard("Remaining", data.Stats.RemainingPoints, "points left", "⏳", "border-l-4 border-amber-500")
+	</div>
+
+	<!-- Progress and Team Stats -->
+	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+		@components.ProgressBar(data.Stats.CompletedPoints, data.Stats.TotalPoints)
+		@components.UserStatsSection(data.UserStats)
+	</div>
+
+	<!-- Sprint Board -->
+	@components.SprintBoard(data.TodoStories, data.InProgress, data.DoneStories)
+}
+
+func getSprintStatusClass(state string) string {
+	switch state {
+	case "active":
+		return "bg-green-100 text-green-700"
+	case "closed":
+		return "bg-slate-100 text-slate-600"
+	default:
+		return "bg-blue-100 text-blue-700"
+	}
+}
+

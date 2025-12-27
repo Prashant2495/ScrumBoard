@@ -1,0 +1,62 @@
+package components
+
+import "fmt"
+
+templ StatsCard(title string, value int, subtitle string, icon string, colorClass string) {
+	<div class={ "glass rounded-2xl p-6 card-hover animate-fade-in " + colorClass }>
+		<div class="flex items-center justify-between">
+			<div>
+				<p class="text-sm font-medium text-slate-500 uppercase tracking-wide">{ title }</p>
+				<p class="text-4xl font-bold text-slate-800 mt-2">{ fmt.Sprintf("%d", value) }</p>
+				<p class="text-sm text-slate-500 mt-1">{ subtitle }</p>
+			</div>
+			<div class={ "w-16 h-16 rounded-2xl flex items-center justify-center text-2xl " + getIconBg(colorClass) }>
+				{ icon }
+			</div>
+		</div>
+	</div>
+}
+
+func getIconBg(colorClass string) string {
+	switch colorClass {
+	case "border-l-4 border-primary-500":
+		return "bg-primary-100 text-primary-600"
+	case "border-l-4 border-secondary-500":
+		return "bg-secondary-100 text-secondary-600"
+	case "border-l-4 border-amber-500":
+		return "bg-amber-100 text-amber-600"
+	case "border-l-4 border-emerald-500":
+		return "bg-emerald-100 text-emerald-600"
+	default:
+		return "bg-slate-100 text-slate-600"
+	}
+}
+
+templ ProgressBar(completed int, total int) {
+	<div class="glass rounded-2xl p-6 card-hover animate-fade-in">
+		<div class="flex items-center justify-between mb-4">
+			<h3 class="text-lg font-semibold text-slate-700">Sprint Progress</h3>
+			<span class="text-2xl font-bold text-primary-600">
+				{ fmt.Sprintf("%d%%", getPercentage(completed, total)) }
+			</span>
+		</div>
+		<div class="w-full bg-slate-200 rounded-full h-4 overflow-hidden">
+			<div 
+				class="h-full rounded-full bg-gradient-to-r from-primary-400 to-secondary-500 transition-all duration-1000 ease-out"
+				style={ fmt.Sprintf("width: %d%%", getPercentage(completed, total)) }
+			></div>
+		</div>
+		<div class="flex justify-between mt-3 text-sm text-slate-500">
+			<span>{ fmt.Sprintf("%d points completed", completed) }</span>
+			<span>{ fmt.Sprintf("%d points total", total) }</span>
+		</div>
+	</div>
+}
+
+func getPercentage(completed, total int) int {
+	if total == 0 {
+		return 0
+	}
+	return (completed * 100) / total
+}
+

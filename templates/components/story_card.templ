@@ -1,0 +1,113 @@
+package components
+
+import (
+	"ScrumBoard/internal/models"
+	"fmt"
+)
+
+templ StoryCard(story models.Story) {
+	<div class={ "glass rounded-xl p-4 card-hover animate-fade-in " + getPriorityClass(story.Priority) }>
+		<div class="flex items-start justify-between mb-3">
+			<span class="text-xs font-semibold text-secondary-600 bg-secondary-100 px-2 py-1 rounded-lg">
+				{ story.Key }
+			</span>
+			<span class={ "text-xs font-medium px-2 py-1 rounded-lg " + getStatusBadge(story.StatusCategory) }>
+				{ story.Status }
+			</span>
+		</div>
+
+		<h4 class="font-semibold text-slate-800 text-sm leading-snug mb-3">
+			{ story.Title }
+		</h4>
+
+		<div class="flex items-center justify-between">
+			<div class="flex items-center gap-2">
+				if story.Assignee.Name != "" {
+					<div class="w-7 h-7 rounded-full bg-gradient-to-br from-primary-400 to-secondary-500 flex items-center justify-center text-white text-xs font-semibold">
+						{ getInitials(story.Assignee.Name) }
+					</div>
+					<span class="text-xs text-slate-600 truncate max-w-[100px]">{ story.Assignee.Name }</span>
+				} else {
+					<div class="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center text-slate-400 text-xs">
+						?
+					</div>
+					<span class="text-xs text-slate-400">Unassigned</span>
+				}
+			</div>
+
+			<div class="flex items-center gap-1 bg-primary-100 text-primary-700 px-2 py-1 rounded-lg">
+				<span class="text-xs">⚡</span>
+				<span class="text-xs font-semibold">{ fmt.Sprintf("%d", story.StoryPoints) }</span>
+			</div>
+		</div>
+	</div>
+}
+
+func getPriorityClass(priority string) string {
+	switch priority {
+	case "High", "Highest":
+		return "priority-high"
+	case "Medium":
+		return "priority-medium"
+	default:
+		return "priority-low"
+	}
+}
+
+func getPriorityBadge(priority string) string {
+	switch priority {
+	case "High", "Highest":
+		return "bg-red-100 text-red-700"
+	case "Medium":
+		return "bg-amber-100 text-amber-700"
+	default:
+		return "bg-green-100 text-green-700"
+	}
+}
+
+func getInitials(name string) string {
+	if len(name) == 0 {
+		return "?"
+	}
+	initials := ""
+	words := splitName(name)
+	for i, word := range words {
+		if i >= 2 {
+			break
+		}
+		if len(word) > 0 {
+			initials += string(word[0])
+		}
+	}
+	return initials
+}
+
+func splitName(name string) []string {
+	var words []string
+	word := ""
+	for _, c := range name {
+		if c == ' ' {
+			if word != "" {
+				words = append(words, word)
+				word = ""
+			}
+		} else {
+			word += string(c)
+		}
+	}
+	if word != "" {
+		words = append(words, word)
+	}
+	return words
+}
+
+func getStatusBadge(statusCategory string) string {
+	switch statusCategory {
+	case "done":
+		return "bg-emerald-100 text-emerald-700"
+	case "indeterminate":
+		return "bg-blue-100 text-blue-700"
+	default: // "new" = To Do/Backlog
+		return "bg-slate-100 text-slate-700"
+	}
+}
