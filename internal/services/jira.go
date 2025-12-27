@@ -9,6 +9,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
+	"sync"
 	"time"
 
 	"ScrumBoard/internal/models"
@@ -457,11 +459,155 @@ func (j *JiraService) GetDefectsByEngineerAndSprint(engineerEmail string, sprint
 	return defects, nil
 }
 
-// GetSprintIssues fetches all issues for a board (filtered by board's filter)
+// GetSprintIssuesByJQL fetches AMF team issues using direct JQL search (no board number needed)
+func (j *JiraService) GetSprintIssuesByJQL(sprintID int) ([]models.Story, error) {
+	// Use JQL to search across ALL boards for sprint + AMF team filter
+	// Try multiple JQL variations to find the right syntax
+
+	// First try: Use "Team" field name
+	jql := fmt.Sprintf("sprint = %d AND Team ~ \"AMF:*\" ORDER BY created DESC", sprintID)
+
+	log.Printf("🔍 JQL Query: %s", jql)
+
+	url := fmt.Sprintf("%s/rest/api/3/search/jql", j.BaseURL)
+
+	requestBody := map[string]interface{}{
+		"jql":        jql,
+		"maxResults": 500,
+		"fields":     []string{"summary", "status", "assignee", "priority", "customfield_10028", "customfield_10001", "labels", "created", "updated", "description"},
+	}
+
+	bodyBytes, err := json.Marshal(requestBody)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(bodyBytes))
+	if err != nil {
+		return nil, err
+	}
+
+	auth := base64.StdEncoding.EncodeToString([]byte(j.Email + ":" + j.APIToken))
+	req.Header.Set("Authorization", "Basic "+auth)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := j.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode != 200 {
+		log.Printf("❌ Jira API error: Status %d, Response: %s", resp.StatusCode, string(data))
+		return nil, fmt.Errorf("jira API returned status %d", resp.StatusCode)
+	}
+
+	var result struct {
+		Issues []struct {
+			ID     string `json:"id"`
+			Key    string `json:"key"`
+			Fields struct {
+				Summary     string `json:"summary"`
+				Description any    `json:"description"`
+				Status      struct {
+					Name           string `json:"name"`
+					StatusCategory struct {
+						Key string `json:"key"` // done, indeterminate, new
+					} `json:"statusCategory"`
+				} `json:"status"`
+				Assignee *struct {
+					DisplayName  string `json:"displayName"`
+					EmailAddress string `json:"emailAddress"`
+					AvatarUrls   struct {
+						Small string `json:"48x48"`
+					} `json:"avatarUrls"`
+				} `json:"assignee"`
+				Priority struct {
+					Name string `json:"name"`
+				} `json:"priority"`
+				Team *struct {
+					Name string `json:"name"`
+				} `json:"customfield_10001"` // Team field
+				StoryPoints float64  `json:"customfield_10028"`
+				Labels      []string `json:"labels"`
+				Created     string   `json:"created"`
+				Updated     string   `json:"updated"`
+			} `json:"fields"`
+		} `json:"issues"`
+	}
+
+	if err := json.Unmarshal(data, &result); err != nil {
+		return nil, err
+	}
+
+	stories := make([]models.Story, 0, len(result.Issues))
+	teamMap := make(map[string]int)
+
+	// Log first issue for debugging
+	if len(result.Issues) > 0 {
+		firstIssue := result.Issues[0]
+		log.Printf("🔬 Sample issue %s:", firstIssue.Key)
+		if firstIssue.Fields.Team != nil {
+			log.Printf("   Team: %s", firstIssue.Fields.Team.Name)
+		}
+		if firstIssue.Fields.Assignee != nil {
+			log.Printf("   Assignee: %s", firstIssue.Fields.Assignee.DisplayName)
+		}
+	}
+
+	for _, issue := range result.Issues {
+		// Track team names
+		if issue.Fields.Team != nil {
+			teamMap[issue.Fields.Team.Name]++
+		}
+
+		story := models.Story{
+			ID:             issue.ID,
+			Key:            issue.Key,
+			Title:          issue.Fields.Summary,
+			Status:         issue.Fields.Status.Name,
+			StatusCategory: issue.Fields.Status.StatusCategory.Key,
+			StoryPoints:    int(issue.Fields.StoryPoints),
+			Priority:       issue.Fields.Priority.Name,
+			Labels:         issue.Fields.Labels,
+			CreatedAt:      issue.Fields.Created,
+			UpdatedAt:      issue.Fields.Updated,
+		}
+
+		if issue.Fields.Assignee != nil {
+			story.Assignee = models.User{
+				Name:      issue.Fields.Assignee.DisplayName,
+				Email:     issue.Fields.Assignee.EmailAddress,
+				AvatarURL: issue.Fields.Assignee.AvatarUrls.Small,
+			}
+		}
+
+		stories = append(stories, story)
+	}
+
+	// Log results
+	log.Printf("🔍 Sprint %d: Found %d AMF team issues via JQL", sprintID, len(stories))
+	if len(teamMap) > 0 {
+		log.Printf("👥 AMF Teams:")
+		for team, count := range teamMap {
+			log.Printf("   - %s: %d issues", team, count)
+		}
+	}
+
+	return stories, nil
+}
+
+// GetSprintIssues fetches all issues for a specific sprint filtered by team name containing "AMF"
 func (j *JiraService) GetSprintIssues(boardID string, sprintID int) ([]models.Story, error) {
-	// Use Board API to get issues - this respects the board's filter
-	// customfield_10028 = Story Points in this Jira instance
-	url := fmt.Sprintf("%s/rest/agile/1.0/board/%s/issue?fields=summary,status,assignee,priority,customfield_10028,labels,created,updated,description&maxResults=200", j.BaseURL, boardID)
+	// Use Board + Sprint API to get issues for a specific sprint
+	// customfield_10028 = Story Points
+	// customfield_10001 = Team field (contains team name like "AMF: Interstellar", "AMF: Avengers")
+	url := fmt.Sprintf("%s/rest/agile/1.0/board/%s/sprint/%d/issue?fields=summary,status,assignee,priority,customfield_10028,customfield_10001,labels,created,updated,description&maxResults=500", j.BaseURL, boardID, sprintID)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -506,6 +652,9 @@ func (j *JiraService) GetSprintIssues(boardID string, sprintID int) ([]models.St
 				Priority struct {
 					Name string `json:"name"`
 				} `json:"priority"`
+				Team *struct {
+					Name string `json:"name"`
+				} `json:"customfield_10001"` // Team field
 				StoryPoints float64  `json:"customfield_10028"`
 				Labels      []string `json:"labels"`
 				Created     string   `json:"created"`
@@ -519,7 +668,38 @@ func (j *JiraService) GetSprintIssues(boardID string, sprintID int) ([]models.St
 	}
 
 	stories := make([]models.Story, 0, len(result.Issues))
+	teamMap := make(map[string]int) // Track unique teams
+
+	// Log first issue for debugging
+	if len(result.Issues) > 0 {
+		firstIssue := result.Issues[0]
+		log.Printf("🔬 Sample issue %s:", firstIssue.Key)
+		if firstIssue.Fields.Team != nil {
+			log.Printf("   Team: %s", firstIssue.Fields.Team.Name)
+		} else {
+			log.Printf("   Team: <none>")
+		}
+		if firstIssue.Fields.Assignee != nil {
+			log.Printf("   Assignee: %s", firstIssue.Fields.Assignee.DisplayName)
+		}
+	}
+
 	for _, issue := range result.Issues {
+		// Filter: Only include issues with AMF in team name
+		hasAMF := false
+		if issue.Fields.Team != nil {
+			teamName := issue.Fields.Team.Name
+			teamMap[teamName]++
+			if strings.Contains(strings.ToUpper(teamName), "AMF") {
+				hasAMF = true
+			}
+		}
+
+		// Skip non-AMF issues
+		if !hasAMF {
+			continue
+		}
+
 		story := models.Story{
 			ID:             issue.ID,
 			Key:            issue.Key,
@@ -544,7 +724,70 @@ func (j *JiraService) GetSprintIssues(boardID string, sprintID int) ([]models.St
 		stories = append(stories, story)
 	}
 
+	// Log results
+	log.Printf("🔍 Board %s, Sprint %d: Found %d AMF team issues", boardID, sprintID, len(stories))
+	if len(teamMap) > 0 {
+		log.Printf("👥 AMF Teams:")
+		for team, count := range teamMap {
+			if strings.Contains(strings.ToUpper(team), "AMF") {
+				log.Printf("   - %s: %d issues", team, count)
+			}
+		}
+	}
+
 	return stories, nil
+}
+
+// DiscoverAMFBoards scans board IDs in parallel to find boards with AMF team issues for a sprint
+func (j *JiraService) DiscoverAMFBoards(sprintID int, startID int, endID int) []string {
+	log.Printf("🔍 Discovering AMF boards for sprint %d (scanning boards %d to %d in parallel)...", sprintID, startID, endID)
+
+	type result struct {
+		boardID string
+		count   int
+	}
+
+	results := make(chan result, 100)
+	var wg sync.WaitGroup
+
+	// Scan in parallel with 50 concurrent workers
+	semaphore := make(chan struct{}, 50)
+
+	for boardID := startID; boardID <= endID; boardID++ {
+		wg.Add(1)
+		go func(id int) {
+			defer wg.Done()
+			semaphore <- struct{}{}        // Acquire
+			defer func() { <-semaphore }() // Release
+
+			// Try to fetch issues from this board
+			stories, err := j.GetSprintIssues(fmt.Sprintf("%d", id), sprintID)
+			if err != nil {
+				return // Skip boards that error out
+			}
+
+			// If we found AMF issues, send result
+			if len(stories) > 0 {
+				results <- result{boardID: fmt.Sprintf("%d", id), count: len(stories)}
+			}
+		}(boardID)
+	}
+
+	// Close results channel when all goroutines complete
+	go func() {
+		wg.Wait()
+		close(results)
+	}()
+
+	// Collect results
+	amfBoards := make([]string, 0)
+	for res := range results {
+		amfBoards = append(amfBoards, res.boardID)
+		log.Printf("✅ Found board %s with %d AMF issues", res.boardID, res.count)
+	}
+
+	log.Printf("🎯 Discovery complete! Found %d boards with AMF data: %v", len(amfBoards), amfBoards)
+	return amfBoards
 }
 
 // GetSprintDefects fetches all bugs/defects for a board in the current sprint

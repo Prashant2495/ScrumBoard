@@ -72,16 +72,32 @@ templ Dashboard(data models.DashboardData) {
 				.then(res => res.json())
 				.then(sprints => {
 					const selector = document.getElementById('sprint-selector');
-					selector.innerHTML = '<option value="0">🟢 Active Sprint</option>';
+					selector.innerHTML = '';
 
+					// Add "Active Sprint" option
+					const activeOption = document.createElement('option');
+					activeOption.value = '0';
+					activeOption.textContent = '🟢 Active Sprint';
+					if (currentSprintId === 0) activeOption.selected = true;
+					selector.appendChild(activeOption);
+
+					// Add all sprints
 					sprints.sort((a, b) => b.id - a.id).forEach(sprint => {
 						const option = document.createElement('option');
 						option.value = sprint.id;
 						const stateEmoji = sprint.state === 'active' ? '🟢' : '🔴';
 						option.textContent = `${stateEmoji} ${sprint.name}`;
-						if (sprint.id === currentSprintId) option.selected = true;
+						if (sprint.id === currentSprintId) {
+							option.selected = true;
+							console.log(`Selected sprint: ${sprint.name} (ID: ${sprint.id})`);
+						}
 						selector.appendChild(option);
 					});
+
+					// Double-check selection
+					if (currentSprintId !== 0) {
+						selector.value = currentSprintId.toString();
+					}
 				})
 				.catch(err => {
 					console.error('Failed to load sprints:', err);
@@ -90,7 +106,7 @@ templ Dashboard(data models.DashboardData) {
 			// Handle sprint change
 			document.getElementById('sprint-selector').addEventListener('change', (e) => {
 				const sprintId = e.target.value;
-				window.location.href = `/?sprint=${sprintId}`;
+				window.location.href = `/sprint?sprint=${sprintId}`;
 			});
 		</script>
 	}

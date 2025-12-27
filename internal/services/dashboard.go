@@ -2,6 +2,7 @@ package services
 
 import (
 	"ScrumBoard/internal/models"
+	"log"
 	"os"
 )
 
@@ -112,43 +113,68 @@ func (d *DashboardService) GetDashboardData(boardID string) (*models.DashboardDa
 }
 
 // GetDashboardDataForSprint fetches dashboard data for a specific sprint (0 = active sprint)
+// Fetches from known AMF boards - fast and reliable
 func (d *DashboardService) GetDashboardDataForSprint(boardID string, sprintID int) (*models.DashboardData, error) {
 	// For demo, return mock data if Jira is not configured
 	if d.jira.BaseURL == "" {
 		return d.GetMockData(), nil
 	}
 
+	// Known AMF team boards - manually add new boards here when discovered
+	amfBoards := []string{
+		"6091", // AMF: Avengers (older sprints like NM-2515)
+		"6537", // Mixed board
+		"6991", // AMF: Interstellar (current sprints)
+		"6992", // AMF: Avengers (current sprints like NM-2517)
+		"7556", // AMF board for NM-2601 (add more as needed)
+	}
+
 	var sprint *models.Sprint
 	var err error
 
 	if sprintID == 0 {
-		// Get active sprint
-		sprint, err = d.jira.GetActiveSprint(boardID)
+		// Get active sprint from first board
+		log.Printf("🔍 Fetching ACTIVE sprint")
+		sprint, err = d.jira.GetActiveSprint(amfBoards[0])
 		if err != nil {
 			return nil, err
 		}
+		log.Printf("✅ Active sprint: %s (ID: %d)", sprint.Name, sprint.ID)
 	} else {
 		// Get specific sprint by ID
+		log.Printf("🔍 Fetching sprint ID %d", sprintID)
 		sprintData, err := d.jira.GetSprintByID(sprintID)
 		if err != nil {
 			return nil, err
 		}
 		sprint = &sprintData
+		log.Printf("✅ Sprint: %s (ID: %d)", sprint.Name, sprint.ID)
 	}
 
-	stories, err := d.jira.GetSprintIssues(boardID, sprint.ID)
-	if err != nil {
-		return nil, err
+	// Fetch AMF team issues from all known boards
+	var allStories []models.Story
+	for _, board := range amfBoards {
+		stories, err := d.jira.GetSprintIssues(board, sprint.ID)
+		if err != nil {
+			log.Printf("⚠️  Error fetching from board %s: %v", board, err)
+			continue
+		}
+		allStories = append(allStories, stories...)
 	}
 
-	stats := d.CalculateStats(stories)
-	userStats := d.CalculateUserStats(stories)
-	todo, inProgress, done := d.GroupStoriesByStatus(stories)
+	log.Printf("📊 Total AMF team stories: %d for sprint %s (ID: %d)", len(allStories), sprint.Name, sprint.ID)
+
+	stats := d.CalculateStats(allStories)
+	userStats := d.CalculateUserStats(allStories)
+	todo, inProgress, done := d.GroupStoriesByStatus(allStories)
+
+	log.Printf("📈 Stats: Total=%d, Completed=%d, InProgress=%d, Todo=%d",
+		stats.TotalStories, stats.CompletedStories, stats.InProgressStories, stats.TodoStories)
 
 	return &models.DashboardData{
 		Sprint:      *sprint,
 		Stats:       stats,
-		Stories:     stories,
+		Stories:     allStories,
 		UserStats:   userStats,
 		TodoStories: todo,
 		InProgress:  inProgress,

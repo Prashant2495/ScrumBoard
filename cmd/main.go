@@ -27,10 +27,11 @@ func main() {
 	dashboardHandler := handlers.NewDashboardHandler(dashboardService)
 	defectHandler := handlers.NewDefectHandler(defectDashboardService)
 	engineerHandler := handlers.NewEngineerHandler(engineerDashboardService, jiraService)
+	homeHandler := handlers.NewHomeHandler()
 
 	// Create Fiber app
 	app := fiber.New(fiber.Config{
-		AppName: "Scrum Dashboard",
+		AppName: "Scrum Insights",
 	})
 
 	// Middleware
@@ -41,7 +42,8 @@ func main() {
 	app.Static("/static", "./static")
 
 	// Routes
-	app.Get("/", dashboardHandler.Index)
+	app.Get("/", homeHandler.Index)
+	app.Get("/sprint", dashboardHandler.Index)
 	app.Get("/api/refresh", dashboardHandler.Refresh)
 	app.Get("/api/boards", dashboardHandler.GetBoards)
 	app.Get("/api/sprints", dashboardHandler.GetSprints)

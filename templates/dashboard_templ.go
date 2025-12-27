@@ -54,7 +54,7 @@ func Dashboard(data models.DashboardData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</main></div><!-- Sprint Selector Script --> <script>\n\t\t\tconst urlParams = new URLSearchParams(window.location.search);\n\t\t\tconst currentSprintId = parseInt(urlParams.get('sprint') || '0');\n\n\t\t\t// Load sprints\n\t\t\tfetch('/api/sprints')\n\t\t\t\t.then(res => res.json())\n\t\t\t\t.then(sprints => {\n\t\t\t\t\tconst selector = document.getElementById('sprint-selector');\n\t\t\t\t\tselector.innerHTML = '<option value=\"0\">🟢 Active Sprint</option>';\n\n\t\t\t\t\tsprints.sort((a, b) => b.id - a.id).forEach(sprint => {\n\t\t\t\t\t\tconst option = document.createElement('option');\n\t\t\t\t\t\toption.value = sprint.id;\n\t\t\t\t\t\tconst stateEmoji = sprint.state === 'active' ? '🟢' : '🔴';\n\t\t\t\t\t\toption.textContent = `${stateEmoji} ${sprint.name}`;\n\t\t\t\t\t\tif (sprint.id === currentSprintId) option.selected = true;\n\t\t\t\t\t\tselector.appendChild(option);\n\t\t\t\t\t});\n\t\t\t\t})\n\t\t\t\t.catch(err => {\n\t\t\t\t\tconsole.error('Failed to load sprints:', err);\n\t\t\t\t});\n\n\t\t\t// Handle sprint change\n\t\t\tdocument.getElementById('sprint-selector').addEventListener('change', (e) => {\n\t\t\t\tconst sprintId = e.target.value;\n\t\t\t\twindow.location.href = `/?sprint=${sprintId}`;\n\t\t\t});\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</main></div><!-- Sprint Selector Script --> <script>\n\t\t\tconst urlParams = new URLSearchParams(window.location.search);\n\t\t\tconst currentSprintId = parseInt(urlParams.get('sprint') || '0');\n\n\t\t\t// Load sprints\n\t\t\tfetch('/api/sprints')\n\t\t\t\t.then(res => res.json())\n\t\t\t\t.then(sprints => {\n\t\t\t\t\tconst selector = document.getElementById('sprint-selector');\n\t\t\t\t\tselector.innerHTML = '';\n\n\t\t\t\t\t// Add \"Active Sprint\" option\n\t\t\t\t\tconst activeOption = document.createElement('option');\n\t\t\t\t\tactiveOption.value = '0';\n\t\t\t\t\tactiveOption.textContent = '🟢 Active Sprint';\n\t\t\t\t\tif (currentSprintId === 0) activeOption.selected = true;\n\t\t\t\t\tselector.appendChild(activeOption);\n\n\t\t\t\t\t// Add all sprints\n\t\t\t\t\tsprints.sort((a, b) => b.id - a.id).forEach(sprint => {\n\t\t\t\t\t\tconst option = document.createElement('option');\n\t\t\t\t\t\toption.value = sprint.id;\n\t\t\t\t\t\tconst stateEmoji = sprint.state === 'active' ? '🟢' : '🔴';\n\t\t\t\t\t\toption.textContent = `${stateEmoji} ${sprint.name}`;\n\t\t\t\t\t\tif (sprint.id === currentSprintId) {\n\t\t\t\t\t\t\toption.selected = true;\n\t\t\t\t\t\t\tconsole.log(`Selected sprint: ${sprint.name} (ID: ${sprint.id})`);\n\t\t\t\t\t\t}\n\t\t\t\t\t\tselector.appendChild(option);\n\t\t\t\t\t});\n\n\t\t\t\t\t// Double-check selection\n\t\t\t\t\tif (currentSprintId !== 0) {\n\t\t\t\t\t\tselector.value = currentSprintId.toString();\n\t\t\t\t\t}\n\t\t\t\t})\n\t\t\t\t.catch(err => {\n\t\t\t\t\tconsole.error('Failed to load sprints:', err);\n\t\t\t\t});\n\n\t\t\t// Handle sprint change\n\t\t\tdocument.getElementById('sprint-selector').addEventListener('change', (e) => {\n\t\t\t\tconst sprintId = e.target.value;\n\t\t\t\twindow.location.href = `/sprint?sprint=${sprintId}`;\n\t\t\t});\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -96,7 +96,7 @@ func DashboardContent(data models.DashboardData) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.StartDate)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 106, Col: 28}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 122, Col: 28}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -109,7 +109,7 @@ func DashboardContent(data models.DashboardData) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.EndDate)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 106, Col: 54}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 122, Col: 54}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -122,7 +122,7 @@ func DashboardContent(data models.DashboardData) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.Goal)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 111, Col: 59}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 127, Col: 59}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -157,7 +157,7 @@ func DashboardContent(data models.DashboardData) templ.Component {
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.State)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 116, Col: 23}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 132, Col: 23}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
