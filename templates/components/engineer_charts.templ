@@ -189,9 +189,14 @@ templ EngineerStoryStatusPieChart(stories []models.Story) {
 			};
 
 			stories.forEach(story => {
-				if (story.status === 'To Do') statusCounts['To Do']++;
-				else if (story.status === 'In Progress') statusCounts['In Progress']++;
-				else if (story.status === 'Done') statusCounts['Done']++;
+				// Map statusCategory to display status
+				if (story.statusCategory === 'new' || story.statusCategory === 'todo') {
+					statusCounts['To Do']++;
+				} else if (story.statusCategory === 'indeterminate') {
+					statusCounts['In Progress']++;
+				} else if (story.statusCategory === 'done') {
+					statusCounts['Done']++;
+				}
 			});
 
 			const ctx = document.getElementById('engineerStoryStatusChart');
@@ -273,9 +278,14 @@ templ EngineerDefectStatusPieChart(defects []models.Defect) {
 			};
 
 			defects.forEach(defect => {
-				if (defect.status === 'Open') statusCounts['Open']++;
-				else if (defect.status === 'In Progress') statusCounts['In Progress']++;
-				else if (defect.status === 'Resolved' || defect.status === 'Closed') statusCounts['Resolved']++;
+				// Map statusCategory to display status
+				if (defect.statusCategory === 'new' || defect.status === 'Open' || defect.status === 'Opened') {
+					statusCounts['Open']++;
+				} else if (defect.statusCategory === 'indeterminate' || defect.status === 'In Progress') {
+					statusCounts['In Progress']++;
+				} else if (defect.statusCategory === 'done' || defect.status === 'Resolved' || defect.status === 'Closed') {
+					statusCounts['Resolved']++;
+				}
 			});
 
 			const ctx = document.getElementById('engineerDefectStatusChart');

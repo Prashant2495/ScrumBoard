@@ -1,4 +1,4 @@
-2025/12/27 22:39:30 🚀 Scrum Dashboard starting on http://localhost:3000
+2025/12/27 23:00:28 🚀 Scrum Dashboard starting on http://localhost:3000
 
  ┌───────────────────────────────────────────────────┐ 
  │                  Scrum Insights                   │ 
@@ -7,68 +7,326 @@
  │       (bound on host 0.0.0.0 and port 3000)       │ 
  │                                                   │ 
  │ Handlers ............ 23  Processes ........... 1 │ 
- │ Prefork ....... Disabled  PID ............. 18609 │ 
+ │ Prefork ....... Disabled  PID ............. 23609 │ 
  └───────────────────────────────────────────────────┘ 
 
-2025/12/27 22:39:53 🔍 Fetching sprint ID 18615
-2025/12/27 22:39:53 ✅ Sprint: NM-2517 (ID: 18615)
-2025/12/27 22:39:54 🔍 Board 6091, Sprint 18615: Found 0 AMF team issues
-2025/12/27 22:39:55 🔍 Board 6537, Sprint 18615: Found 0 AMF team issues
-2025/12/27 22:39:56 🔬 Sample issue PMOB-223270:
-2025/12/27 22:39:56    Team: AMF: Interstellar
-2025/12/27 22:39:56    Assignee: Akshay Bhat
-2025/12/27 22:39:56 🔍 Board 6991, Sprint 18615: Found 13 AMF team issues
-2025/12/27 22:39:56 👥 AMF Teams:
-2025/12/27 22:39:56    - AMF: Interstellar: 13 issues
-2025/12/27 22:39:57 🔬 Sample issue PMOB-222711:
-2025/12/27 22:39:57    Team: AMF: Avengers
-2025/12/27 22:39:57    Assignee: Vaibhav Vaidya
-2025/12/27 22:39:57 🔍 Board 6992, Sprint 18615: Found 9 AMF team issues
-2025/12/27 22:39:57 👥 AMF Teams:
-2025/12/27 22:39:57    - AMF: Avengers: 9 issues
-2025/12/27 22:39:57 🔍 Board 7556, Sprint 18615: Found 0 AMF team issues
-2025/12/27 22:39:57 📊 Total AMF team stories: 22 for sprint NM-2517 (ID: 18615)
-2025/12/27 22:39:57 📈 Stats: Total=22, Completed=21, InProgress=0, Todo=1
-22:39:53 | 200 |  4.654984583s | 127.0.0.1 | GET | /sprint | -
-2025/12/27 22:40:15 🔍 Fetching sprint ID 18615
-2025/12/27 22:40:16 ✅ Sprint: NM-2517 (ID: 18615)
-2025/12/27 22:40:17 🔍 Board 6091, Sprint 18615: Found 0 AMF team issues
-2025/12/27 22:40:18 🔍 Board 6537, Sprint 18615: Found 0 AMF team issues
-2025/12/27 22:40:20 🔬 Sample issue PMOB-223270:
-2025/12/27 22:40:20    Team: AMF: Interstellar
-2025/12/27 22:40:20    Assignee: Akshay Bhat
-2025/12/27 22:40:20 🔍 Board 6991, Sprint 18615: Found 13 AMF team issues
-2025/12/27 22:40:20 👥 AMF Teams:
-2025/12/27 22:40:20    - AMF: Interstellar: 13 issues
-2025/12/27 22:40:21 🔬 Sample issue PMOB-222711:
-2025/12/27 22:40:21    Team: AMF: Avengers
-2025/12/27 22:40:21    Assignee: Vaibhav Vaidya
-2025/12/27 22:40:21 🔍 Board 6992, Sprint 18615: Found 9 AMF team issues
-2025/12/27 22:40:21 👥 AMF Teams:
-2025/12/27 22:40:21    - AMF: Avengers: 9 issues
-2025/12/27 22:40:21 🔍 Board 7556, Sprint 18615: Found 0 AMF team issues
-2025/12/27 22:40:21 📊 Total AMF team stories: 22 for sprint NM-2517 (ID: 18615)
-2025/12/27 22:40:21 📈 Stats: Total=22, Completed=21, InProgress=0, Todo=1
-22:40:15 | 200 |  5.654669125s | 127.0.0.1 | GET | /sprint | -
-22:40:21 | 200 |  1.146996333s | 127.0.0.1 | GET | /api/sprints | -
-2025/12/27 22:41:12 🔍 Fetching sprint ID 18615
-2025/12/27 22:41:13 ✅ Sprint: NM-2517 (ID: 18615)
-2025/12/27 22:41:13 🔍 Board 6091, Sprint 18615: Found 0 AMF team issues
-2025/12/27 22:41:14 🔍 Board 6537, Sprint 18615: Found 0 AMF team issues
-2025/12/27 22:41:15 🔬 Sample issue PMOB-223270:
-2025/12/27 22:41:15    Team: AMF: Interstellar
-2025/12/27 22:41:15    Assignee: Akshay Bhat
-2025/12/27 22:41:15 🔍 Board 6991, Sprint 18615: Found 13 AMF team issues
-2025/12/27 22:41:15 👥 AMF Teams:
-2025/12/27 22:41:15    - AMF: Interstellar: 13 issues
-2025/12/27 22:41:16 🔬 Sample issue PMOB-222711:
-2025/12/27 22:41:16    Team: AMF: Avengers
-2025/12/27 22:41:16    Assignee: Vaibhav Vaidya
-2025/12/27 22:41:16 🔍 Board 6992, Sprint 18615: Found 9 AMF team issues
-2025/12/27 22:41:16 👥 AMF Teams:
-2025/12/27 22:41:16    - AMF: Avengers: 9 issues
-2025/12/27 22:41:16 🔍 Board 7556, Sprint 18615: Found 0 AMF team issues
-2025/12/27 22:41:16 📊 Total AMF team stories: 22 for sprint NM-2517 (ID: 18615)
-2025/12/27 22:41:16 📈 Stats: Total=22, Completed=21, InProgress=0, Todo=1
-22:41:12 | 200 |  3.731553417s | 127.0.0.1 | GET | /sprint | -
-22:41:16 | 200 |  1.196268833s | 127.0.0.1 | GET | /api/sprints | -
+2025/12/27 23:00:38 📊 Engineer Dashboard Request
+2025/12/27 23:00:38 📊 Fetching engineer dashboard for prdewang@cisco.com in sprint 0
+2025/12/27 23:00:39 📖 Found 0 stories for prdewang@cisco.com in sprint 0
+2025/12/27 23:00:40 🐛 Found 0 defects for prdewang@cisco.com in sprint 0
+2025/12/27 23:00:40 ✅ Engineer dashboard: 0 stories, 0 defects
+2025/12/27 23:00:40 ✅ Engineer dashboard rendered for prdewang@cisco.com
+23:00:38 | 200 |  2.338923459s | 127.0.0.1 | GET | /engineer | -
+23:00:40 | 200 |  1.156831583s | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:01:29 📊 Engineer Dashboard Request
+2025/12/27 23:01:29 📊 Fetching engineer dashboard for prdewang@cisco.com in sprint 18615
+2025/12/27 23:01:30 📖 Found 1 stories for prdewang@cisco.com in sprint 18615
+2025/12/27 23:01:31 🐛 Found 2 defects for prdewang@cisco.com in sprint 18615
+2025/12/27 23:01:31 ✅ Engineer dashboard: 1 stories, 2 defects
+2025/12/27 23:01:31 ✅ Engineer dashboard rendered for prdewang@cisco.com
+23:01:29 | 200 |  1.381397416s | 127.0.0.1 | GET | /engineer | -
+23:01:31 | 200 |  500.523291ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:02:00 🔍 Fetching sprint ID 18615
+2025/12/27 23:02:00 ✅ Sprint: NM-2517 (ID: 18615)
+2025/12/27 23:02:01 🔍 Board 6091, Sprint 18615: Found 0 AMF team issues
+2025/12/27 23:02:02 🔍 Board 6537, Sprint 18615: Found 0 AMF team issues
+2025/12/27 23:02:04 🔬 Sample issue PMOB-223270:
+2025/12/27 23:02:04    Team: AMF: Interstellar
+2025/12/27 23:02:04    Assignee: Akshay Bhat
+2025/12/27 23:02:04 🔍 Board 6991, Sprint 18615: Found 13 AMF team issues
+2025/12/27 23:02:04 👥 AMF Teams:
+2025/12/27 23:02:04    - AMF: Interstellar: 13 issues
+2025/12/27 23:02:04 🔬 Sample issue PMOB-222711:
+2025/12/27 23:02:04    Team: AMF: Avengers
+2025/12/27 23:02:04    Assignee: Vaibhav Vaidya
+2025/12/27 23:02:04 🔍 Board 6992, Sprint 18615: Found 9 AMF team issues
+2025/12/27 23:02:04 👥 AMF Teams:
+2025/12/27 23:02:04    - AMF: Avengers: 9 issues
+2025/12/27 23:02:05 🔍 Board 7556, Sprint 18615: Found 0 AMF team issues
+2025/12/27 23:02:05 📊 Total AMF team stories: 22 for sprint NM-2517 (ID: 18615)
+2025/12/27 23:02:05 📈 Stats: Total=22, Completed=21, InProgress=0, Todo=1
+23:02:00 | 200 |  5.485298709s | 127.0.0.1 | GET | /sprint | -
+23:02:05 | 200 |  1.172950125s | 127.0.0.1 | GET | /api/sprints | -
+2025/12/27 23:02:38 📊 Found 2 defects in sprint NM-2517
+2025/12/27 23:02:38   Bug 1: BUG-934734 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+2025/12/27 23:02:38   Bug 2: BUG-926223 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+23:02:36 | 200 |  1.037524542s | 127.0.0.1 | GET | /defects | -
+23:02:38 | 200 |  1.221174625s | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:03:39 📊 Engineer Dashboard Request
+2025/12/27 23:03:39 📊 Fetching engineer dashboard for surasin2@cisco.com in sprint 18615
+2025/12/27 23:03:40 📖 Found 3 stories for surasin2@cisco.com in sprint 18615
+2025/12/27 23:03:40 🐛 Found 0 defects for surasin2@cisco.com in sprint 18615
+2025/12/27 23:03:40 ✅ Engineer dashboard: 3 stories, 0 defects
+2025/12/27 23:03:40 ✅ Engineer dashboard rendered for surasin2@cisco.com
+23:03:38 | 200 |   1.36668325s | 127.0.0.1 | GET | /engineer | -
+23:03:40 | 200 |  1.369243292s | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:03:47 📊 Engineer Dashboard Request
+2025/12/27 23:03:47 📊 Fetching engineer dashboard for akbhat2@cisco.com in sprint 18615
+2025/12/27 23:03:49 📖 Found 3 stories for akbhat2@cisco.com in sprint 18615
+2025/12/27 23:03:49 🐛 Found 0 defects for akbhat2@cisco.com in sprint 18615
+2025/12/27 23:03:49 ✅ Engineer dashboard: 3 stories, 0 defects
+2025/12/27 23:03:49 ✅ Engineer dashboard rendered for akbhat2@cisco.com
+23:03:47 | 200 |  1.661283667s | 127.0.0.1 | GET | /engineer | -
+23:03:49 | 200 |  503.623875ms | 127.0.0.1 | GET | /defects/api/sprints | -
+23:04:35 | 200 |      87.792µs | 127.0.0.1 | GET | / | -
+2025/12/27 23:04:51 📊 Engineer Dashboard Request
+23:04:51 | 200 |     323.958µs | 127.0.0.1 | GET | /engineer | -
+23:04:51 | 200 |   584.69775ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:04:54 📊 Engineer Dashboard Request
+2025/12/27 23:04:54 📊 Fetching engineer dashboard for prdewang@cisco.com in sprint 0
+2025/12/27 23:04:55 📖 Found 0 stories for prdewang@cisco.com in sprint 0
+2025/12/27 23:04:56 🐛 Found 0 defects for prdewang@cisco.com in sprint 0
+2025/12/27 23:04:56 ✅ Engineer dashboard: 0 stories, 0 defects
+2025/12/27 23:04:56 ✅ Engineer dashboard rendered for prdewang@cisco.com
+23:04:54 | 200 |  1.276510917s | 127.0.0.1 | GET | /engineer | -
+23:04:56 | 200 |   528.09325ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:04:59 📊 Engineer Dashboard Request
+2025/12/27 23:04:59 📊 Fetching engineer dashboard for prdewang@cisco.com in sprint 18614
+2025/12/27 23:05:00 📖 Found 2 stories for prdewang@cisco.com in sprint 18614
+2025/12/27 23:05:00 🐛 Found 3 defects for prdewang@cisco.com in sprint 18614
+2025/12/27 23:05:00 ✅ Engineer dashboard: 2 stories, 3 defects
+2025/12/27 23:05:00 ✅ Engineer dashboard rendered for prdewang@cisco.com
+23:04:59 | 200 |  1.272496959s | 127.0.0.1 | GET | /engineer | -
+23:05:00 | 200 |  496.100333ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:05:09 📊 Found 9 defects in sprint NM-2516
+2025/12/27 23:05:09   Bug 1: BUG-911245 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+2025/12/27 23:05:09   Bug 2: BUG-910831 - Assignee: Madhurima Datta (maddatta@cisco.com)
+2025/12/27 23:05:09   Bug 3: BUG-908049 - Assignee: Akshay Bhat (akbhat2@cisco.com)
+2025/12/27 23:05:09   Bug 4: BUG-907755 - Assignee: Suraj Singh (surasin2@cisco.com)
+2025/12/27 23:05:09   Bug 5: BUG-906124 - Assignee: Amit Kumar Singh (amitksi3@cisco.com)
+2025/12/27 23:05:09   Bug 6: BUG-903677 - Assignee: Amit Kumar Singh (amitksi3@cisco.com)
+2025/12/27 23:05:09   Bug 7: BUG-902236 - Assignee: Shashi Kiran Bharti (shabhart@cisco.com)
+2025/12/27 23:05:09   Bug 8: BUG-890229 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+2025/12/27 23:05:09   Bug 9: BUG-883085 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+23:05:08 | 200 |  1.176025167s | 127.0.0.1 | GET | /defects | -
+23:05:09 | 200 |  1.175714667s | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:05:24 📊 Found 2 defects in sprint NM-2517
+2025/12/27 23:05:24   Bug 1: BUG-934734 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+2025/12/27 23:05:24   Bug 2: BUG-926223 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+23:05:22 | 200 |  1.063034917s | 127.0.0.1 | GET | /defects | -
+23:05:23 | 200 |  493.999542ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:05:31 📊 Found 9 defects in sprint NM-2515
+2025/12/27 23:05:31   Bug 1: BUG-880109 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+2025/12/27 23:05:31   Bug 2: BUG-880060 - Assignee: Shivani Bisht (shivbish@cisco.com)
+2025/12/27 23:05:31   Bug 3: BUG-879648 - Assignee: Shashi Kiran Bharti (shabhart@cisco.com)
+2025/12/27 23:05:31   Bug 4: BUG-873636 - Assignee: Madhurima Datta (maddatta@cisco.com)
+2025/12/27 23:05:31   Bug 5: BUG-871303 - Assignee: Shashi Kiran Bharti (shabhart@cisco.com)
+2025/12/27 23:05:31   Bug 6: BUG-865995 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+2025/12/27 23:05:31   Bug 7: BUG-856182 - Assignee: Madhurima Datta (maddatta@cisco.com)
+2025/12/27 23:05:31   Bug 8: BUG-856012 - Assignee: Gnana Guru Natarajan (gnnatara@cisco.com)
+2025/12/27 23:05:31   Bug 9: BUG-855745 - Assignee: Ganesh Agrawal (ganagraw@cisco.com)
+23:05:30 | 200 |  940.021875ms | 127.0.0.1 | GET | /defects | -
+23:05:31 | 200 |  485.660958ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:05:45 📊 Found 9 defects in sprint NM-2516
+2025/12/27 23:05:45   Bug 1: BUG-911245 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+2025/12/27 23:05:45   Bug 2: BUG-910831 - Assignee: Madhurima Datta (maddatta@cisco.com)
+2025/12/27 23:05:45   Bug 3: BUG-908049 - Assignee: Akshay Bhat (akbhat2@cisco.com)
+2025/12/27 23:05:45   Bug 4: BUG-907755 - Assignee: Suraj Singh (surasin2@cisco.com)
+2025/12/27 23:05:45   Bug 5: BUG-906124 - Assignee: Amit Kumar Singh (amitksi3@cisco.com)
+2025/12/27 23:05:45   Bug 6: BUG-903677 - Assignee: Amit Kumar Singh (amitksi3@cisco.com)
+2025/12/27 23:05:45   Bug 7: BUG-902236 - Assignee: Shashi Kiran Bharti (shabhart@cisco.com)
+2025/12/27 23:05:45   Bug 8: BUG-890229 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+2025/12/27 23:05:45   Bug 9: BUG-883085 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+23:05:43 | 200 |  1.024387208s | 127.0.0.1 | GET | /defects | -
+23:05:45 | 200 |   527.17225ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:06:00 🔍 Fetching ACTIVE sprint
+2025/12/27 23:06:00 ✅ Active sprint: NM-2515 (ID: 18613)
+2025/12/27 23:06:01 🔬 Sample issue PMOB-214218:
+2025/12/27 23:06:01    Team: AMF: Avengers
+2025/12/27 23:06:01    Assignee: Vaibhav Vaidya
+2025/12/27 23:06:01 🔍 Board 6091, Sprint 18613: Found 8 AMF team issues
+2025/12/27 23:06:01 👥 AMF Teams:
+2025/12/27 23:06:01    - AMF: Avengers: 8 issues
+2025/12/27 23:06:02 🔍 Board 6537, Sprint 18613: Found 0 AMF team issues
+2025/12/27 23:06:02 🔍 Board 6991, Sprint 18613: Found 0 AMF team issues
+2025/12/27 23:06:03 🔍 Board 6992, Sprint 18613: Found 0 AMF team issues
+2025/12/27 23:06:03 🔍 Board 7556, Sprint 18613: Found 0 AMF team issues
+2025/12/27 23:06:03 📊 Total AMF team stories: 8 for sprint NM-2515 (ID: 18613)
+2025/12/27 23:06:03 📈 Stats: Total=8, Completed=8, InProgress=0, Todo=0
+23:06:00 | 200 |  3.204029875s | 127.0.0.1 | GET | /sprint | -
+23:06:03 | 200 |  494.993416ms | 127.0.0.1 | GET | /api/sprints | -
+2025/12/27 23:06:15 🔍 Fetching sprint ID 18615
+2025/12/27 23:06:15 ✅ Sprint: NM-2517 (ID: 18615)
+2025/12/27 23:06:16 🔍 Board 6091, Sprint 18615: Found 0 AMF team issues
+2025/12/27 23:06:16 🔍 Board 6537, Sprint 18615: Found 0 AMF team issues
+2025/12/27 23:06:17 🔬 Sample issue PMOB-223270:
+2025/12/27 23:06:17    Team: AMF: Interstellar
+2025/12/27 23:06:17    Assignee: Akshay Bhat
+2025/12/27 23:06:17 🔍 Board 6991, Sprint 18615: Found 13 AMF team issues
+2025/12/27 23:06:17 👥 AMF Teams:
+2025/12/27 23:06:17    - AMF: Interstellar: 13 issues
+2025/12/27 23:06:18 🔬 Sample issue PMOB-222711:
+2025/12/27 23:06:18    Team: AMF: Avengers
+2025/12/27 23:06:18    Assignee: Vaibhav Vaidya
+2025/12/27 23:06:18 🔍 Board 6992, Sprint 18615: Found 9 AMF team issues
+2025/12/27 23:06:18 👥 AMF Teams:
+2025/12/27 23:06:18    - AMF: Avengers: 9 issues
+2025/12/27 23:06:19 🔍 Board 7556, Sprint 18615: Found 0 AMF team issues
+2025/12/27 23:06:19 📊 Total AMF team stories: 22 for sprint NM-2517 (ID: 18615)
+2025/12/27 23:06:19 📈 Stats: Total=22, Completed=21, InProgress=0, Todo=1
+23:06:14 | 200 |  3.959819708s | 127.0.0.1 | GET | /sprint | -
+23:06:18 | 200 |    497.1885ms | 127.0.0.1 | GET | /api/sprints | -
+2025/12/27 23:06:50 📊 Found 9 defects in sprint NM-2516
+2025/12/27 23:06:50   Bug 1: BUG-911245 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+2025/12/27 23:06:50   Bug 2: BUG-910831 - Assignee: Madhurima Datta (maddatta@cisco.com)
+2025/12/27 23:06:50   Bug 3: BUG-908049 - Assignee: Akshay Bhat (akbhat2@cisco.com)
+2025/12/27 23:06:50   Bug 4: BUG-907755 - Assignee: Suraj Singh (surasin2@cisco.com)
+2025/12/27 23:06:50   Bug 5: BUG-906124 - Assignee: Amit Kumar Singh (amitksi3@cisco.com)
+2025/12/27 23:06:50   Bug 6: BUG-903677 - Assignee: Amit Kumar Singh (amitksi3@cisco.com)
+2025/12/27 23:06:50   Bug 7: BUG-902236 - Assignee: Shashi Kiran Bharti (shabhart@cisco.com)
+2025/12/27 23:06:50   Bug 8: BUG-890229 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+2025/12/27 23:06:50   Bug 9: BUG-883085 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+23:06:48 | 200 |  1.086149208s | 127.0.0.1 | GET | /defects | -
+23:06:50 | 200 |  595.756416ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:07:00 📊 Found 2 defects in sprint NM-2517
+2025/12/27 23:07:00   Bug 1: BUG-934734 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+2025/12/27 23:07:00   Bug 2: BUG-926223 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+23:06:59 | 200 |   963.51675ms | 127.0.0.1 | GET | /defects | -
+23:07:00 | 200 |  499.654625ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:07:09 📊 Engineer Dashboard Request
+23:07:09 | 200 |    2.119584ms | 127.0.0.1 | GET | /engineer | -
+23:07:09 | 200 |   498.25375ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:07:13 📊 Engineer Dashboard Request
+2025/12/27 23:07:13 📊 Fetching engineer dashboard for akbhat2@cisco.com in sprint 0
+2025/12/27 23:07:14 📖 Found 0 stories for akbhat2@cisco.com in sprint 0
+2025/12/27 23:07:14 🐛 Found 0 defects for akbhat2@cisco.com in sprint 0
+2025/12/27 23:07:14 ✅ Engineer dashboard: 0 stories, 0 defects
+2025/12/27 23:07:14 ✅ Engineer dashboard rendered for akbhat2@cisco.com
+23:07:12 | 200 |  1.168316291s | 127.0.0.1 | GET | /engineer | -
+23:07:14 | 200 |  1.245250208s | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:07:17 📊 Engineer Dashboard Request
+2025/12/27 23:07:17 📊 Fetching engineer dashboard for akbhat2@cisco.com in sprint 18614
+2025/12/27 23:07:18 📖 Found 1 stories for akbhat2@cisco.com in sprint 18614
+2025/12/27 23:07:18 🐛 Found 1 defects for akbhat2@cisco.com in sprint 18614
+2025/12/27 23:07:18 ✅ Engineer dashboard: 1 stories, 1 defects
+2025/12/27 23:07:18 ✅ Engineer dashboard rendered for akbhat2@cisco.com
+23:07:17 | 200 |  1.383901042s | 127.0.0.1 | GET | /engineer | -
+23:07:18 | 200 |   510.06225ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:07:57 📊 Engineer Dashboard Request
+2025/12/27 23:07:57 📊 Fetching engineer dashboard for prdewang@cisco.com in sprint 18615
+2025/12/27 23:07:58 📖 Found 1 stories for prdewang@cisco.com in sprint 18615
+2025/12/27 23:07:58 🐛 Found 2 defects for prdewang@cisco.com in sprint 18615
+2025/12/27 23:07:58 ✅ Engineer dashboard: 1 stories, 2 defects
+2025/12/27 23:07:58 ✅ Engineer dashboard rendered for prdewang@cisco.com
+23:07:56 | 200 |  1.273246292s | 127.0.0.1 | GET | /engineer | -
+23:07:58 | 404 |      10.167µs | 127.0.0.1 | GET | /favicon.ico | Cannot GET /favicon.ico
+23:07:58 | 200 |  596.831083ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:08:56 📊 Engineer Dashboard Request
+2025/12/27 23:08:56 📊 Fetching engineer dashboard for akbhat2@cisco.com in sprint 18614
+2025/12/27 23:08:57 📖 Found 1 stories for akbhat2@cisco.com in sprint 18614
+2025/12/27 23:08:58 🐛 Found 1 defects for akbhat2@cisco.com in sprint 18614
+2025/12/27 23:08:58 ✅ Engineer dashboard: 1 stories, 1 defects
+2025/12/27 23:08:58 ✅ Engineer dashboard rendered for akbhat2@cisco.com
+23:08:56 | 200 |  1.401251625s | 127.0.0.1 | GET | /engineer | -
+23:08:58 | 200 |  520.099834ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:10:08 📊 Engineer Dashboard Request
+2025/12/27 23:10:08 📊 Fetching engineer dashboard for prdewang@cisco.com in sprint 18615
+2025/12/27 23:10:09 📖 Found 1 stories for prdewang@cisco.com in sprint 18615
+2025/12/27 23:10:09 🐛 Found 2 defects for prdewang@cisco.com in sprint 18615
+2025/12/27 23:10:09 ✅ Engineer dashboard: 1 stories, 2 defects
+2025/12/27 23:10:09 ✅ Engineer dashboard rendered for prdewang@cisco.com
+23:10:08 | 200 |  1.299689458s | 127.0.0.1 | GET | /engineer | -
+23:10:09 | 200 |    487.9005ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:11:05 📊 Engineer Dashboard Request
+2025/12/27 23:11:05 📊 Fetching engineer dashboard for prdewang@cisco.com in sprint 18615
+2025/12/27 23:11:06 📖 Found 1 stories for prdewang@cisco.com in sprint 18615
+2025/12/27 23:11:07 🐛 Found 2 defects for prdewang@cisco.com in sprint 18615
+2025/12/27 23:11:07 ✅ Engineer dashboard: 1 stories, 2 defects
+2025/12/27 23:11:07 ✅ Engineer dashboard rendered for prdewang@cisco.com
+23:11:05 | 200 |  1.668203625s | 127.0.0.1 | GET | /engineer | -
+23:11:07 | 200 |  499.537292ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:11:13 📊 Engineer Dashboard Request
+2025/12/27 23:11:13 📊 Fetching engineer dashboard for amitksi3@cisco.com in sprint 18615
+2025/12/27 23:11:14 📖 Found 3 stories for amitksi3@cisco.com in sprint 18615
+2025/12/27 23:11:14 🐛 Found 0 defects for amitksi3@cisco.com in sprint 18615
+2025/12/27 23:11:14 ✅ Engineer dashboard: 3 stories, 0 defects
+2025/12/27 23:11:14 ✅ Engineer dashboard rendered for amitksi3@cisco.com
+23:11:13 | 200 |  1.227873292s | 127.0.0.1 | GET | /engineer | -
+23:11:14 | 200 |  1.275685792s | 127.0.0.1 | GET | /defects/api/sprints | -
+23:11:24 | 200 |      23.875µs | 127.0.0.1 | GET | / | -
+2025/12/27 23:11:26 🔍 Fetching ACTIVE sprint
+2025/12/27 23:11:26 ✅ Active sprint: NM-2515 (ID: 18613)
+2025/12/27 23:11:27 🔍 Fetching ACTIVE sprint
+2025/12/27 23:11:27 🔬 Sample issue PMOB-214218:
+2025/12/27 23:11:27    Team: AMF: Avengers
+2025/12/27 23:11:27    Assignee: Vaibhav Vaidya
+2025/12/27 23:11:27 🔍 Board 6091, Sprint 18613: Found 8 AMF team issues
+2025/12/27 23:11:27 👥 AMF Teams:
+2025/12/27 23:11:27    - AMF: Avengers: 8 issues
+2025/12/27 23:11:28 ✅ Active sprint: NM-2515 (ID: 18613)
+2025/12/27 23:11:28 🔍 Board 6537, Sprint 18613: Found 0 AMF team issues
+2025/12/27 23:11:29 🔍 Board 6991, Sprint 18613: Found 0 AMF team issues
+2025/12/27 23:11:29 🔬 Sample issue PMOB-214218:
+2025/12/27 23:11:29    Team: AMF: Avengers
+2025/12/27 23:11:29    Assignee: Vaibhav Vaidya
+2025/12/27 23:11:29 🔍 Board 6091, Sprint 18613: Found 8 AMF team issues
+2025/12/27 23:11:29 👥 AMF Teams:
+2025/12/27 23:11:29    - AMF: Avengers: 8 issues
+2025/12/27 23:11:29 🔍 Board 6537, Sprint 18613: Found 0 AMF team issues
+2025/12/27 23:11:30 🔍 Board 6991, Sprint 18613: Found 0 AMF team issues
+2025/12/27 23:11:30 🔍 Board 6992, Sprint 18613: Found 0 AMF team issues
+2025/12/27 23:11:31 🔍 Board 7556, Sprint 18613: Found 0 AMF team issues
+2025/12/27 23:11:31 📊 Total AMF team stories: 8 for sprint NM-2515 (ID: 18613)
+2025/12/27 23:11:31 📈 Stats: Total=8, Completed=8, InProgress=0, Todo=0
+23:11:25 | 200 |  4.942198917s | 127.0.0.1 | GET | /sprint | -
+2025/12/27 23:11:31 🔍 Board 6992, Sprint 18613: Found 0 AMF team issues
+2025/12/27 23:11:31 📊 Found 9 defects in sprint NM-2516
+2025/12/27 23:11:31   Bug 1: BUG-911245 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+2025/12/27 23:11:31   Bug 2: BUG-910831 - Assignee: Madhurima Datta (maddatta@cisco.com)
+2025/12/27 23:11:31   Bug 3: BUG-908049 - Assignee: Akshay Bhat (akbhat2@cisco.com)
+2025/12/27 23:11:31   Bug 4: BUG-907755 - Assignee: Suraj Singh (surasin2@cisco.com)
+2025/12/27 23:11:31   Bug 5: BUG-906124 - Assignee: Amit Kumar Singh (amitksi3@cisco.com)
+2025/12/27 23:11:31   Bug 6: BUG-903677 - Assignee: Amit Kumar Singh (amitksi3@cisco.com)
+2025/12/27 23:11:31   Bug 7: BUG-902236 - Assignee: Shashi Kiran Bharti (shabhart@cisco.com)
+2025/12/27 23:11:31   Bug 8: BUG-890229 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+2025/12/27 23:11:31   Bug 9: BUG-883085 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+23:11:30 | 200 |  1.025067042s | 127.0.0.1 | GET | /defects | -
+23:11:31 | 200 |  477.330333ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:11:32 🔍 Board 7556, Sprint 18613: Found 0 AMF team issues
+2025/12/27 23:11:32 📊 Total AMF team stories: 8 for sprint NM-2515 (ID: 18613)
+2025/12/27 23:11:32 📈 Stats: Total=8, Completed=8, InProgress=0, Todo=0
+23:11:27 | 200 |  5.037466625s | 127.0.0.1 | GET | /sprint | -
+2025/12/27 23:11:34 📊 Engineer Dashboard Request
+23:11:34 | 200 |     127.167µs | 127.0.0.1 | GET | /engineer | -
+23:11:34 | 200 |  617.717292ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:11:41 📊 Engineer Dashboard Request
+2025/12/27 23:11:41 📊 Fetching engineer dashboard for prdewang@cisco.com in sprint 18611
+2025/12/27 23:11:42 📖 Found 1 stories for prdewang@cisco.com in sprint 18611
+2025/12/27 23:11:43 🐛 Found 0 defects for prdewang@cisco.com in sprint 18611
+2025/12/27 23:11:43 ✅ Engineer dashboard: 1 stories, 0 defects
+2025/12/27 23:11:43 ✅ Engineer dashboard rendered for prdewang@cisco.com
+23:11:41 | 200 |    1.3430545s | 127.0.0.1 | GET | /engineer | -
+23:11:42 | 200 |  514.679083ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:12:55 📊 Engineer Dashboard Request
+2025/12/27 23:12:55 📊 Fetching engineer dashboard for prdewang@cisco.com in sprint 18615
+2025/12/27 23:12:55 📖 Found 1 stories for prdewang@cisco.com in sprint 18615
+2025/12/27 23:12:56 🐛 Found 2 defects for prdewang@cisco.com in sprint 18615
+2025/12/27 23:12:56 ✅ Engineer dashboard: 1 stories, 2 defects
+2025/12/27 23:12:56 ✅ Engineer dashboard rendered for prdewang@cisco.com
+23:12:54 | 200 |  1.254195959s | 127.0.0.1 | GET | /engineer | -
+23:12:56 | 404 |      10.583µs | 127.0.0.1 | GET | /favicon.ico | Cannot GET /favicon.ico
+23:12:56 | 200 |   486.03025ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:13:42 📊 Engineer Dashboard Request
+2025/12/27 23:13:42 📊 Fetching engineer dashboard for shabhart@cisco.com in sprint 18615
+2025/12/27 23:13:43 📖 Found 1 stories for shabhart@cisco.com in sprint 18615
+2025/12/27 23:13:44 🐛 Found 0 defects for shabhart@cisco.com in sprint 18615
+2025/12/27 23:13:44 ✅ Engineer dashboard: 1 stories, 0 defects
+2025/12/27 23:13:44 ✅ Engineer dashboard rendered for shabhart@cisco.com
+23:13:42 | 200 |   1.22029375s | 127.0.0.1 | GET | /engineer | -
+23:13:44 | 200 |  498.610333ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:13:51 📊 Engineer Dashboard Request
+2025/12/27 23:13:51 📊 Fetching engineer dashboard for prdewang@cisco.com in sprint 18615
+2025/12/27 23:13:52 📖 Found 1 stories for prdewang@cisco.com in sprint 18615
+2025/12/27 23:13:52 🐛 Found 2 defects for prdewang@cisco.com in sprint 18615
+2025/12/27 23:13:52 ✅ Engineer dashboard: 1 stories, 2 defects
+2025/12/27 23:13:52 ✅ Engineer dashboard rendered for prdewang@cisco.com
+23:13:51 | 200 |  1.217765292s | 127.0.0.1 | GET | /engineer | -
+23:13:52 | 200 |     477.209ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 23:14:19 📊 Engineer Dashboard Request
+2025/12/27 23:14:19 📊 Fetching engineer dashboard for prdewang@cisco.com in sprint 18614
+2025/12/27 23:14:20 📖 Found 2 stories for prdewang@cisco.com in sprint 18614
+2025/12/27 23:14:20 🐛 Found 3 defects for prdewang@cisco.com in sprint 18614
+2025/12/27 23:14:20 ✅ Engineer dashboard: 2 stories, 3 defects
+2025/12/27 23:14:20 ✅ Engineer dashboard rendered for prdewang@cisco.com
+23:14:19 | 200 |  1.392293625s | 127.0.0.1 | GET | /engineer | -
+23:14:20 | 200 |  533.006042ms | 127.0.0.1 | GET | /defects/api/sprints | -

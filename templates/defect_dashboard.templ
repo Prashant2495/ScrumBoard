@@ -1,9 +1,7 @@
 package templates
 
-import (
-	"ScrumBoard/internal/models"
-	"ScrumBoard/templates/components"
-)
+import "ScrumBoard/internal/models"
+import "ScrumBoard/templates/components"
 
 templ DefectDashboard(data models.DefectDashboardData) {
 	@Layout("Defect Dashboard") {
@@ -17,7 +15,7 @@ templ DefectDashboard(data models.DefectDashboardData) {
 						</div>
 						<div>
 							<h1 class="text-2xl font-bold">Defect Dashboard</h1>
-							<p class="text-white/80 text-sm">Track and manage bugs</p>
+							<p class="text-white/80 text-sm">Track and analyze defects</p>
 						</div>
 					</div>
 					
@@ -25,150 +23,125 @@ templ DefectDashboard(data models.DefectDashboardData) {
 						<!-- Sprint Selector -->
 						<div class="glass-dark px-4 py-2 rounded-xl">
 							<p class="text-xs text-white/70 mb-1">Sprint</p>
-							<select
-								id="sprint-selector"
-								class="bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30"
-								onchange="window.location.href='/defects?sprint='+this.value"
-							>
+							<select id="sprint-selector" class="bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30">
 								<option value="0">Loading...</option>
 							</select>
 						</div>
+						
 						<a
-							href="/"
-							class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2"
+							id="jira-defect-link"
+							href="#"
+							target="_blank"
+							class="bg-blue-500/80 hover:bg-blue-600/90 px-4 py-2 rounded-xl transition-all flex items-center gap-2"
+							title="Open defects in Jira"
 						>
+							<span>🔗</span>
+							<span>Open in Jira</span>
+						</a>
+						
+						<a href="/sprint" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2">
 							<span>📊</span>
 							<span>Sprint Dashboard</span>
 						</a>
-						<a
-							href="/engineer"
-							class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2"
-						>
+						
+						<a href="/engineer" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2">
 							<span>👨‍💻</span>
-							<span>Engineer Dashboard</span>
+							<span>Engineers</span>
 						</a>
-						<button
-							hx-get="/defects/api/refresh"
-							hx-target="#defect-content"
-							hx-swap="innerHTML"
-							class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2"
-						>
-							<span>🔄</span>
-							<span>Refresh</span>
-						</button>
 					</div>
 				</div>
 			</header>
-			
+
 			<!-- Main Content -->
 			<main id="defect-content" class="max-w-7xl mx-auto px-8 py-8">
 				@DefectDashboardContent(data)
 			</main>
 		</div>
 
-		<!-- Sprint Selector Script -->
+		<!-- Sprint Selection Script -->
 		<script>
-			// Load sprints on page load
+			const jiraBaseUrl = 'https://jira-eng-gpk1.cisco.com/jira';
+			const urlParams = new URLSearchParams(window.location.search);
+			const currentSprintId = parseInt(urlParams.get('sprint') || '0');
+
+			// Update Jira link for defects
+			function updateJiraDefectLink(sprintId) {
+				const jiraLink = document.getElementById('jira-defect-link');
+				if (sprintId && sprintId !== '0') {
+					const jql = `type=Bug AND labels=AMFDEVFT AND sprint=${sprintId}`;
+					jiraLink.href = `${jiraBaseUrl}/issues/?jql=${encodeURIComponent(jql)}`;
+				} else {
+					const jql = 'type=Bug AND labels=AMFDEVFT AND sprint in openSprints()';
+					jiraLink.href = `${jiraBaseUrl}/issues/?jql=${encodeURIComponent(jql)}`;
+				}
+			}
+
+			// Set initial Jira link
+			updateJiraDefectLink(currentSprintId);
+
+			// Load sprints
 			fetch('/defects/api/sprints')
 				.then(res => res.json())
 				.then(sprints => {
 					const selector = document.getElementById('sprint-selector');
-					const urlParams = new URLSearchParams(window.location.search);
-					const currentSprintId = parseInt(urlParams.get('sprint') || '0');
+					selector.innerHTML = '<option value="0">🟢 Active Sprint</option>';
 
-					selector.innerHTML = '';
-
-					// Add "Active Sprint" option
-					const activeOption = document.createElement('option');
-					activeOption.value = '0';
-					activeOption.textContent = '🟢 Active Sprint';
-					if (currentSprintId === 0) activeOption.selected = true;
-					selector.appendChild(activeOption);
-
-					// Add all sprints (sorted by ID descending - newest first)
 					sprints.sort((a, b) => b.id - a.id).forEach(sprint => {
 						const option = document.createElement('option');
 						option.value = sprint.id;
-						const stateEmoji = sprint.state === 'active' ? '🟢' : sprint.state === 'closed' ? '🔴' : '⚪';
+						const stateEmoji = sprint.state === 'active' ? '🟢' : '🔴';
 						option.textContent = `${stateEmoji} ${sprint.name}`;
 						if (sprint.id === currentSprintId) option.selected = true;
 						selector.appendChild(option);
 					});
-				})
-				.catch(err => console.error('Failed to load sprints:', err));
+				});
+
+			// Handle sprint change
+			document.getElementById('sprint-selector').addEventListener('change', function() {
+				const sprintId = this.value;
+				updateJiraDefectLink(sprintId);
+				window.location.href = `/defects?sprint=${sprintId}`;
+			});
 		</script>
 	}
 }
 
 templ DefectDashboardContent(data models.DefectDashboardData) {
-	<!-- Sprint Info Bar -->
-	<div class="glass rounded-2xl p-4 mb-8 flex items-center justify-between animate-fade-in">
-		<div class="flex items-center gap-6">
-			<div class="flex items-center gap-2">
-				<span class="text-lg">📅</span>
-				<span class="text-sm text-slate-600">
-					{ data.Sprint.StartDate } - { data.Sprint.EndDate }
-				</span>
+	<!-- Sprint Info -->
+	<div class="glass rounded-2xl p-6 mb-8 animate-fade-in">
+		<div class="flex items-center justify-between">
+			<div>
+				<h2 class="text-2xl font-bold text-slate-800">{ data.Sprint.Name }</h2>
+				<p class="text-sm text-slate-600 mt-1">Defect Analysis</p>
 			</div>
-			<div class="flex items-center gap-2">
-				<span class="text-lg">🎯</span>
-				<span class="text-sm text-slate-600">{ data.Sprint.Goal }</span>
+			<div class="text-right">
+				<p class="text-xs text-slate-500 mb-1">Sprint Period</p>
+				<p class="text-sm font-semibold text-slate-700">{ data.Sprint.StartDate } - { data.Sprint.EndDate }</p>
 			</div>
-		</div>
-		<div class="flex items-center gap-2">
-			<span class={ "px-3 py-1 rounded-full text-xs font-semibold " + getDefectSprintStatusClass(data.Sprint.State) }>
-				{ data.Sprint.State }
-			</span>
 		</div>
 	</div>
 
-	<!-- Stats Grid -->
+	<!-- Stats Cards -->
 	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-		@components.DefectStatsCard("Total Defects", data.Stats.TotalDefects, "in this sprint", "🐛", "border-l-4 border-slate-500")
+		@components.DefectStatsCard("Total Defects", data.Stats.TotalDefects, "in sprint", "🐛", "border-l-4 border-red-500")
 		@components.DefectStatsCard("Open", data.Stats.OpenDefects, "need attention", "🔴", "border-l-4 border-red-500")
 		@components.DefectStatsCard("In Progress", data.Stats.InProgressDefects, "being fixed", "🟡", "border-l-4 border-yellow-500")
 		@components.DefectStatsCard("Resolved", data.Stats.ResolvedDefects, "completed", "🟢", "border-l-4 border-green-500")
 	</div>
 
-	<!-- Severity Stats -->
-	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-		@components.DefectStatsCard("Critical", data.Stats.CriticalDefects, "severity", "🔥", "border-l-4 border-red-600")
-		@components.DefectStatsCard("High", data.Stats.HighDefects, "severity", "⚠️", "border-l-4 border-orange-500")
-		@components.DefectStatsCard("Medium", data.Stats.MediumDefects, "severity", "📌", "border-l-4 border-yellow-500")
-		@components.DefectStatsCard("Low", data.Stats.LowDefects, "severity", "ℹ️", "border-l-4 border-green-500")
+	<!-- Metrics -->
+	<div class="mb-8">
+		@components.DefectMetricsCard(data.Stats)
 	</div>
 
-	<!-- Main Charts Section -->
-	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+	<!-- Charts -->
+	<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
 		@components.DefectStatusPieChart(data.Stats)
 		@components.DefectSeverityDoughnutChart(data.Stats)
-	</div>
-
-	<!-- Secondary Charts Section -->
-	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
 		@components.DefectAgingPieChart(data.Stats)
-		@components.DefectPriorityPieChart(data.AssigneeStats)
-	</div>
-
-	<!-- Charts and Team Stats -->
-	<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-		@components.SeverityBreakdownChart(data.SeverityBreakdown)
-		@components.DefectMetricsCard(data.Stats)
-		@components.DefectAssigneeStats(data.AssigneeStats)
 	</div>
 
 	<!-- Defect Board -->
 	@components.DefectBoard(data.OpenDefects, data.InProgressDefects, data.ResolvedDefects)
-}
-
-func getDefectSprintStatusClass(state string) string {
-	switch state {
-	case "active":
-		return "bg-green-100 text-green-700"
-	case "closed":
-		return "bg-slate-100 text-slate-600"
-	default:
-		return "bg-blue-100 text-blue-700"
-	}
 }
 

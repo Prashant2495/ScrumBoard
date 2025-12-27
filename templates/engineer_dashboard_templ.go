@@ -45,7 +45,7 @@ func EngineerDashboard(data models.EngineerDashboardData, engineers []models.Eng
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"min-h-screen\"><!-- Header --><header class=\"gradient-bg text-white py-6 px-8 shadow-lg\"><div class=\"max-w-7xl mx-auto flex items-center justify-between\"><div class=\"flex items-center gap-4\"><div class=\"w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl backdrop-blur\">👨\u200d💻</div><div><h1 class=\"text-2xl font-bold\">Engineer Dashboard</h1><p class=\"text-white/80 text-sm\">Individual performance tracking</p></div></div><div class=\"flex items-center gap-4\"><!-- Engineer Selector --><div class=\"glass-dark px-4 py-2 rounded-xl\"><p class=\"text-xs text-white/70 mb-1\">Engineer</p><select id=\"engineer-selector\" class=\"bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30\"><option value=\"\">Select Engineer</option> <option value=\"prdewang@cisco.com\">Prashant Dewangan</option> <option value=\"amitksi3@cisco.com\">Amit Kumar Singh</option> <option value=\"surasin2@cisco.com\">Suraj Singh</option> <option value=\"akbhat2@cisco.com\">Akshay Bhat</option> <option value=\"shabhart@cisco.com\">Shashi Kiran Bharti</option></select></div><!-- Sprint Selector --><div class=\"glass-dark px-4 py-2 rounded-xl\"><p class=\"text-xs text-white/70 mb-1\">Sprint</p><select id=\"sprint-selector\" class=\"bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30\"><option value=\"0\">Loading...</option></select></div><a href=\"/\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2\"><span>📊</span> <span>Sprint Dashboard</span></a> <a href=\"/defects\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2\"><span>🐛</span> <span>Defects</span></a></div></div></header><!-- Main Content --><main id=\"engineer-content\" class=\"max-w-7xl mx-auto px-8 py-8\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"min-h-screen\"><!-- Header --><header class=\"gradient-bg text-white py-6 px-8 shadow-lg\"><div class=\"max-w-7xl mx-auto flex items-center justify-between\"><div class=\"flex items-center gap-4\"><div class=\"w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl backdrop-blur\">👨\u200d💻</div><div><h1 class=\"text-2xl font-bold\">Engineer Dashboard</h1><p class=\"text-white/80 text-sm\">Individual performance tracking</p></div></div><div class=\"flex items-center gap-4\"><!-- Engineer Selector --><div class=\"glass-dark px-4 py-2 rounded-xl\"><p class=\"text-xs text-white/70 mb-1\">Engineer</p><select id=\"engineer-selector\" class=\"bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30\"><option value=\"\">Select Engineer</option> <option value=\"prdewang@cisco.com\">Prashant Dewangan</option> <option value=\"amitksi3@cisco.com\">Amit Kumar Singh</option> <option value=\"surasin2@cisco.com\">Suraj Singh</option> <option value=\"akbhat2@cisco.com\">Akshay Bhat</option> <option value=\"shabhart@cisco.com\">Shashi Kiran Bharti</option></select></div><!-- Sprint Selector --><div class=\"glass-dark px-4 py-2 rounded-xl\"><p class=\"text-xs text-white/70 mb-1\">Sprint</p><select id=\"sprint-selector\" class=\"bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30\"><option value=\"0\">Loading...</option></select></div><a id=\"jira-engineer-link\" href=\"#\" target=\"_blank\" class=\"bg-blue-500/80 hover:bg-blue-600/90 px-4 py-2 rounded-xl transition-all flex items-center gap-2\" title=\"Open engineer's work in Jira\"><span>🔗</span> <span>Open in Jira</span></a> <a href=\"/\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2\"><span>📊</span> <span>Sprint Dashboard</span></a> <a href=\"/defects\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2\"><span>🐛</span> <span>Defects</span></a></div></div></header><!-- Main Content --><main id=\"engineer-content\" class=\"max-w-7xl mx-auto px-8 py-8\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -53,7 +53,7 @@ func EngineerDashboard(data models.EngineerDashboardData, engineers []models.Eng
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</main></div><!-- Selection Script --> <script>\n\t\t\t// Load sprints\n\t\t\tfetch('/defects/api/sprints')\n\t\t\t\t.then(res => res.json())\n\t\t\t\t.then(sprints => {\n\t\t\t\t\tconst selector = document.getElementById('sprint-selector');\n\t\t\t\t\tconst urlParams = new URLSearchParams(window.location.search);\n\t\t\t\t\tconst currentSprintId = parseInt(urlParams.get('sprint') || '0');\n\n\t\t\t\t\tselector.innerHTML = '<option value=\"0\">🟢 Active Sprint</option>';\n\n\t\t\t\t\tsprints.sort((a, b) => b.id - a.id).forEach(sprint => {\n\t\t\t\t\t\tconst option = document.createElement('option');\n\t\t\t\t\t\toption.value = sprint.id;\n\t\t\t\t\t\tconst stateEmoji = sprint.state === 'active' ? '🟢' : '🔴';\n\t\t\t\t\t\toption.textContent = `${stateEmoji} ${sprint.name}`;\n\t\t\t\t\t\tif (sprint.id === currentSprintId) option.selected = true;\n\t\t\t\t\t\tselector.appendChild(option);\n\t\t\t\t\t});\n\t\t\t\t});\n\n\t\t\t// Handle engineer change\n\t\t\tdocument.getElementById('engineer-selector').addEventListener('change', function() {\n\t\t\t\tconst engineer = this.value;\n\t\t\t\tconst sprint = document.getElementById('sprint-selector').value;\n\t\t\t\tif (engineer) {\n\t\t\t\t\twindow.location.href = `/engineer?email=${engineer}&sprint=${sprint}`;\n\t\t\t\t}\n\t\t\t});\n\n\t\t\t// Handle sprint change\n\t\t\tdocument.getElementById('sprint-selector').addEventListener('change', function() {\n\t\t\t\tconst engineer = document.getElementById('engineer-selector').value;\n\t\t\t\tconst sprint = this.value;\n\t\t\t\tif (engineer) {\n\t\t\t\t\twindow.location.href = `/engineer?email=${engineer}&sprint=${sprint}`;\n\t\t\t\t}\n\t\t\t});\n\n\t\t\t// Set current engineer\n\t\t\tconst urlParams = new URLSearchParams(window.location.search);\n\t\t\tconst currentEngineer = urlParams.get('email');\n\t\t\tif (currentEngineer) {\n\t\t\t\tdocument.getElementById('engineer-selector').value = currentEngineer;\n\t\t\t}\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</main></div><!-- Selection Script --> <script>\n\t\t\tconst jiraBaseUrl = 'https://jira-eng-gpk1.cisco.com/jira';\n\t\t\tconst urlParams = new URLSearchParams(window.location.search);\n\t\t\tconst currentEngineer = urlParams.get('email');\n\t\t\tconst currentSprintId = parseInt(urlParams.get('sprint') || '0');\n\n\t\t\t// Update Jira link for engineer\n\t\t\tfunction updateJiraEngineerLink(engineer, sprintId) {\n\t\t\t\tconst jiraLink = document.getElementById('jira-engineer-link');\n\t\t\t\tif (engineer) {\n\t\t\t\t\t// Extract name from email (e.g., prdewang@cisco.com -> prdewang)\n\t\t\t\t\tconst username = engineer.split('@')[0];\n\t\t\t\t\t\n\t\t\t\t\tif (sprintId && sprintId !== '0') {\n\t\t\t\t\t\t// JQL query for engineer's work in specific sprint\n\t\t\t\t\t\tconst jql = `assignee=${username} AND sprint=${sprintId}`;\n\t\t\t\t\t\tjiraLink.href = `${jiraBaseUrl}/issues/?jql=${encodeURIComponent(jql)}`;\n\t\t\t\t\t} else {\n\t\t\t\t\t\t// JQL query for engineer's work in active sprint\n\t\t\t\t\t\tconst jql = `assignee=${username} AND sprint in openSprints()`;\n\t\t\t\t\t\tjiraLink.href = `${jiraBaseUrl}/issues/?jql=${encodeURIComponent(jql)}`;\n\t\t\t\t\t}\n\t\t\t\t} else {\n\t\t\t\t\t// Default to board view\n\t\t\t\t\tjiraLink.href = `${jiraBaseUrl}/secure/RapidBoard.jspa?rapidView=6991`;\n\t\t\t\t}\n\t\t\t}\n\n\t\t\t// Set initial Jira link\n\t\t\tupdateJiraEngineerLink(currentEngineer, currentSprintId);\n\n\t\t\t// Load sprints\n\t\t\tfetch('/defects/api/sprints')\n\t\t\t\t.then(res => res.json())\n\t\t\t\t.then(sprints => {\n\t\t\t\t\tconst selector = document.getElementById('sprint-selector');\n\n\t\t\t\t\tselector.innerHTML = '<option value=\"0\">🟢 Active Sprint</option>';\n\n\t\t\t\t\tsprints.sort((a, b) => b.id - a.id).forEach(sprint => {\n\t\t\t\t\t\tconst option = document.createElement('option');\n\t\t\t\t\t\toption.value = sprint.id;\n\t\t\t\t\t\tconst stateEmoji = sprint.state === 'active' ? '🟢' : '🔴';\n\t\t\t\t\t\toption.textContent = `${stateEmoji} ${sprint.name}`;\n\t\t\t\t\t\tif (sprint.id === currentSprintId) option.selected = true;\n\t\t\t\t\t\tselector.appendChild(option);\n\t\t\t\t\t});\n\t\t\t\t});\n\n\t\t\t// Handle engineer change\n\t\t\tdocument.getElementById('engineer-selector').addEventListener('change', function() {\n\t\t\t\tconst engineer = this.value;\n\t\t\t\tconst sprint = document.getElementById('sprint-selector').value;\n\t\t\t\tupdateJiraEngineerLink(engineer, sprint);\n\t\t\t\tif (engineer) {\n\t\t\t\t\twindow.location.href = `/engineer?email=${engineer}&sprint=${sprint}`;\n\t\t\t\t}\n\t\t\t});\n\n\t\t\t// Handle sprint change\n\t\t\tdocument.getElementById('sprint-selector').addEventListener('change', function() {\n\t\t\t\tconst engineer = document.getElementById('engineer-selector').value;\n\t\t\t\tconst sprint = this.value;\n\t\t\t\tupdateJiraEngineerLink(engineer, sprint);\n\t\t\t\tif (engineer) {\n\t\t\t\t\twindow.location.href = `/engineer?email=${engineer}&sprint=${sprint}`;\n\t\t\t\t}\n\t\t\t});\n\n\t\t\t// Set current engineer\n\t\t\tif (currentEngineer) {\n\t\t\t\tdocument.getElementById('engineer-selector').value = currentEngineer;\n\t\t\t}\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -88,7 +88,7 @@ func EngineerDashboardContent(data models.EngineerDashboardData) templ.Component
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<!-- Engineer Info --><div class=\"glass rounded-2xl p-6 mb-8 flex items-center justify-between animate-fade-in\"><div class=\"flex items-center gap-4\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<!-- Engineer Profile Header --><div class=\"glass rounded-2xl p-6 mb-8 flex items-center justify-between animate-fade-in\"><div class=\"flex items-center gap-6\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -117,7 +117,7 @@ func EngineerDashboardContent(data models.EngineerDashboardData) templ.Component
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(getInitials(data.Engineer.Name))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 119, Col: 37}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 158, Col: 37}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -130,7 +130,7 @@ func EngineerDashboardContent(data models.EngineerDashboardData) templ.Component
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(data.Engineer.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 122, Col: 70}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 161, Col: 70}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -143,72 +143,79 @@ func EngineerDashboardContent(data models.EngineerDashboardData) templ.Component
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(data.Engineer.Email)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 123, Col: 59}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 162, Col: 59}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</p><p class=\"text-xs text-slate-500 mt-1\">Sprint: ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</p><p class=\"text-sm text-slate-500 mt-1\">Sprint: ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 124, Col: 69}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 163, Col: 69}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</p></div></div><div class=\"text-right\"><p class=\"text-sm text-slate-600\">Sprint Period</p><p class=\"text-xs text-slate-500\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</p></div></div><div class=\"text-right\"><p class=\"text-xs text-slate-500 mb-1\">Sprint Period</p><p class=\"text-sm font-semibold text-slate-700\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var10 string
-		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.StartDate)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 129, Col: 60}
+		if data.Sprint.StartDate != "" {
+			var templ_7745c5c3_Var10 string
+			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.StartDate)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 170, Col: 28}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, " - ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var11 string
+			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.EndDate)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 170, Col: 54}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "-")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, " - ")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var11 string
-		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.EndDate)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 129, Col: 86}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</p></div></div><!-- Stats Grid --><div class=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = components.StatsCard("Total Stories", data.Stats.TotalStories, "assigned", "📖", "border-l-4 border-blue-500").Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = components.StatsCard("Completed", data.Stats.CompletedStories, "stories done", "✅", "border-l-4 border-green-500").Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = components.StatsCard("Story Points", data.Stats.StoryPoints, fmt.Sprintf("%d completed", data.Stats.CompletedPoints), "⚡", "border-l-4 border-purple-500").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</p></div></div><!-- Stats Cards --><div class=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.StatsCard("Defects", data.Stats.TotalDefects, fmt.Sprintf("%d resolved", data.Stats.ResolvedDefects), "🐛", "border-l-4 border-red-500").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.StatsCard("Total Stories", data.Stats.TotalStories, "assigned", "📖", "from-blue-500 to-blue-600").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div><!-- Charts Section --><div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8\">")
+		templ_7745c5c3_Err = components.StatsCard("Completed", data.Stats.CompletedStories, "stories done", "✅", "from-green-500 to-green-600").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = components.StatsCard("Story Points", data.Stats.StoryPoints, fmt.Sprintf("%d completed", data.Stats.CompletedPoints), "⚡", "from-purple-500 to-purple-600").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = components.StatsCard("Defects", data.Stats.TotalDefects, fmt.Sprintf("%d resolved", data.Stats.ResolvedDefects), "🐛", "from-red-500 to-red-600").Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div><!-- Charts Row 1 --><div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -220,7 +227,7 @@ func EngineerDashboardContent(data models.EngineerDashboardData) templ.Component
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div><!-- Additional Charts Section --><div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div><!-- Charts Row 2 --><div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -232,25 +239,25 @@ func EngineerDashboardContent(data models.EngineerDashboardData) templ.Component
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div><!-- Stories Section --><div class=\"mb-8\"><h3 class=\"text-xl font-bold text-slate-800 mb-4 flex items-center gap-2\"><span>📖</span> <span>Stories (")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</div><!-- Stories Section --><div class=\"mb-8\"><h3 class=\"text-xl font-bold text-slate-800 mb-4 flex items-center gap-2\"><span>📖</span> <span>Stories (")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(data.Stories)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 157, Col: 56}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 202, Col: 56}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, ")</span></h3>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, ")</span></h3>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if len(data.Stories) > 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div class=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<div class=\"grid grid-cols-1 gap-4\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -260,35 +267,35 @@ func EngineerDashboardContent(data models.EngineerDashboardData) templ.Component
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "<div class=\"glass rounded-xl p-8 text-center\"><p class=\"text-slate-500\">No stories assigned in this sprint</p></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "<p class=\"text-slate-500 text-center py-8\">No stories assigned in this sprint</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</div><!-- Defects Section --><div><h3 class=\"text-xl font-bold text-slate-800 mb-4 flex items-center gap-2\"><span>🐛</span> <span>Defects (")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</div><!-- Defects Section --><div class=\"mb-8\"><h3 class=\"text-xl font-bold text-slate-800 mb-4 flex items-center gap-2\"><span>🐛</span> <span>Defects (")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var13 string
 		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(data.Defects)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 177, Col: 56}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 220, Col: 56}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, ")</span></h3>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, ")</span></h3>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if len(data.Defects) > 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<div class=\"grid grid-cols-1 gap-4\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<div class=\"grid grid-cols-1 gap-4\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -298,17 +305,17 @@ func EngineerDashboardContent(data models.EngineerDashboardData) templ.Component
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<div class=\"glass rounded-xl p-8 text-center\"><p class=\"text-slate-500\">No defects assigned in this sprint</p></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "<p class=\"text-slate-500 text-center py-8\">No defects assigned in this sprint</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -317,39 +324,16 @@ func EngineerDashboardContent(data models.EngineerDashboardData) templ.Component
 }
 
 func getInitials(name string) string {
-	if len(name) == 0 {
+	if name == "" || name == "Select an Engineer" {
 		return "?"
 	}
-	initials := ""
-	words := splitName(name)
-	for i, word := range words {
-		if i >= 2 {
-			break
-		}
-		if len(word) > 0 {
-			initials += string(word[0])
-		}
-	}
-	return initials
-}
 
-func splitName(name string) []string {
-	var words []string
-	word := ""
-	for _, c := range name {
-		if c == ' ' {
-			if word != "" {
-				words = append(words, word)
-				word = ""
-			}
-		} else {
-			word += string(c)
-		}
+	// Split name and get first letter of each word
+	words := []rune(name)
+	if len(words) > 0 {
+		return string(words[0])
 	}
-	if word != "" {
-		words = append(words, word)
-	}
-	return words
+	return "?"
 }
 
 var _ = templruntime.GeneratedTemplate

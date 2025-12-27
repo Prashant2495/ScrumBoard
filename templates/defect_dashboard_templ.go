@@ -8,10 +8,8 @@ package templates
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import (
-	"ScrumBoard/internal/models"
-	"ScrumBoard/templates/components"
-)
+import "ScrumBoard/internal/models"
+import "ScrumBoard/templates/components"
 
 func DefectDashboard(data models.DefectDashboardData) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -46,7 +44,7 @@ func DefectDashboard(data models.DefectDashboardData) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"min-h-screen\"><!-- Header --><header class=\"gradient-bg text-white py-6 px-8 shadow-lg\"><div class=\"max-w-7xl mx-auto flex items-center justify-between\"><div class=\"flex items-center gap-4\"><div class=\"w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl backdrop-blur\">🐛</div><div><h1 class=\"text-2xl font-bold\">Defect Dashboard</h1><p class=\"text-white/80 text-sm\">Track and manage bugs</p></div></div><div class=\"flex items-center gap-4\"><!-- Sprint Selector --><div class=\"glass-dark px-4 py-2 rounded-xl\"><p class=\"text-xs text-white/70 mb-1\">Sprint</p><select id=\"sprint-selector\" class=\"bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30\" onchange=\"window.location.href='/defects?sprint='+this.value\"><option value=\"0\">Loading...</option></select></div><a href=\"/\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2\"><span>📊</span> <span>Sprint Dashboard</span></a> <a href=\"/engineer\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2\"><span>👨\u200d💻</span> <span>Engineer Dashboard</span></a> <button hx-get=\"/defects/api/refresh\" hx-target=\"#defect-content\" hx-swap=\"innerHTML\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2\"><span>🔄</span> <span>Refresh</span></button></div></div></header><!-- Main Content --><main id=\"defect-content\" class=\"max-w-7xl mx-auto px-8 py-8\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"min-h-screen\"><!-- Header --><header class=\"gradient-bg text-white py-6 px-8 shadow-lg\"><div class=\"max-w-7xl mx-auto flex items-center justify-between\"><div class=\"flex items-center gap-4\"><div class=\"w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl backdrop-blur\">🐛</div><div><h1 class=\"text-2xl font-bold\">Defect Dashboard</h1><p class=\"text-white/80 text-sm\">Track and analyze defects</p></div></div><div class=\"flex items-center gap-4\"><!-- Sprint Selector --><div class=\"glass-dark px-4 py-2 rounded-xl\"><p class=\"text-xs text-white/70 mb-1\">Sprint</p><select id=\"sprint-selector\" class=\"bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30\"><option value=\"0\">Loading...</option></select></div><a id=\"jira-defect-link\" href=\"#\" target=\"_blank\" class=\"bg-blue-500/80 hover:bg-blue-600/90 px-4 py-2 rounded-xl transition-all flex items-center gap-2\" title=\"Open defects in Jira\"><span>🔗</span> <span>Open in Jira</span></a> <a href=\"/sprint\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2\"><span>📊</span> <span>Sprint Dashboard</span></a> <a href=\"/engineer\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2\"><span>👨\u200d💻</span> <span>Engineers</span></a></div></div></header><!-- Main Content --><main id=\"defect-content\" class=\"max-w-7xl mx-auto px-8 py-8\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -54,7 +52,7 @@ func DefectDashboard(data models.DefectDashboardData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</main></div><!-- Sprint Selector Script --> <script>\n\t\t\t// Load sprints on page load\n\t\t\tfetch('/defects/api/sprints')\n\t\t\t\t.then(res => res.json())\n\t\t\t\t.then(sprints => {\n\t\t\t\t\tconst selector = document.getElementById('sprint-selector');\n\t\t\t\t\tconst urlParams = new URLSearchParams(window.location.search);\n\t\t\t\t\tconst currentSprintId = parseInt(urlParams.get('sprint') || '0');\n\n\t\t\t\t\tselector.innerHTML = '';\n\n\t\t\t\t\t// Add \"Active Sprint\" option\n\t\t\t\t\tconst activeOption = document.createElement('option');\n\t\t\t\t\tactiveOption.value = '0';\n\t\t\t\t\tactiveOption.textContent = '🟢 Active Sprint';\n\t\t\t\t\tif (currentSprintId === 0) activeOption.selected = true;\n\t\t\t\t\tselector.appendChild(activeOption);\n\n\t\t\t\t\t// Add all sprints (sorted by ID descending - newest first)\n\t\t\t\t\tsprints.sort((a, b) => b.id - a.id).forEach(sprint => {\n\t\t\t\t\t\tconst option = document.createElement('option');\n\t\t\t\t\t\toption.value = sprint.id;\n\t\t\t\t\t\tconst stateEmoji = sprint.state === 'active' ? '🟢' : sprint.state === 'closed' ? '🔴' : '⚪';\n\t\t\t\t\t\toption.textContent = `${stateEmoji} ${sprint.name}`;\n\t\t\t\t\t\tif (sprint.id === currentSprintId) option.selected = true;\n\t\t\t\t\t\tselector.appendChild(option);\n\t\t\t\t\t});\n\t\t\t\t})\n\t\t\t\t.catch(err => console.error('Failed to load sprints:', err));\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</main></div><!-- Sprint Selection Script --> <script>\n\t\t\tconst jiraBaseUrl = 'https://jira-eng-gpk1.cisco.com/jira';\n\t\t\tconst urlParams = new URLSearchParams(window.location.search);\n\t\t\tconst currentSprintId = parseInt(urlParams.get('sprint') || '0');\n\n\t\t\t// Update Jira link for defects\n\t\t\tfunction updateJiraDefectLink(sprintId) {\n\t\t\t\tconst jiraLink = document.getElementById('jira-defect-link');\n\t\t\t\tif (sprintId && sprintId !== '0') {\n\t\t\t\t\tconst jql = `type=Bug AND labels=AMFDEVFT AND sprint=${sprintId}`;\n\t\t\t\t\tjiraLink.href = `${jiraBaseUrl}/issues/?jql=${encodeURIComponent(jql)}`;\n\t\t\t\t} else {\n\t\t\t\t\tconst jql = 'type=Bug AND labels=AMFDEVFT AND sprint in openSprints()';\n\t\t\t\t\tjiraLink.href = `${jiraBaseUrl}/issues/?jql=${encodeURIComponent(jql)}`;\n\t\t\t\t}\n\t\t\t}\n\n\t\t\t// Set initial Jira link\n\t\t\tupdateJiraDefectLink(currentSprintId);\n\n\t\t\t// Load sprints\n\t\t\tfetch('/defects/api/sprints')\n\t\t\t\t.then(res => res.json())\n\t\t\t\t.then(sprints => {\n\t\t\t\t\tconst selector = document.getElementById('sprint-selector');\n\t\t\t\t\tselector.innerHTML = '<option value=\"0\">🟢 Active Sprint</option>';\n\n\t\t\t\t\tsprints.sort((a, b) => b.id - a.id).forEach(sprint => {\n\t\t\t\t\t\tconst option = document.createElement('option');\n\t\t\t\t\t\toption.value = sprint.id;\n\t\t\t\t\t\tconst stateEmoji = sprint.state === 'active' ? '🟢' : '🔴';\n\t\t\t\t\t\toption.textContent = `${stateEmoji} ${sprint.name}`;\n\t\t\t\t\t\tif (sprint.id === currentSprintId) option.selected = true;\n\t\t\t\t\t\tselector.appendChild(option);\n\t\t\t\t\t});\n\t\t\t\t});\n\n\t\t\t// Handle sprint change\n\t\t\tdocument.getElementById('sprint-selector').addEventListener('change', function() {\n\t\t\t\tconst sprintId = this.value;\n\t\t\t\tupdateJiraDefectLink(sprintId);\n\t\t\t\twindow.location.href = `/defects?sprint=${sprintId}`;\n\t\t\t});\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -89,85 +87,50 @@ func DefectDashboardContent(data models.DefectDashboardData) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<!-- Sprint Info Bar --><div class=\"glass rounded-2xl p-4 mb-8 flex items-center justify-between animate-fade-in\"><div class=\"flex items-center gap-6\"><div class=\"flex items-center gap-2\"><span class=\"text-lg\">📅</span> <span class=\"text-sm text-slate-600\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<!-- Sprint Info --><div class=\"glass rounded-2xl p-6 mb-8 animate-fade-in\"><div class=\"flex items-center justify-between\"><div><h2 class=\"text-2xl font-bold text-slate-800\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
-		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.StartDate)
+		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/defect_dashboard.templ`, Line: 110, Col: 28}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/defect_dashboard.templ`, Line: 114, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, " - ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</h2><p class=\"text-sm text-slate-600 mt-1\">Defect Analysis</p></div><div class=\"text-right\"><p class=\"text-xs text-slate-500 mb-1\">Sprint Period</p><p class=\"text-sm font-semibold text-slate-700\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
-		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.EndDate)
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.StartDate)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/defect_dashboard.templ`, Line: 110, Col: 54}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/defect_dashboard.templ`, Line: 119, Col: 75}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</span></div><div class=\"flex items-center gap-2\"><span class=\"text-lg\">🎯</span> <span class=\"text-sm text-slate-600\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, " - ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
-		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.Goal)
+		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.EndDate)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/defect_dashboard.templ`, Line: 115, Col: 59}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/defect_dashboard.templ`, Line: 119, Col: 101}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</span></div></div><div class=\"flex items-center gap-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</p></div></div></div><!-- Stats Cards --><div class=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var7 = []any{"px-3 py-1 rounded-full text-xs font-semibold " + getDefectSprintStatusClass(data.Sprint.State)}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var7...)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<span class=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var8 string
-		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var7).String())
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/defect_dashboard.templ`, Line: 1, Col: 0}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var9 string
-		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.State)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/defect_dashboard.templ`, Line: 120, Col: 23}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</span></div></div><!-- Stats Grid --><div class=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = components.DefectStatsCard("Total Defects", data.Stats.TotalDefects, "in this sprint", "🐛", "border-l-4 border-slate-500").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.DefectStatsCard("Total Defects", data.Stats.TotalDefects, "in sprint", "🐛", "border-l-4 border-red-500").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -183,27 +146,15 @@ func DefectDashboardContent(data models.DefectDashboardData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</div><!-- Severity Stats --><div class=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</div><!-- Metrics --><div class=\"mb-8\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.DefectStatsCard("Critical", data.Stats.CriticalDefects, "severity", "🔥", "border-l-4 border-red-600").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = components.DefectMetricsCard(data.Stats).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.DefectStatsCard("High", data.Stats.HighDefects, "severity", "⚠️", "border-l-4 border-orange-500").Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = components.DefectStatsCard("Medium", data.Stats.MediumDefects, "severity", "📌", "border-l-4 border-yellow-500").Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = components.DefectStatsCard("Low", data.Stats.LowDefects, "severity", "ℹ️", "border-l-4 border-green-500").Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</div><!-- Main Charts Section --><div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</div><!-- Charts --><div class=\"grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -215,35 +166,11 @@ func DefectDashboardContent(data models.DefectDashboardData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div><!-- Secondary Charts Section --><div class=\"grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
 		templ_7745c5c3_Err = components.DefectAgingPieChart(data.Stats).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = components.DefectPriorityPieChart(data.AssigneeStats).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div><!-- Charts and Team Stats --><div class=\"grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = components.SeverityBreakdownChart(data.SeverityBreakdown).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = components.DefectMetricsCard(data.Stats).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = components.DefectAssigneeStats(data.AssigneeStats).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "</div><!-- Defect Board -->")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div><!-- Defect Board -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -253,17 +180,6 @@ func DefectDashboardContent(data models.DefectDashboardData) templ.Component {
 		}
 		return nil
 	})
-}
-
-func getDefectSprintStatusClass(state string) string {
-	switch state {
-	case "active":
-		return "bg-green-100 text-green-700"
-	case "closed":
-		return "bg-slate-100 text-slate-600"
-	default:
-		return "bg-blue-100 text-blue-700"
-	}
 }
 
 var _ = templruntime.GeneratedTemplate

@@ -1,9 +1,8 @@
 package templates
 
-import (
-	"ScrumBoard/internal/models"
-	"ScrumBoard/templates/components"
-)
+import "ScrumBoard/internal/models"
+import "ScrumBoard/templates/components"
+import "fmt"
 
 templ Dashboard(data models.DashboardData) {
 	@Layout("Sprint Dashboard") {
@@ -17,7 +16,7 @@ templ Dashboard(data models.DashboardData) {
 						</div>
 						<div>
 							<h1 class="text-2xl font-bold">Sprint Dashboard</h1>
-							<p class="text-white/80 text-sm">Track your team's progress</p>
+							<p class="text-white/80 text-sm">Track sprint progress and team velocity</p>
 						</div>
 					</div>
 					
@@ -26,86 +25,80 @@ templ Dashboard(data models.DashboardData) {
 						<div class="glass-dark px-4 py-2 rounded-xl">
 							<p class="text-xs text-white/70 mb-1">Sprint</p>
 							<select id="sprint-selector" class="bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30">
-								<option value="0">🟢 Active Sprint</option>
+								<option value="0">Loading...</option>
 							</select>
 						</div>
+						
 						<a
-							href="/engineer"
-							class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2"
+							id="jira-sprint-link"
+							href="#"
+							target="_blank"
+							class="bg-blue-500/80 hover:bg-blue-600/90 px-4 py-2 rounded-xl transition-all flex items-center gap-2"
+							title="Open in Jira"
 						>
-							<span>👨‍💻</span>
-							<span>Engineer Dashboard</span>
+							<span>🔗</span>
+							<span>Open in Jira</span>
 						</a>
-						<a
-							href="/defects"
-							class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2"
-						>
+						
+						<a href="/defects" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2">
 							<span>🐛</span>
-							<span>Defect Dashboard</span>
+							<span>Defects</span>
 						</a>
-						<button
-							hx-get="/api/refresh"
-							hx-target="#dashboard-content"
-							hx-swap="innerHTML"
-							class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2"
-						>
-							<span>🔄</span>
-							<span>Refresh</span>
-						</button>
+						
+						<a href="/engineer" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2">
+							<span>👨‍💻</span>
+							<span>Engineers</span>
+						</a>
 					</div>
 				</div>
 			</header>
-			
+
 			<!-- Main Content -->
 			<main id="dashboard-content" class="max-w-7xl mx-auto px-8 py-8">
 				@DashboardContent(data)
 			</main>
 		</div>
 
-		<!-- Sprint Selector Script -->
+		<!-- Sprint Selection Script -->
 		<script>
+			const jiraBaseUrl = 'https://jira-eng-gpk1.cisco.com/jira';
 			const urlParams = new URLSearchParams(window.location.search);
 			const currentSprintId = parseInt(urlParams.get('sprint') || '0');
+
+			// Update Jira link
+			function updateJiraLink(sprintId) {
+				const jiraLink = document.getElementById('jira-sprint-link');
+				if (sprintId && sprintId !== '0') {
+					jiraLink.href = `${jiraBaseUrl}/secure/RapidBoard.jspa?rapidView=6991&sprint=${sprintId}`;
+				} else {
+					jiraLink.href = `${jiraBaseUrl}/secure/RapidBoard.jspa?rapidView=6991`;
+				}
+			}
+
+			// Set initial Jira link
+			updateJiraLink(currentSprintId);
 
 			// Load sprints
 			fetch('/api/sprints')
 				.then(res => res.json())
 				.then(sprints => {
 					const selector = document.getElementById('sprint-selector');
-					selector.innerHTML = '';
+					selector.innerHTML = '<option value="0">🟢 Active Sprint</option>';
 
-					// Add "Active Sprint" option
-					const activeOption = document.createElement('option');
-					activeOption.value = '0';
-					activeOption.textContent = '🟢 Active Sprint';
-					if (currentSprintId === 0) activeOption.selected = true;
-					selector.appendChild(activeOption);
-
-					// Add all sprints
 					sprints.sort((a, b) => b.id - a.id).forEach(sprint => {
 						const option = document.createElement('option');
 						option.value = sprint.id;
 						const stateEmoji = sprint.state === 'active' ? '🟢' : '🔴';
 						option.textContent = `${stateEmoji} ${sprint.name}`;
-						if (sprint.id === currentSprintId) {
-							option.selected = true;
-							console.log(`Selected sprint: ${sprint.name} (ID: ${sprint.id})`);
-						}
+						if (sprint.id === currentSprintId) option.selected = true;
 						selector.appendChild(option);
 					});
-
-					// Double-check selection
-					if (currentSprintId !== 0) {
-						selector.value = currentSprintId.toString();
-					}
-				})
-				.catch(err => {
-					console.error('Failed to load sprints:', err);
 				});
 
 			// Handle sprint change
-			document.getElementById('sprint-selector').addEventListener('change', (e) => {
-				const sprintId = e.target.value;
+			document.getElementById('sprint-selector').addEventListener('change', function() {
+				const sprintId = this.value;
+				updateJiraLink(sprintId);
 				window.location.href = `/sprint?sprint=${sprintId}`;
 			});
 		</script>
@@ -113,65 +106,40 @@ templ Dashboard(data models.DashboardData) {
 }
 
 templ DashboardContent(data models.DashboardData) {
-	<!-- Sprint Info Bar -->
-	<div class="glass rounded-2xl p-4 mb-8 flex items-center justify-between animate-fade-in">
-		<div class="flex items-center gap-6">
-			<div class="flex items-center gap-2">
-				<span class="text-lg">📅</span>
-				<span class="text-sm text-slate-600">
-					{ data.Sprint.StartDate } - { data.Sprint.EndDate }
-				</span>
+	<!-- Sprint Info -->
+	<div class="glass rounded-2xl p-6 mb-8 animate-fade-in">
+		<div class="flex items-center justify-between">
+			<div>
+				<h2 class="text-2xl font-bold text-slate-800">{ data.Sprint.Name }</h2>
+				<p class="text-sm text-slate-600 mt-1">{ data.Sprint.Goal }</p>
 			</div>
-			<div class="flex items-center gap-2">
-				<span class="text-lg">🎯</span>
-				<span class="text-sm text-slate-600">{ data.Sprint.Goal }</span>
+			<div class="text-right">
+				<p class="text-xs text-slate-500 mb-1">Sprint Period</p>
+				<p class="text-sm font-semibold text-slate-700">{ data.Sprint.StartDate } - { data.Sprint.EndDate }</p>
 			</div>
-		</div>
-		<div class="flex items-center gap-2">
-			<span class={ "px-3 py-1 rounded-full text-xs font-semibold " + getSprintStatusClass(data.Sprint.State) }>
-				{ data.Sprint.State }
-			</span>
 		</div>
 	</div>
 
-	<!-- Stats Grid -->
+	<!-- Stats Cards -->
 	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-		@components.StatsCard("Total Stories", data.Stats.TotalStories, "in this sprint", "📊", "border-l-4 border-secondary-500")
-		@components.StatsCard("Total Points", data.Stats.TotalPoints, "story points", "⚡", "border-l-4 border-primary-500")
-		@components.StatsCard("Completed", data.Stats.CompletedPoints, "points done", "✅", "border-l-4 border-emerald-500")
-		@components.StatsCard("Remaining", data.Stats.RemainingPoints, "points left", "⏳", "border-l-4 border-amber-500")
+		@components.StatsCard("Total Stories", data.Stats.TotalStories, "in sprint", "📖", "border-l-4 border-primary-500")
+		@components.StatsCard("Completed", data.Stats.CompletedStories, "stories done", "✅", "border-l-4 border-emerald-500")
+		@components.StatsCard("Total Points", data.Stats.TotalPoints, fmt.Sprintf("%d completed", data.Stats.CompletedPoints), "⚡", "border-l-4 border-secondary-500")
+		@components.StatsCard("In Progress", data.Stats.InProgressStories, fmt.Sprintf("%d points", data.Stats.InProgressPoints), "🔄", "border-l-4 border-amber-500")
 	</div>
 
-	<!-- Progress and Team Stats -->
-	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+	<!-- Progress Bar -->
+	<div class="mb-8">
 		@components.ProgressBar(data.Stats.CompletedPoints, data.Stats.TotalPoints)
-		@components.UserStatsSection(data.UserStats)
 	</div>
 
-	<!-- Main Charts Section -->
+	<!-- Charts -->
 	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-		@components.TeamWorkDistributionChart(data.UserStats)
 		@components.SprintProgressPieChart(data.Stats)
+		@components.TeamWorkDistributionChart(data.UserStats)
 	</div>
 
-	<!-- Additional Charts Section -->
-	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-		@components.StoryStatusDistributionPieChart(data.TodoStories, data.InProgress, data.DoneStories)
-		@components.TeamWorkloadPieChart(data.UserStats)
-	</div>
-
-	<!-- Sprint Board -->
+	<!-- Story Board -->
 	@components.SprintBoard(data.TodoStories, data.InProgress, data.DoneStories)
-}
-
-func getSprintStatusClass(state string) string {
-	switch state {
-	case "active":
-		return "bg-green-100 text-green-700"
-	case "closed":
-		return "bg-slate-100 text-slate-600"
-	default:
-		return "bg-blue-100 text-blue-700"
-	}
 }
 

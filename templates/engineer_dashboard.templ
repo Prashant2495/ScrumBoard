@@ -42,6 +42,17 @@ templ EngineerDashboard(data models.EngineerDashboardData, engineers []models.En
 							</select>
 						</div>
 						
+						<a
+							id="jira-engineer-link"
+							href="#"
+							target="_blank"
+							class="bg-blue-500/80 hover:bg-blue-600/90 px-4 py-2 rounded-xl transition-all flex items-center gap-2"
+							title="Open engineer's work in Jira"
+						>
+							<span>🔗</span>
+							<span>Open in Jira</span>
+						</a>
+						
 						<a href="/" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2">
 							<span>📊</span>
 							<span>Sprint Dashboard</span>
@@ -63,13 +74,41 @@ templ EngineerDashboard(data models.EngineerDashboardData, engineers []models.En
 
 		<!-- Selection Script -->
 		<script>
+			const jiraBaseUrl = 'https://jira-eng-gpk1.cisco.com/jira';
+			const urlParams = new URLSearchParams(window.location.search);
+			const currentEngineer = urlParams.get('email');
+			const currentSprintId = parseInt(urlParams.get('sprint') || '0');
+
+			// Update Jira link for engineer
+			function updateJiraEngineerLink(engineer, sprintId) {
+				const jiraLink = document.getElementById('jira-engineer-link');
+				if (engineer) {
+					// Extract name from email (e.g., prdewang@cisco.com -> prdewang)
+					const username = engineer.split('@')[0];
+					
+					if (sprintId && sprintId !== '0') {
+						// JQL query for engineer's work in specific sprint
+						const jql = `assignee=${username} AND sprint=${sprintId}`;
+						jiraLink.href = `${jiraBaseUrl}/issues/?jql=${encodeURIComponent(jql)}`;
+					} else {
+						// JQL query for engineer's work in active sprint
+						const jql = `assignee=${username} AND sprint in openSprints()`;
+						jiraLink.href = `${jiraBaseUrl}/issues/?jql=${encodeURIComponent(jql)}`;
+					}
+				} else {
+					// Default to board view
+					jiraLink.href = `${jiraBaseUrl}/secure/RapidBoard.jspa?rapidView=6991`;
+				}
+			}
+
+			// Set initial Jira link
+			updateJiraEngineerLink(currentEngineer, currentSprintId);
+
 			// Load sprints
 			fetch('/defects/api/sprints')
 				.then(res => res.json())
 				.then(sprints => {
 					const selector = document.getElementById('sprint-selector');
-					const urlParams = new URLSearchParams(window.location.search);
-					const currentSprintId = parseInt(urlParams.get('sprint') || '0');
 
 					selector.innerHTML = '<option value="0">🟢 Active Sprint</option>';
 
@@ -87,6 +126,7 @@ templ EngineerDashboard(data models.EngineerDashboardData, engineers []models.En
 			document.getElementById('engineer-selector').addEventListener('change', function() {
 				const engineer = this.value;
 				const sprint = document.getElementById('sprint-selector').value;
+				updateJiraEngineerLink(engineer, sprint);
 				if (engineer) {
 					window.location.href = `/engineer?email=${engineer}&sprint=${sprint}`;
 				}
@@ -96,14 +136,13 @@ templ EngineerDashboard(data models.EngineerDashboardData, engineers []models.En
 			document.getElementById('sprint-selector').addEventListener('change', function() {
 				const engineer = document.getElementById('engineer-selector').value;
 				const sprint = this.value;
+				updateJiraEngineerLink(engineer, sprint);
 				if (engineer) {
 					window.location.href = `/engineer?email=${engineer}&sprint=${sprint}`;
 				}
 			});
 
 			// Set current engineer
-			const urlParams = new URLSearchParams(window.location.search);
-			const currentEngineer = urlParams.get('email');
 			if (currentEngineer) {
 				document.getElementById('engineer-selector').value = currentEngineer;
 			}
@@ -112,39 +151,45 @@ templ EngineerDashboard(data models.EngineerDashboardData, engineers []models.En
 }
 
 templ EngineerDashboardContent(data models.EngineerDashboardData) {
-	<!-- Engineer Info -->
+	<!-- Engineer Profile Header -->
 	<div class="glass rounded-2xl p-6 mb-8 flex items-center justify-between animate-fade-in">
-		<div class="flex items-center gap-4">
+		<div class="flex items-center gap-6">
 			<div class={ "w-16 h-16 rounded-full flex items-center justify-center text-white text-2xl font-bold " + data.Engineer.AvatarColor }>
 				{ getInitials(data.Engineer.Name) }
 			</div>
 			<div>
 				<h2 class="text-2xl font-bold text-slate-800">{ data.Engineer.Name }</h2>
 				<p class="text-sm text-slate-600">{ data.Engineer.Email }</p>
-				<p class="text-xs text-slate-500 mt-1">Sprint: { data.Sprint.Name }</p>
+				<p class="text-sm text-slate-500 mt-1">Sprint: { data.Sprint.Name }</p>
 			</div>
 		</div>
 		<div class="text-right">
-			<p class="text-sm text-slate-600">Sprint Period</p>
-			<p class="text-xs text-slate-500">{ data.Sprint.StartDate } - { data.Sprint.EndDate }</p>
+			<p class="text-xs text-slate-500 mb-1">Sprint Period</p>
+			<p class="text-sm font-semibold text-slate-700">
+				if data.Sprint.StartDate != "" {
+					{ data.Sprint.StartDate } - { data.Sprint.EndDate }
+				} else {
+					-
+				}
+			</p>
 		</div>
 	</div>
 
-	<!-- Stats Grid -->
+	<!-- Stats Cards -->
 	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-		@components.StatsCard("Total Stories", data.Stats.TotalStories, "assigned", "📖", "border-l-4 border-blue-500")
-		@components.StatsCard("Completed", data.Stats.CompletedStories, "stories done", "✅", "border-l-4 border-green-500")
-		@components.StatsCard("Story Points", data.Stats.StoryPoints, fmt.Sprintf("%d completed", data.Stats.CompletedPoints), "⚡", "border-l-4 border-purple-500")
-		@components.StatsCard("Defects", data.Stats.TotalDefects, fmt.Sprintf("%d resolved", data.Stats.ResolvedDefects), "🐛", "border-l-4 border-red-500")
+		@components.StatsCard("Total Stories", data.Stats.TotalStories, "assigned", "📖", "from-blue-500 to-blue-600")
+		@components.StatsCard("Completed", data.Stats.CompletedStories, "stories done", "✅", "from-green-500 to-green-600")
+		@components.StatsCard("Story Points", data.Stats.StoryPoints, fmt.Sprintf("%d completed", data.Stats.CompletedPoints), "⚡", "from-purple-500 to-purple-600")
+		@components.StatsCard("Defects", data.Stats.TotalDefects, fmt.Sprintf("%d resolved", data.Stats.ResolvedDefects), "🐛", "from-red-500 to-red-600")
 	</div>
 
-	<!-- Charts Section -->
+	<!-- Charts Row 1 -->
 	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
 		@components.EngineerWorkDistribution(data.Stories, data.Defects)
 		@components.StoryPointsProgress(data.Stats.CompletedPoints, data.Stats.StoryPoints)
 	</div>
 
-	<!-- Additional Charts Section -->
+	<!-- Charts Row 2 -->
 	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
 		@components.EngineerStoryStatusPieChart(data.Stories)
 		@components.EngineerDefectStatusPieChart(data.Defects)
@@ -156,27 +201,25 @@ templ EngineerDashboardContent(data models.EngineerDashboardData) {
 			<span>📖</span>
 			<span>Stories ({ fmt.Sprintf("%d", len(data.Stories)) })</span>
 		</h3>
-		
+
 		if len(data.Stories) > 0 {
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+			<div class="grid grid-cols-1 gap-4">
 				for _, story := range data.Stories {
 					@components.StoryCard(story)
 				}
 			</div>
 		} else {
-			<div class="glass rounded-xl p-8 text-center">
-				<p class="text-slate-500">No stories assigned in this sprint</p>
-			</div>
+			<p class="text-slate-500 text-center py-8">No stories assigned in this sprint</p>
 		}
 	</div>
 
 	<!-- Defects Section -->
-	<div>
+	<div class="mb-8">
 		<h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
 			<span>🐛</span>
 			<span>Defects ({ fmt.Sprintf("%d", len(data.Defects)) })</span>
 		</h3>
-		
+
 		if len(data.Defects) > 0 {
 			<div class="grid grid-cols-1 gap-4">
 				for _, defect := range data.Defects {
@@ -184,46 +227,21 @@ templ EngineerDashboardContent(data models.EngineerDashboardData) {
 				}
 			</div>
 		} else {
-			<div class="glass rounded-xl p-8 text-center">
-				<p class="text-slate-500">No defects assigned in this sprint</p>
-			</div>
+			<p class="text-slate-500 text-center py-8">No defects assigned in this sprint</p>
 		}
 	</div>
 }
 
 func getInitials(name string) string {
-	if len(name) == 0 {
+	if name == "" || name == "Select an Engineer" {
 		return "?"
 	}
-	initials := ""
-	words := splitName(name)
-	for i, word := range words {
-		if i >= 2 {
-			break
-		}
-		if len(word) > 0 {
-			initials += string(word[0])
-		}
-	}
-	return initials
-}
 
-func splitName(name string) []string {
-	var words []string
-	word := ""
-	for _, c := range name {
-		if c == ' ' {
-			if word != "" {
-				words = append(words, word)
-				word = ""
-			}
-		} else {
-			word += string(c)
-		}
+	// Split name and get first letter of each word
+	words := []rune(name)
+	if len(words) > 0 {
+		return string(words[0])
 	}
-	if word != "" {
-		words = append(words, word)
-	}
-	return words
+	return "?"
 }
 
