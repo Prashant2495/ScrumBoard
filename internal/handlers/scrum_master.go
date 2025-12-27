@@ -3,6 +3,7 @@ package handlers
 import (
 	"ScrumBoard/internal/services"
 	"ScrumBoard/templates"
+	"fmt"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
@@ -12,13 +13,15 @@ import (
 type ScrumMasterHandler struct {
 	scrumMasterService *services.ScrumMasterService
 	jiraService        *services.JiraService
+	webexService       *services.WebexService
 }
 
 // NewScrumMasterHandler creates a new scrum master handler
-func NewScrumMasterHandler(sm *services.ScrumMasterService, jira *services.JiraService) *ScrumMasterHandler {
+func NewScrumMasterHandler(sm *services.ScrumMasterService, jira *services.JiraService, webex *services.WebexService) *ScrumMasterHandler {
 	return &ScrumMasterHandler{
 		scrumMasterService: sm,
 		jiraService:        jira,
+		webexService:       webex,
 	}
 }
 
@@ -108,3 +111,122 @@ func (h *ScrumMasterHandler) GetRisks(c *fiber.Ctx) error {
 	return c.JSON(data.RiskIndicators)
 }
 
+// PingRequest represents a request to ping a user
+type PingRequest struct {
+	Email      string   `json:"email"`
+	Name       string   `json:"name"`
+	SprintName string   `json:"sprintName"`
+	Items      []string `json:"items"`
+}
+
+// PingUser sends a Webex message to request status update
+func (h *ScrumMasterHandler) PingUser(c *fiber.Ctx) error {
+	var req PingRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(400).JSON(fiber.Map{"error": "Invalid request body"})
+	}
+
+	if req.Email == "" {
+		return c.Status(400).JSON(fiber.Map{"error": "Email is required"})
+	}
+
+	log.Printf("📤 Pinging user %s (%s) for status update", req.Name, req.Email)
+
+	// Check if Webex is configured
+	if !h.webexService.IsConfigured() {
+		log.Printf("⚠️ Webex not configured, simulating ping")
+		return c.JSON(fiber.Map{
+			"success": true,
+			"message": fmt.Sprintf("Ping simulated for %s (Webex not configured)", req.Name),
+			"demo":    true,
+		})
+	}
+
+	// Send actual Webex message
+	err := h.webexService.SendStatusPing(req.Email, req.Name, req.SprintName, req.Items)
+	if err != nil {
+		log.Printf("❌ Failed to ping user: %v", err)
+		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	// Store the ping in ping store
+	pingStore := services.GetPingStore()
+	message := "Status update requested"
+	if len(req.Items) > 0 {
+		message = req.Items[0]
+	}
+	ping := pingStore.SavePing(req.Email, req.Name, req.SprintName, message)
+	log.Printf("✅ Ping sent and stored with ID: %s", ping.ID)
+
+	return c.JSON(fiber.Map{
+		"success": true,
+		"message": fmt.Sprintf("Status request sent to %s via Webex", req.Name),
+	})
+}
+
+// CheckWebexStatus returns whether Webex bot is configured
+func (h *ScrumMasterHandler) CheckWebexStatus(c *fiber.Ctx) error {
+	return c.JSON(fiber.Map{
+		"configured": h.webexService.IsConfigured(),
+	})
+}
+
+// InfoRequest represents a request for info on a specific item
+type InfoRequest struct {
+	Email      string `json:"email"`
+	Name       string `json:"name"`
+	SprintName string `json:"sprintName"`
+	ItemKey    string `json:"itemKey"`
+	ItemTitle  string `json:"itemTitle"`
+	ItemType   string `json:"itemType"` // "story" or "defect"
+}
+
+// RequestInfo sends a Webex message requesting info on a specific story/defect
+func (h *ScrumMasterHandler) RequestInfo(c *fiber.Ctx) error {
+	var req InfoRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(400).JSON(fiber.Map{"error": "Invalid request body"})
+	}
+
+	if req.Email == "" || req.ItemKey == "" {
+		return c.Status(400).JSON(fiber.Map{"error": "Email and item key are required"})
+	}
+
+	// For testing: redirect all requests to Prashant Dewangan
+	testEmail := "prdewang@cisco.com"
+	log.Printf("📋 Requesting info from %s (%s) for %s: %s [redirected to %s for testing]", req.Name, req.Email, req.ItemKey, req.ItemTitle, testEmail)
+	req.Email = testEmail
+
+	// Check if Webex is configured
+	if !h.webexService.IsConfigured() {
+		log.Printf("⚠️ Webex not configured, simulating info request")
+		// Still store the request
+		pingStore := services.GetPingStore()
+		ping := pingStore.SaveInfoRequest(req.Email, req.Name, req.SprintName, req.ItemKey, req.ItemTitle, req.ItemType, "Info requested")
+		log.Printf("✅ Info request stored with ID: %s (Webex not configured)", ping.ID)
+		return c.JSON(fiber.Map{
+			"success": true,
+			"message": fmt.Sprintf("Info request stored for %s (Webex not configured)", req.Name),
+			"demo":    true,
+			"ping_id": ping.ID,
+		})
+	}
+
+	// Send Webex message for specific item
+	err := h.webexService.SendInfoRequest(req.Email, req.Name, req.SprintName, req.ItemKey, req.ItemTitle, req.ItemType)
+	if err != nil {
+		log.Printf("❌ Failed to send info request: %v", err)
+		return c.Status(500).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	// Store the info request
+	pingStore := services.GetPingStore()
+	ping := pingStore.SaveInfoRequest(req.Email, req.Name, req.SprintName, req.ItemKey, req.ItemTitle, req.ItemType, "Info requested")
+	log.Printf("✅ Info request sent and stored with ID: %s", ping.ID)
+
+	return c.JSON(fiber.Map{
+		"success": true,
+		"message": fmt.Sprintf("Info request sent to %s via Webex for %s", req.Name, req.ItemKey),
+		"ping_id": ping.ID,
+	})
+}

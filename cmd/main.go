@@ -23,12 +23,13 @@ func main() {
 	defectDashboardService := services.NewDefectDashboardService(jiraService)
 	engineerDashboardService := services.NewEngineerDashboardService(jiraService)
 	scrumMasterService := services.NewScrumMasterService(jiraService, dashboardService)
+	webexService := services.NewWebexService()
 
 	// Initialize handlers
 	dashboardHandler := handlers.NewDashboardHandler(dashboardService)
 	defectHandler := handlers.NewDefectHandler(defectDashboardService)
 	engineerHandler := handlers.NewEngineerHandler(engineerDashboardService, jiraService)
-	scrumMasterHandler := handlers.NewScrumMasterHandler(scrumMasterService, jiraService)
+	scrumMasterHandler := handlers.NewScrumMasterHandler(scrumMasterService, jiraService, webexService)
 	homeHandler := handlers.NewHomeHandler()
 
 	// Create Fiber app
@@ -58,6 +59,9 @@ func main() {
 	// Engineer Dashboard Routes
 	app.Get("/engineer", engineerHandler.HandleEngineerDashboard)
 	app.Get("/engineer/api/refresh", engineerHandler.HandleEngineerRefresh)
+	app.Post("/engineer/api/ping", engineerHandler.PingEngineer)
+	app.Post("/engineer/api/ping/respond", engineerHandler.RespondToPing)
+	app.Get("/engineer/api/pings", engineerHandler.GetPings)
 
 	// Scrum Master Dashboard Routes
 	app.Get("/scrum-master", scrumMasterHandler.Dashboard)
@@ -66,6 +70,11 @@ func main() {
 	app.Get("/scrum-master/api/health", scrumMasterHandler.GetTeamHealth)
 	app.Get("/scrum-master/api/blockers", scrumMasterHandler.GetBlockers)
 	app.Get("/scrum-master/api/risks", scrumMasterHandler.GetRisks)
+	app.Post("/scrum-master/api/ping", scrumMasterHandler.PingUser)
+	app.Get("/scrum-master/api/webex-status", scrumMasterHandler.CheckWebexStatus)
+
+	// Request Info API (per story/defect)
+	app.Post("/api/request-info", scrumMasterHandler.RequestInfo)
 
 	// Get port from env or default
 	port := os.Getenv("PORT")

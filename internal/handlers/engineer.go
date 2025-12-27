@@ -5,6 +5,7 @@ import (
 	"ScrumBoard/internal/services"
 	"ScrumBoard/templates"
 	"log"
+	"os"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -115,4 +116,108 @@ func (h *EngineerHandler) HandleEngineerRefresh(c *fiber.Ctx) error {
 
 	log.Printf("✅ Engineer dashboard refreshed for %s", engineerEmail)
 	return nil
+}
+
+// PingEngineer sends a ping to an engineer via Webex
+func (h *EngineerHandler) PingEngineer(c *fiber.Ctx) error {
+	email := c.FormValue("email")
+	name := c.FormValue("name")
+	sprintName := c.FormValue("sprint_name")
+
+	if email == "" || name == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Email and name required",
+		})
+	}
+
+	log.Printf("📤 Pinging engineer %s (%s) for status update", name, email)
+
+	// Check if Webex token is configured
+	webexToken := os.Getenv("WEBEX_BOT_TOKEN")
+	if webexToken == "" {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"success": false,
+			"message": "Webex bot not configured",
+		})
+	}
+
+	// Get stories for this engineer
+	var assignedItems []string
+	if h.engineerService != nil {
+		data, err := h.engineerService.GetEngineerDashboard(email, 0)
+		if err == nil && data != nil {
+			for _, story := range data.Stories {
+				assignedItems = append(assignedItems, story.Key+" - "+story.Title)
+			}
+		}
+	}
+
+	// Send Webex message
+	webexService := services.NewWebexService()
+	err := webexService.SendStatusPing(email, name, sprintName, assignedItems)
+	if err != nil {
+		log.Printf("❌ Failed to send Webex ping: %v", err)
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"success": false,
+			"message": "Failed to send message: " + err.Error(),
+		})
+	}
+
+	// Store the ping
+	pingStore := services.GetPingStore()
+	ping := pingStore.SavePing(email, name, sprintName, "Status update requested")
+
+	log.Printf("✅ Ping sent and stored with ID: %s", ping.ID)
+	return c.JSON(fiber.Map{
+		"success": true,
+		"message": "Ping sent successfully",
+		"ping_id": ping.ID,
+	})
+}
+
+// RespondToPing saves a response to a ping
+func (h *EngineerHandler) RespondToPing(c *fiber.Ctx) error {
+	pingID := c.FormValue("ping_id")
+	response := c.FormValue("response")
+
+	if pingID == "" || response == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"success": false,
+			"message": "Ping ID and response required",
+		})
+	}
+
+	pingStore := services.GetPingStore()
+	if pingStore.SaveResponse(pingID, response) {
+		log.Printf("✅ Response saved for ping %s", pingID)
+		return c.JSON(fiber.Map{
+			"success": true,
+			"message": "Response saved",
+		})
+	}
+
+	return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+		"success": false,
+		"message": "Ping not found",
+	})
+}
+
+// GetPings returns all pings for an engineer
+func (h *EngineerHandler) GetPings(c *fiber.Ctx) error {
+	email := c.Query("email")
+
+	pingStore := services.GetPingStore()
+
+	var pings []models.PingMessage
+	if email != "" {
+		pings = pingStore.GetPingsByEngineer(email)
+	} else {
+		pings = pingStore.GetAllPings()
+	}
+
+	return c.JSON(fiber.Map{
+		"success": true,
+		"pings":   pings,
+	})
 }

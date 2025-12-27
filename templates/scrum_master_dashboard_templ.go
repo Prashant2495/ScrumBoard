@@ -214,7 +214,7 @@ func ScrumMasterDashboardContent(data models.ScrumMasterDashboardData) templ.Com
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = TeamCapacityCard(data.UserStats, data.TeamHealth).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = TeamCapacityCard(data.UserStats, data.TeamHealth, data.Sprint.Name).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -234,7 +234,7 @@ func ScrumMasterDashboardContent(data models.ScrumMasterDashboardData) templ.Com
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div><!-- Info Requests Section --><div class=\"glass rounded-2xl p-6 card-hover animate-fade-in mb-8\"><h3 class=\"text-lg font-bold text-slate-800 mb-4 flex items-center gap-2\"><span class=\"text-2xl\">�</span> <span>Info Requests & Responses</span> <button onclick=\"loadAllInfoRequests()\" class=\"ml-auto px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold rounded-lg transition-all\">🔄 Refresh</button></h3><div id=\"info-request-list\" class=\"space-y-3 max-h-96 overflow-y-auto\"><p class=\"text-slate-500 text-center py-4\">Loading info requests...</p></div></div><script>\n\t\tfunction loadAllInfoRequests() {\n\t\t\tfetch('/engineer/api/pings')\n\t\t\t\t.then(function(res) { return res.json(); })\n\t\t\t\t.then(function(data) {\n\t\t\t\t\tvar reqList = document.getElementById('info-request-list');\n\t\t\t\t\tif (!reqList) return;\n\n\t\t\t\t\tif (!data.pings || data.pings.length === 0) {\n\t\t\t\t\t\treqList.innerHTML = '<p class=\"text-slate-500 text-center py-4\">No info requests yet. Use \"Request Info\" button on stories/defects.</p>';\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\n\t\t\t\t\treqList.innerHTML = data.pings.map(function(ping) {\n\t\t\t\t\t\tvar borderClass = ping.status === 'responded' ? 'border-green-300 bg-green-50' : 'border-yellow-300 bg-yellow-50';\n\t\t\t\t\t\tvar statusClass = ping.status === 'responded' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';\n\t\t\t\t\t\tvar statusText = ping.status === 'responded' ? '✅ Responded' : '⏳ Awaiting Reply';\n\t\t\t\t\t\tvar responseHtml = '';\n\t\t\t\t\t\tif (ping.response) {\n\t\t\t\t\t\t\tresponseHtml = '<div class=\"mt-3 bg-green-100 rounded-lg p-3 border border-green-200\">' +\n\t\t\t\t\t\t\t\t'<p class=\"text-xs text-green-600 mb-1\">📩 Response (' + ping.responded_at + '):</p>' +\n\t\t\t\t\t\t\t\t'<p class=\"text-sm text-green-800 font-medium\">' + ping.response + '</p></div>';\n\t\t\t\t\t\t}\n\t\t\t\t\t\tvar itemHtml = ping.item_key ? '<p class=\"text-sm font-bold text-blue-600 mb-1\">🎯 ' + ping.item_key + ': ' + (ping.item_title || '') + '</p>' : '';\n\t\t\t\t\t\treturn '<div class=\"rounded-xl p-4 border-2 ' + borderClass + '\">' +\n\t\t\t\t\t\t\t'<div class=\"flex items-center justify-between mb-2\">' +\n\t\t\t\t\t\t\t'<div class=\"flex items-center gap-2\">' +\n\t\t\t\t\t\t\t'<span class=\"font-bold text-slate-800\">' + ping.engineer_name + '</span>' +\n\t\t\t\t\t\t\t'<span class=\"text-xs text-slate-500\">(' + ping.engineer_email + ')</span></div>' +\n\t\t\t\t\t\t\t'<span class=\"px-2 py-1 rounded-full text-xs font-semibold ' + statusClass + '\">' + statusText + '</span></div>' +\n\t\t\t\t\t\t\titemHtml +\n\t\t\t\t\t\t\t'<div class=\"flex items-center gap-4 text-xs text-slate-500 mb-2\">' +\n\t\t\t\t\t\t\t'<span>📤 Requested: ' + ping.sent_at + '</span>' +\n\t\t\t\t\t\t\t'<span>🏃 Sprint: ' + ping.sprint_name + '</span></div>' +\n\t\t\t\t\t\t\tresponseHtml + '</div>';\n\t\t\t\t\t}).join('');\n\t\t\t\t})\n\t\t\t\t.catch(function(err) {\n\t\t\t\t\tconsole.error('Error loading info requests:', err);\n\t\t\t\t\tdocument.getElementById('info-request-list').innerHTML = '<p class=\"text-red-500 text-center py-4\">Error loading info requests</p>';\n\t\t\t\t});\n\t\t}\n\n\t\t// Load info requests on page load\n\t\tloadAllInfoRequests();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -271,7 +271,7 @@ func VelocityChart(velocity models.VelocityData) templ.Component {
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(marshalVelocityData(velocity))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 143, Col: 108}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 204, Col: 108}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
@@ -306,7 +306,7 @@ func VelocityChart(velocity models.VelocityData) templ.Component {
 		var templ_7745c5c3_Var14 string
 		templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(getVelocityTrendIcon(velocity.VelocityTrend))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 150, Col: 50}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 211, Col: 50}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 		if templ_7745c5c3_Err != nil {
@@ -319,7 +319,7 @@ func VelocityChart(velocity models.VelocityData) templ.Component {
 		var templ_7745c5c3_Var15 string
 		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(velocity.VelocityTrend)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 150, Col: 77}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 211, Col: 77}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 		if templ_7745c5c3_Err != nil {
@@ -332,7 +332,7 @@ func VelocityChart(velocity models.VelocityData) templ.Component {
 		var templ_7745c5c3_Var16 string
 		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", velocity.CurrentVelocity))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 155, Col: 95}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 216, Col: 95}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
@@ -345,7 +345,7 @@ func VelocityChart(velocity models.VelocityData) templ.Component {
 		var templ_7745c5c3_Var17 string
 		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", velocity.AverageVelocity))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 159, Col: 96}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 220, Col: 96}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 		if templ_7745c5c3_Err != nil {
@@ -358,7 +358,7 @@ func VelocityChart(velocity models.VelocityData) templ.Component {
 		var templ_7745c5c3_Var18 string
 		templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", velocity.PredictedNext))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 163, Col: 95}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 224, Col: 95}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 		if templ_7745c5c3_Err != nil {
@@ -401,7 +401,7 @@ func BurndownChart(burndown []models.BurndownPoint, totalPoints int) templ.Compo
 		var templ_7745c5c3_Var20 string
 		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(marshalBurndownData(burndown))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 200, Col: 108}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 261, Col: 108}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 		if templ_7745c5c3_Err != nil {
@@ -414,7 +414,7 @@ func BurndownChart(burndown []models.BurndownPoint, totalPoints int) templ.Compo
 		var templ_7745c5c3_Var21 string
 		templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", totalPoints))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 200, Col: 154}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 261, Col: 154}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 		if templ_7745c5c3_Err != nil {
@@ -429,7 +429,7 @@ func BurndownChart(burndown []models.BurndownPoint, totalPoints int) templ.Compo
 }
 
 // TeamCapacityCard shows team capacity utilization
-func TeamCapacityCard(userStats []models.UserStats, health models.TeamHealth) templ.Component {
+func TeamCapacityCard(userStats []models.UserStats, health models.TeamHealth, sprintName string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -484,7 +484,7 @@ func TeamCapacityCard(userStats []models.UserStats, health models.TeamHealth) te
 			var templ_7745c5c3_Var25 string
 			templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(smGetInitials(us.User.Name))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 247, Col: 35}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 308, Col: 35}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
 			if templ_7745c5c3_Err != nil {
@@ -497,7 +497,7 @@ func TeamCapacityCard(userStats []models.UserStats, health models.TeamHealth) te
 			var templ_7745c5c3_Var26 string
 			templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(us.User.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 250, Col: 62}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 311, Col: 62}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
 			if templ_7745c5c3_Err != nil {
@@ -532,7 +532,7 @@ func TeamCapacityCard(userStats []models.UserStats, health models.TeamHealth) te
 			var templ_7745c5c3_Var29 string
 			templ_7745c5c3_Var29, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(fmt.Sprintf("width: %d%%", minInt(us.AssignedPoints*10, 100)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 253, Col: 140}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 314, Col: 140}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
 			if templ_7745c5c3_Err != nil {
@@ -545,7 +545,7 @@ func TeamCapacityCard(userStats []models.UserStats, health models.TeamHealth) te
 			var templ_7745c5c3_Var30 string
 			templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d pts", us.AssignedPoints))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 255, Col: 96}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 316, Col: 96}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
 			if templ_7745c5c3_Err != nil {
@@ -573,7 +573,7 @@ func TeamCapacityCard(userStats []models.UserStats, health models.TeamHealth) te
 				var templ_7745c5c3_Var31 string
 				templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs(m.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 265, Col: 47}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 326, Col: 47}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
 				if templ_7745c5c3_Err != nil {
@@ -586,7 +586,7 @@ func TeamCapacityCard(userStats []models.UserStats, health models.TeamHealth) te
 				var templ_7745c5c3_Var32 string
 				templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f%%", m.LoadPercentage))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 265, Col: 92}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 326, Col: 92}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var32))
 				if templ_7745c5c3_Err != nil {
@@ -694,7 +694,7 @@ func RiskIndicatorsCard(risks []models.RiskIndicator) templ.Component {
 				var templ_7745c5c3_Var38 string
 				templ_7745c5c3_Var38, templ_7745c5c3_Err = templ.JoinStringErrs(risk.Severity)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 290, Col: 23}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 351, Col: 23}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var38))
 				if templ_7745c5c3_Err != nil {
@@ -707,7 +707,7 @@ func RiskIndicatorsCard(risks []models.RiskIndicator) templ.Component {
 				var templ_7745c5c3_Var39 string
 				templ_7745c5c3_Var39, templ_7745c5c3_Err = templ.JoinStringErrs(risk.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 292, Col: 58}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 353, Col: 58}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var39))
 				if templ_7745c5c3_Err != nil {
@@ -720,7 +720,7 @@ func RiskIndicatorsCard(risks []models.RiskIndicator) templ.Component {
 				var templ_7745c5c3_Var40 string
 				templ_7745c5c3_Var40, templ_7745c5c3_Err = templ.JoinStringErrs(risk.Description)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 294, Col: 60}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 355, Col: 60}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var40))
 				if templ_7745c5c3_Err != nil {
@@ -778,7 +778,7 @@ func SprintHistoryCard(history []models.SprintSummary) templ.Component {
 			var templ_7745c5c3_Var42 string
 			templ_7745c5c3_Var42, templ_7745c5c3_Err = templ.JoinStringErrs(sprint.SprintName)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 313, Col: 67}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 374, Col: 67}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var42))
 			if templ_7745c5c3_Err != nil {
@@ -791,7 +791,7 @@ func SprintHistoryCard(history []models.SprintSummary) templ.Component {
 			var templ_7745c5c3_Var43 string
 			templ_7745c5c3_Var43, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d/%d pts completed", sprint.Completed, sprint.Committed))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 314, Col: 114}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 375, Col: 114}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var43))
 			if templ_7745c5c3_Err != nil {
@@ -826,7 +826,7 @@ func SprintHistoryCard(history []models.SprintSummary) templ.Component {
 			var templ_7745c5c3_Var46 string
 			templ_7745c5c3_Var46, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f%%", sprint.CompletionPct))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 317, Col: 51}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 378, Col: 51}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var46))
 			if templ_7745c5c3_Err != nil {
@@ -879,7 +879,7 @@ func BlockersCard(blockers []models.Blocker) templ.Component {
 			var templ_7745c5c3_Var48 string
 			templ_7745c5c3_Var48, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(blockers)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 332, Col: 122}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 393, Col: 122}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var48))
 			if templ_7745c5c3_Err != nil {
@@ -912,7 +912,7 @@ func BlockersCard(blockers []models.Blocker) templ.Component {
 				var templ_7745c5c3_Var49 templ.SafeURL
 				templ_7745c5c3_Var49, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("https://jira-eng-sjc4.cisco.com/jira/browse/" + blocker.Key))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 345, Col: 92}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 406, Col: 92}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var49))
 				if templ_7745c5c3_Err != nil {
@@ -925,7 +925,7 @@ func BlockersCard(blockers []models.Blocker) templ.Component {
 				var templ_7745c5c3_Var50 string
 				templ_7745c5c3_Var50, templ_7745c5c3_Err = templ.JoinStringErrs(blocker.Key)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 345, Col: 171}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 406, Col: 171}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var50))
 				if templ_7745c5c3_Err != nil {
@@ -938,7 +938,7 @@ func BlockersCard(blockers []models.Blocker) templ.Component {
 				var templ_7745c5c3_Var51 string
 				templ_7745c5c3_Var51, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d days", blocker.AgeInDays))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 346, Col: 85}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 407, Col: 85}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var51))
 				if templ_7745c5c3_Err != nil {
@@ -951,7 +951,7 @@ func BlockersCard(blockers []models.Blocker) templ.Component {
 				var templ_7745c5c3_Var52 string
 				templ_7745c5c3_Var52, templ_7745c5c3_Err = templ.JoinStringErrs(blocker.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 348, Col: 57}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 409, Col: 57}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var52))
 				if templ_7745c5c3_Err != nil {
@@ -964,7 +964,7 @@ func BlockersCard(blockers []models.Blocker) templ.Component {
 				var templ_7745c5c3_Var53 string
 				templ_7745c5c3_Var53, templ_7745c5c3_Err = templ.JoinStringErrs(blocker.AssignedTo)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 349, Col: 77}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 410, Col: 77}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var53))
 				if templ_7745c5c3_Err != nil {

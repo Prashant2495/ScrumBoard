@@ -53,7 +53,7 @@ func Dashboard(data models.DashboardData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</main></div><!-- Sprint Selection Script --> <script>\n\t\t\tconst jiraBaseUrl = 'https://jira-eng-gpk1.cisco.com/jira';\n\t\t\tconst urlParams = new URLSearchParams(window.location.search);\n\t\t\tconst currentSprintId = parseInt(urlParams.get('sprint') || '0');\n\n\t\t\t// Update Jira link\n\t\t\tfunction updateJiraLink(sprintId) {\n\t\t\t\tconst jiraLink = document.getElementById('jira-sprint-link');\n\t\t\t\tif (sprintId && sprintId !== '0') {\n\t\t\t\t\tjiraLink.href = `${jiraBaseUrl}/secure/RapidBoard.jspa?rapidView=6991&sprint=${sprintId}`;\n\t\t\t\t} else {\n\t\t\t\t\tjiraLink.href = `${jiraBaseUrl}/secure/RapidBoard.jspa?rapidView=6991`;\n\t\t\t\t}\n\t\t\t}\n\n\t\t\t// Set initial Jira link\n\t\t\tupdateJiraLink(currentSprintId);\n\n\t\t\t// Load sprints\n\t\t\tfetch('/api/sprints')\n\t\t\t\t.then(res => res.json())\n\t\t\t\t.then(sprints => {\n\t\t\t\t\tconst selector = document.getElementById('sprint-selector');\n\t\t\t\t\tselector.innerHTML = '<option value=\"0\">🟢 Active Sprint</option>';\n\n\t\t\t\t\tsprints.sort((a, b) => b.id - a.id).forEach(sprint => {\n\t\t\t\t\t\tconst option = document.createElement('option');\n\t\t\t\t\t\toption.value = sprint.id;\n\t\t\t\t\t\tconst stateEmoji = sprint.state === 'active' ? '🟢' : '🔴';\n\t\t\t\t\t\toption.textContent = `${stateEmoji} ${sprint.name}`;\n\t\t\t\t\t\tif (sprint.id === currentSprintId) option.selected = true;\n\t\t\t\t\t\tselector.appendChild(option);\n\t\t\t\t\t});\n\t\t\t\t});\n\n\t\t\t// Handle sprint change\n\t\t\tdocument.getElementById('sprint-selector').addEventListener('change', function() {\n\t\t\t\tconst sprintId = this.value;\n\t\t\t\tupdateJiraLink(sprintId);\n\t\t\t\twindow.location.href = `/sprint?sprint=${sprintId}`;\n\t\t\t});\n\t\t</script>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</main></div><!-- Sprint Selection Script --> <script>\n\t\t\tconst jiraBaseUrl = 'https://jira-eng-gpk1.cisco.com/jira';\n\t\t\tconst urlParams = new URLSearchParams(window.location.search);\n\t\t\tconst currentSprintId = parseInt(urlParams.get('sprint') || '0');\n\n\t\t\t// Update Jira link\n\t\t\tfunction updateJiraLink(sprintId) {\n\t\t\t\tconst jiraLink = document.getElementById('jira-sprint-link');\n\t\t\t\tif (sprintId && sprintId !== '0') {\n\t\t\t\t\tjiraLink.href = `${jiraBaseUrl}/secure/RapidBoard.jspa?rapidView=6991&sprint=${sprintId}`;\n\t\t\t\t} else {\n\t\t\t\t\tjiraLink.href = `${jiraBaseUrl}/secure/RapidBoard.jspa?rapidView=6991`;\n\t\t\t\t}\n\t\t\t}\n\n\t\t\t// Set initial Jira link\n\t\t\tupdateJiraLink(currentSprintId);\n\n\t\t\t// Load sprints\n\t\t\tfetch('/api/sprints')\n\t\t\t\t.then(res => res.json())\n\t\t\t\t.then(sprints => {\n\t\t\t\t\tconst selector = document.getElementById('sprint-selector');\n\t\t\t\t\tselector.innerHTML = '<option value=\"0\">🟢 Active Sprint</option>';\n\n\t\t\t\t\tsprints.sort((a, b) => b.id - a.id).forEach(sprint => {\n\t\t\t\t\t\tconst option = document.createElement('option');\n\t\t\t\t\t\toption.value = sprint.id;\n\t\t\t\t\t\tconst stateEmoji = sprint.state === 'active' ? '🟢' : '🔴';\n\t\t\t\t\t\toption.textContent = `${stateEmoji} ${sprint.name}`;\n\t\t\t\t\t\tif (sprint.id === currentSprintId) option.selected = true;\n\t\t\t\t\t\tselector.appendChild(option);\n\t\t\t\t\t});\n\t\t\t\t});\n\n\t\t\t// Handle sprint change\n\t\t\tdocument.getElementById('sprint-selector').addEventListener('change', function() {\n\t\t\t\tconst sprintId = this.value;\n\t\t\t\tupdateJiraLink(sprintId);\n\t\t\t\twindow.location.href = `/sprint?sprint=${sprintId}`;\n\t\t\t});\n\n\t\t\t// Request Info button handler\n\t\t\tdocument.querySelectorAll('.request-info-btn').forEach(btn => {\n\t\t\t\tbtn.addEventListener('click', async function(e) {\n\t\t\t\t\te.stopPropagation();\n\t\t\t\t\tconst email = this.dataset.email;\n\t\t\t\t\tconst name = this.dataset.name;\n\t\t\t\t\tconst itemKey = this.dataset.itemKey;\n\t\t\t\t\tconst itemTitle = this.dataset.itemTitle;\n\t\t\t\t\tconst itemType = this.dataset.itemType;\n\t\t\t\t\tconst sprintName = document.querySelector('#sprint-selector option:checked')?.textContent || 'Current Sprint';\n\n\t\t\t\t\tif (!email) {\n\t\t\t\t\t\talert('No email available for this assignee');\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\n\t\t\t\t\tthis.disabled = true;\n\t\t\t\t\tthis.innerHTML = '⏳';\n\n\t\t\t\t\ttry {\n\t\t\t\t\t\tconst response = await fetch('/api/request-info', {\n\t\t\t\t\t\t\tmethod: 'POST',\n\t\t\t\t\t\t\theaders: { 'Content-Type': 'application/json' },\n\t\t\t\t\t\t\tbody: JSON.stringify({\n\t\t\t\t\t\t\t\temail: email,\n\t\t\t\t\t\t\t\tname: name,\n\t\t\t\t\t\t\t\tsprintName: sprintName.replace(/^[🟢🔴]\\s*/, ''),\n\t\t\t\t\t\t\t\titemKey: itemKey,\n\t\t\t\t\t\t\t\titemTitle: itemTitle,\n\t\t\t\t\t\t\t\titemType: itemType\n\t\t\t\t\t\t\t})\n\t\t\t\t\t\t});\n\n\t\t\t\t\t\tconst result = await response.json();\n\n\t\t\t\t\t\tif (result.success) {\n\t\t\t\t\t\t\tthis.innerHTML = '✅';\n\t\t\t\t\t\t\tsetTimeout(() => {\n\t\t\t\t\t\t\t\tthis.innerHTML = '📋';\n\t\t\t\t\t\t\t\tthis.disabled = false;\n\t\t\t\t\t\t\t}, 2000);\n\t\t\t\t\t\t} else {\n\t\t\t\t\t\t\tthrow new Error(result.error || 'Failed to send');\n\t\t\t\t\t\t}\n\t\t\t\t\t} catch (error) {\n\t\t\t\t\t\tthis.innerHTML = '❌';\n\t\t\t\t\t\tconsole.error('Request info error:', error);\n\t\t\t\t\t\tsetTimeout(() => {\n\t\t\t\t\t\t\tthis.innerHTML = '📋';\n\t\t\t\t\t\t\tthis.disabled = false;\n\t\t\t\t\t\t}, 2000);\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t});\n\t\t</script>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -95,7 +95,7 @@ func DashboardContent(data models.DashboardData) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 113, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 168, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -108,7 +108,7 @@ func DashboardContent(data models.DashboardData) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.Goal)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 114, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 169, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -121,7 +121,7 @@ func DashboardContent(data models.DashboardData) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.StartDate)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 118, Col: 75}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 173, Col: 75}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -134,7 +134,7 @@ func DashboardContent(data models.DashboardData) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.EndDate)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 118, Col: 101}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 173, Col: 101}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {

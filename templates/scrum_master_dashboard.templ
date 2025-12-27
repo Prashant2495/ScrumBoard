@@ -127,7 +127,7 @@ templ ScrumMasterDashboardContent(data models.ScrumMasterDashboardData) {
 
 	<!-- Team Capacity & Risk Indicators -->
 	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-		@TeamCapacityCard(data.UserStats, data.TeamHealth)
+		@TeamCapacityCard(data.UserStats, data.TeamHealth, data.Sprint.Name)
 		@RiskIndicatorsCard(data.RiskIndicators)
 	</div>
 
@@ -136,6 +136,67 @@ templ ScrumMasterDashboardContent(data models.ScrumMasterDashboardData) {
 		@SprintHistoryCard(data.SprintHistory)
 		@BlockersCard(data.Blockers)
 	</div>
+
+	<!-- Info Requests Section -->
+	<div class="glass rounded-2xl p-6 card-hover animate-fade-in mb-8">
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">�</span>
+			<span>Info Requests & Responses</span>
+			<button onclick="loadAllInfoRequests()" class="ml-auto px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold rounded-lg transition-all">
+				🔄 Refresh
+			</button>
+		</h3>
+		<div id="info-request-list" class="space-y-3 max-h-96 overflow-y-auto">
+			<p class="text-slate-500 text-center py-4">Loading info requests...</p>
+		</div>
+	</div>
+
+	<script>
+		function loadAllInfoRequests() {
+			fetch('/engineer/api/pings')
+				.then(function(res) { return res.json(); })
+				.then(function(data) {
+					var reqList = document.getElementById('info-request-list');
+					if (!reqList) return;
+
+					if (!data.pings || data.pings.length === 0) {
+						reqList.innerHTML = '<p class="text-slate-500 text-center py-4">No info requests yet. Use "Request Info" button on stories/defects.</p>';
+						return;
+					}
+
+					reqList.innerHTML = data.pings.map(function(ping) {
+						var borderClass = ping.status === 'responded' ? 'border-green-300 bg-green-50' : 'border-yellow-300 bg-yellow-50';
+						var statusClass = ping.status === 'responded' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';
+						var statusText = ping.status === 'responded' ? '✅ Responded' : '⏳ Awaiting Reply';
+						var responseHtml = '';
+						if (ping.response) {
+							responseHtml = '<div class="mt-3 bg-green-100 rounded-lg p-3 border border-green-200">' +
+								'<p class="text-xs text-green-600 mb-1">📩 Response (' + ping.responded_at + '):</p>' +
+								'<p class="text-sm text-green-800 font-medium">' + ping.response + '</p></div>';
+						}
+						var itemHtml = ping.item_key ? '<p class="text-sm font-bold text-blue-600 mb-1">🎯 ' + ping.item_key + ': ' + (ping.item_title || '') + '</p>' : '';
+						return '<div class="rounded-xl p-4 border-2 ' + borderClass + '">' +
+							'<div class="flex items-center justify-between mb-2">' +
+							'<div class="flex items-center gap-2">' +
+							'<span class="font-bold text-slate-800">' + ping.engineer_name + '</span>' +
+							'<span class="text-xs text-slate-500">(' + ping.engineer_email + ')</span></div>' +
+							'<span class="px-2 py-1 rounded-full text-xs font-semibold ' + statusClass + '">' + statusText + '</span></div>' +
+							itemHtml +
+							'<div class="flex items-center gap-4 text-xs text-slate-500 mb-2">' +
+							'<span>📤 Requested: ' + ping.sent_at + '</span>' +
+							'<span>🏃 Sprint: ' + ping.sprint_name + '</span></div>' +
+							responseHtml + '</div>';
+					}).join('');
+				})
+				.catch(function(err) {
+					console.error('Error loading info requests:', err);
+					document.getElementById('info-request-list').innerHTML = '<p class="text-red-500 text-center py-4">Error loading info requests</p>';
+				});
+		}
+
+		// Load info requests on page load
+		loadAllInfoRequests();
+	</script>
 }
 
 // VelocityChart shows team velocity over sprints
@@ -234,7 +295,7 @@ templ BurndownChart(burndown []models.BurndownPoint, totalPoints int) {
 }
 
 // TeamCapacityCard shows team capacity utilization
-templ TeamCapacityCard(userStats []models.UserStats, health models.TeamHealth) {
+templ TeamCapacityCard(userStats []models.UserStats, health models.TeamHealth, sprintName string) {
 	<div class="glass rounded-2xl p-6 card-hover animate-fade-in">
 		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
 			<span class="text-2xl">👥</span>

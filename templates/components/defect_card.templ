@@ -41,13 +41,28 @@ templ DefectCard(defect models.Defect) {
 			}
 		</div>
 
-		<!-- Assignee -->
+		<!-- Assignee & Request Info -->
 		if defect.Assignee.Name != "" {
-			<div class="flex items-center gap-2 pt-2 border-t border-slate-200">
-				<div class="w-6 h-6 rounded-full bg-gradient-to-br from-primary-400 to-secondary-400 flex items-center justify-center text-white text-xs font-semibold">
-					{ string([]rune(defect.Assignee.Name)[0]) }
+			<div class="flex items-center justify-between pt-2 border-t border-slate-200">
+				<div class="flex items-center gap-2">
+					<div class="w-6 h-6 rounded-full bg-gradient-to-br from-primary-400 to-secondary-400 flex items-center justify-center text-white text-xs font-semibold">
+						{ string([]rune(defect.Assignee.Name)[0]) }
+					</div>
+					<span class="text-xs text-slate-600">{ defect.Assignee.Name }</span>
 				</div>
-				<span class="text-xs text-slate-600">{ defect.Assignee.Name }</span>
+				if defect.Assignee.Email != "" {
+					<button
+						class="request-info-btn px-2 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold rounded-lg transition-all shadow-sm"
+						data-email={ defect.Assignee.Email }
+						data-name={ defect.Assignee.Name }
+						data-item-key={ defect.Key }
+						data-item-title={ defect.Summary }
+						data-item-type="defect"
+						title="Request info via Webex"
+					>
+						📋
+					</button>
+				}
 			</div>
 		}
 	</div>

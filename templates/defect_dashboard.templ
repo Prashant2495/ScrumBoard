@@ -102,6 +102,61 @@ templ DefectDashboard(data models.DefectDashboardData) {
 				updateJiraDefectLink(sprintId);
 				window.location.href = `/defects?sprint=${sprintId}`;
 			});
+
+			// Request Info button handler for defects
+			document.querySelectorAll('.request-info-btn').forEach(btn => {
+				btn.addEventListener('click', async function(e) {
+					e.stopPropagation();
+					const email = this.dataset.email;
+					const name = this.dataset.name;
+					const itemKey = this.dataset.itemKey;
+					const itemTitle = this.dataset.itemTitle;
+					const itemType = this.dataset.itemType;
+					const sprintName = document.querySelector('#sprint-selector option:checked')?.textContent || 'Current Sprint';
+
+					if (!email) {
+						alert('No email available for this assignee');
+						return;
+					}
+
+					this.disabled = true;
+					this.innerHTML = '⏳';
+
+					try {
+						const response = await fetch('/api/request-info', {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify({
+								email: email,
+								name: name,
+								sprintName: sprintName.replace(/^[🟢🔴]\s*/, ''),
+								itemKey: itemKey,
+								itemTitle: itemTitle,
+								itemType: itemType
+							})
+						});
+
+						const result = await response.json();
+
+						if (result.success) {
+							this.innerHTML = '✅';
+							setTimeout(() => {
+								this.innerHTML = '📋';
+								this.disabled = false;
+							}, 2000);
+						} else {
+							throw new Error(result.error || 'Failed to send');
+						}
+					} catch (error) {
+						this.innerHTML = '❌';
+						console.error('Request info error:', error);
+						setTimeout(() => {
+							this.innerHTML = '📋';
+							this.disabled = false;
+						}, 2000);
+					}
+				});
+			});
 		</script>
 	}
 }
