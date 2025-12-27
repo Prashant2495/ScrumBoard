@@ -461,11 +461,9 @@ func (j *JiraService) GetDefectsByEngineerAndSprint(engineerEmail string, sprint
 
 // GetSprintIssuesByJQL fetches AMF team issues using direct JQL search (no board number needed)
 func (j *JiraService) GetSprintIssuesByJQL(sprintID int) ([]models.Story, error) {
-	// Use JQL to search across ALL boards for sprint + AMF team filter
-	// Try multiple JQL variations to find the right syntax
-
-	// First try: Use "Team" field name
-	jql := fmt.Sprintf("sprint = %d AND Team ~ \"AMF:*\" ORDER BY created DESC", sprintID)
+	// Use labels=AMFDEVFT to filter AMF team issues (works across boards 6991, 6992)
+	// Exclude Bug type to get only stories/tasks
+	jql := fmt.Sprintf("sprint = %d AND labels = AMFDEVFT AND type != Bug ORDER BY created DESC", sprintID)
 
 	log.Printf("🔍 JQL Query: %s", jql)
 

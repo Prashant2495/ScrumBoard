@@ -5,6 +5,7 @@ import (
 	"ScrumBoard/templates"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -297,6 +298,13 @@ func (h *ScrumMasterHandler) WebexWebhook(c *fiber.Ctx) error {
 	// Only process message created events
 	if payload.Resource != "messages" || payload.Event != "created" {
 		return c.JSON(fiber.Map{"status": "ignored", "reason": "not a message event"})
+	}
+
+	// Ignore messages from the bot itself to prevent recursive loops
+	if strings.Contains(strings.ToLower(payload.Data.PersonEmail), "scrum.bot") ||
+		strings.Contains(strings.ToLower(payload.Data.PersonEmail), "webex.bot") {
+		log.Printf("🤖 Ignoring bot message from %s", payload.Data.PersonEmail)
+		return c.JSON(fiber.Map{"status": "ignored", "reason": "bot message"})
 	}
 
 	// Get the actual message content from Webex API
