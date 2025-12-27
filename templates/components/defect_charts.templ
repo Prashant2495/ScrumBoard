@@ -1,0 +1,451 @@
+package components
+
+import (
+	"ScrumBoard/internal/models"
+	"fmt"
+	"encoding/json"
+)
+
+// DefectStatusPieChart shows defect status distribution
+templ DefectStatusPieChart(stats models.DefectStats) {
+	<div 
+		class="glass rounded-2xl p-6 card-hover animate-scale-in"
+		data-open={ fmt.Sprintf("%d", stats.OpenDefects) }
+		data-in-progress={ fmt.Sprintf("%d", stats.InProgressDefects) }
+		data-resolved={ fmt.Sprintf("%d", stats.ResolvedDefects) }
+		data-total={ fmt.Sprintf("%d", stats.TotalDefects) }
+	>
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">🎯</span>
+			<span>Defect Status Distribution</span>
+		</h3>
+		<div class="chart-container">
+			<canvas id="defectStatusChart"></canvas>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		(function() {
+			const ctx = document.getElementById('defectStatusChart');
+			if (!ctx) return;
+			
+			const chartDiv = ctx.closest('[data-open]');
+			if (!chartDiv) return;
+			
+			const data = {
+				open: parseInt(chartDiv.getAttribute('data-open')),
+				inProgress: parseInt(chartDiv.getAttribute('data-in-progress')),
+				resolved: parseInt(chartDiv.getAttribute('data-resolved')),
+				total: parseInt(chartDiv.getAttribute('data-total'))
+			};
+
+			new Chart(ctx.getContext('2d'), {
+				type: 'pie',
+				data: {
+					labels: ['Open', 'In Progress', 'Resolved'],
+					datasets: [{
+						data: [data.open, data.inProgress, data.resolved],
+						backgroundColor: [
+							'rgba(239, 68, 68, 0.8)',
+							'rgba(251, 191, 36, 0.8)',
+							'rgba(34, 197, 94, 0.8)'
+						],
+						borderColor: [
+							'rgba(239, 68, 68, 1)',
+							'rgba(251, 191, 36, 1)',
+							'rgba(34, 197, 94, 1)'
+						],
+						borderWidth: 2
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: {
+							position: 'bottom',
+							labels: {
+								padding: 15,
+								font: { size: 12, weight: 'bold' }
+							}
+						},
+						tooltip: {
+							callbacks: {
+								label: function(context) {
+									const total = data.total;
+									const value = context.parsed || 0;
+									const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+									return context.label + ': ' + value + ' defects (' + percentage + '%)';
+								}
+							}
+						}
+					}
+				}
+			});
+		})();
+	</script>
+}
+
+// DefectSeverityDoughnutChart shows severity breakdown
+templ DefectSeverityDoughnutChart(stats models.DefectStats) {
+	<div 
+		class="glass rounded-2xl p-6 card-hover animate-scale-in"
+		data-critical={ fmt.Sprintf("%d", stats.CriticalDefects) }
+		data-high={ fmt.Sprintf("%d", stats.HighDefects) }
+		data-medium={ fmt.Sprintf("%d", stats.MediumDefects) }
+		data-low={ fmt.Sprintf("%d", stats.LowDefects) }
+	>
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">🔥</span>
+			<span>Severity Breakdown</span>
+		</h3>
+		<div class="chart-container">
+			<canvas id="severityChart"></canvas>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		(function() {
+			const ctx = document.getElementById('severityChart');
+			if (!ctx) return;
+			
+			const chartDiv = ctx.closest('[data-critical]');
+			if (!chartDiv) return;
+			
+			const data = {
+				critical: parseInt(chartDiv.getAttribute('data-critical')),
+				high: parseInt(chartDiv.getAttribute('data-high')),
+				medium: parseInt(chartDiv.getAttribute('data-medium')),
+				low: parseInt(chartDiv.getAttribute('data-low'))
+			};
+
+			new Chart(ctx.getContext('2d'), {
+				type: 'doughnut',
+				data: {
+					labels: ['Critical', 'High', 'Medium', 'Low'],
+					datasets: [{
+						data: [data.critical, data.high, data.medium, data.low],
+						backgroundColor: [
+							'rgba(220, 38, 38, 0.8)',
+							'rgba(249, 115, 22, 0.8)',
+							'rgba(234, 179, 8, 0.8)',
+							'rgba(34, 197, 94, 0.8)'
+						],
+						borderColor: [
+							'rgba(220, 38, 38, 1)',
+							'rgba(249, 115, 22, 1)',
+							'rgba(234, 179, 8, 1)',
+							'rgba(34, 197, 94, 1)'
+						],
+						borderWidth: 2
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: {
+							position: 'bottom',
+							labels: {
+								padding: 15,
+								font: { size: 12, weight: 'bold' }
+							}
+						},
+						tooltip: {
+							callbacks: {
+								label: function(context) {
+									const total = data.critical + data.high + data.medium + data.low;
+									const value = context.parsed || 0;
+									const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+									return context.label + ': ' + value + ' (' + percentage + '%)';
+								}
+							}
+						}
+					}
+				}
+			});
+		})();
+	</script>
+}
+
+// DefectAssigneeBarChart shows defects by assignee
+templ DefectAssigneeBarChart(assigneeStats []models.DefectByAssignee) {
+	<div class="glass rounded-2xl p-6 card-hover animate-fade-in" data-assignee-stats={ marshalAssigneeStats(assigneeStats) }>
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">👥</span>
+			<span>Defects by Engineer</span>
+		</h3>
+		<div class="chart-container">
+			<canvas id="assigneeDefectsChart"></canvas>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		(function() {
+			const chartDiv = document.querySelector('[data-assignee-stats]');
+			if (!chartDiv) return;
+
+			const assigneeData = JSON.parse(chartDiv.getAttribute('data-assignee-stats'));
+
+			const labels = assigneeData.map(a => a.user.name.split(' ')[0]);
+			const openDefects = assigneeData.map(a => a.openDefects);
+			const resolvedDefects = assigneeData.map(a => a.resolvedDefects);
+
+			const ctx = document.getElementById('assigneeDefectsChart');
+			if (!ctx) return;
+
+			new Chart(ctx.getContext('2d'), {
+				type: 'bar',
+				data: {
+					labels: labels,
+					datasets: [
+						{
+							label: 'Open Defects',
+							data: openDefects,
+							backgroundColor: 'rgba(239, 68, 68, 0.7)',
+							borderColor: 'rgba(239, 68, 68, 1)',
+							borderWidth: 2,
+							borderRadius: 8
+						},
+						{
+							label: 'Resolved Defects',
+							data: resolvedDefects,
+							backgroundColor: 'rgba(34, 197, 94, 0.7)',
+							borderColor: 'rgba(34, 197, 94, 1)',
+							borderWidth: 2,
+							borderRadius: 8
+						}
+					]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: {
+							position: 'top',
+							labels: {
+								padding: 15,
+								font: { size: 12, weight: 'bold' }
+							}
+						},
+						tooltip: {
+							callbacks: {
+								label: function(context) {
+									return context.dataset.label + ': ' + context.parsed.y + ' defects';
+								}
+							}
+						}
+					},
+					scales: {
+						y: {
+							beginAtZero: true,
+							ticks: {
+								stepSize: 1
+							}
+						}
+					}
+				}
+			});
+		})();
+	</script>
+}
+
+// DefectResolutionProgress shows resolution progress
+templ DefectResolutionProgress(stats models.DefectStats) {
+	<div class="glass rounded-2xl p-6 card-hover animate-slide-left shadow-lg">
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">✅</span>
+			<span>Resolution Progress</span>
+		</h3>
+		<div class="space-y-4">
+			<div class="flex justify-between items-center">
+				<span class="text-3xl font-bold text-slate-800">{ fmt.Sprintf("%d", stats.ResolvedDefects) }</span>
+				<span class="text-sm text-slate-500">of { fmt.Sprintf("%d", stats.TotalDefects) } defects</span>
+			</div>
+			<div class="relative h-6 bg-slate-200 rounded-full overflow-hidden shadow-inner">
+				<div
+					class="h-full rounded-full bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 transition-all duration-1000 ease-out shimmer relative"
+					style={ fmt.Sprintf("width: %d%%", getDefectPercentage(stats.ResolvedDefects, stats.TotalDefects)) }
+				>
+					<div class="absolute inset-0 bg-white/20 rounded-full"></div>
+				</div>
+			</div>
+			<div class="text-center">
+				<span class="text-3xl font-extrabold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
+					{ fmt.Sprintf("%d%%", getDefectPercentage(stats.ResolvedDefects, stats.TotalDefects)) }
+				</span>
+			</div>
+		</div>
+	</div>
+}
+
+func marshalAssigneeStats(stats []models.DefectByAssignee) string {
+	data, _ := json.Marshal(stats)
+	return string(data)
+}
+
+func getDefectPercentage(resolved, total int) int {
+	if total == 0 {
+		return 0
+	}
+	return (resolved * 100) / total
+}
+
+// DefectAgingPieChart shows defect aging distribution
+templ DefectAgingPieChart(stats models.DefectStats) {
+	<div
+		class="glass rounded-2xl p-6 card-hover animate-scale-in"
+		data-fresh={ fmt.Sprintf("%d", stats.TotalDefects - stats.DefectsAgedOver7Days) }
+		data-aged7={ fmt.Sprintf("%d", stats.DefectsAgedOver7Days - stats.DefectsAgedOver30Days) }
+		data-aged30={ fmt.Sprintf("%d", stats.DefectsAgedOver30Days) }
+	>
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">⏰</span>
+			<span>Defect Aging</span>
+		</h3>
+		<div class="chart-container">
+			<canvas id="defectAgingChart"></canvas>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		(function() {
+			const chartDiv = document.querySelector('[data-fresh][data-aged7][data-aged30]');
+			if (!chartDiv) return;
+
+			const data = {
+				fresh: parseInt(chartDiv.getAttribute('data-fresh')),
+				aged7: parseInt(chartDiv.getAttribute('data-aged7')),
+				aged30: parseInt(chartDiv.getAttribute('data-aged30'))
+			};
+
+			const ctx = document.getElementById('defectAgingChart');
+			if (!ctx) return;
+
+			new Chart(ctx.getContext('2d'), {
+				type: 'doughnut',
+				data: {
+					labels: ['< 7 days', '7-30 days', '> 30 days'],
+					datasets: [{
+						data: [data.fresh, data.aged7, data.aged30],
+						backgroundColor: [
+							'rgba(34, 197, 94, 0.8)',
+							'rgba(251, 191, 36, 0.8)',
+							'rgba(239, 68, 68, 0.8)'
+						],
+						borderColor: [
+							'rgba(34, 197, 94, 1)',
+							'rgba(251, 191, 36, 1)',
+							'rgba(239, 68, 68, 1)'
+						],
+						borderWidth: 2
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: {
+							position: 'bottom',
+							labels: {
+								padding: 15,
+								font: { size: 12, weight: 'bold' }
+							}
+						},
+						tooltip: {
+							callbacks: {
+								label: function(context) {
+									const total = data.fresh + data.aged7 + data.aged30;
+									const value = context.parsed || 0;
+									const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+									return context.label + ': ' + value + ' defects (' + percentage + '%)';
+								}
+							}
+						}
+					}
+				}
+			});
+		})();
+	</script>
+}
+
+// DefectPriorityPieChart shows priority distribution
+templ DefectPriorityPieChart(assigneeStats []models.DefectByAssignee) {
+	<div class="glass rounded-2xl p-6 card-hover animate-scale-in" data-priority-stats={ marshalAssigneeStats(assigneeStats) }>
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">🎯</span>
+			<span>Critical vs Normal</span>
+		</h3>
+		<div class="chart-container">
+			<canvas id="defectPriorityChart"></canvas>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		(function() {
+			const chartDiv = document.querySelector('[data-priority-stats]');
+			if (!chartDiv) return;
+
+			const assigneeData = JSON.parse(chartDiv.getAttribute('data-priority-stats'));
+
+			let critical = 0;
+			let high = 0;
+			let normal = 0;
+
+			assigneeData.forEach(a => {
+				critical += a.criticalDefects || 0;
+				high += a.highDefects || 0;
+				normal += (a.totalDefects - (a.criticalDefects || 0) - (a.highDefects || 0));
+			});
+
+			const ctx = document.getElementById('defectPriorityChart');
+			if (!ctx) return;
+
+			new Chart(ctx.getContext('2d'), {
+				type: 'pie',
+				data: {
+					labels: ['Critical', 'High', 'Medium/Low'],
+					datasets: [{
+						data: [critical, high, normal],
+						backgroundColor: [
+							'rgba(220, 38, 38, 0.8)',
+							'rgba(249, 115, 22, 0.8)',
+							'rgba(34, 197, 94, 0.8)'
+						],
+						borderColor: [
+							'rgba(220, 38, 38, 1)',
+							'rgba(249, 115, 22, 1)',
+							'rgba(34, 197, 94, 1)'
+						],
+						borderWidth: 2
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: {
+							position: 'bottom',
+							labels: {
+								padding: 15,
+								font: { size: 12, weight: 'bold' }
+							}
+						},
+						tooltip: {
+							callbacks: {
+								label: function(context) {
+									const total = critical + high + normal;
+									const value = context.parsed || 0;
+									const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+									return context.label + ': ' + value + ' (' + percentage + '%)';
+								}
+							}
+						}
+					}
+				}
+			});
+		})();
+	</script>
+}
+
+

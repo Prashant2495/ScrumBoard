@@ -132,6 +132,18 @@ templ DashboardContent(data models.DashboardData) {
 		@components.UserStatsSection(data.UserStats)
 	</div>
 
+	<!-- Main Charts Section -->
+	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+		@components.TeamWorkDistributionChart(data.UserStats)
+		@components.SprintProgressPieChart(data.Stats)
+	</div>
+
+	<!-- Additional Charts Section -->
+	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+		@components.StoryStatusDistributionPieChart(data.TodoStories, data.InProgress, data.DoneStories)
+		@components.TeamWorkloadPieChart(data.UserStats)
+	</div>
+
 	<!-- Sprint Board -->
 	@components.SprintBoard(data.TodoStories, data.InProgress, data.DoneStories)
 }

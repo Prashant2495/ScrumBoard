@@ -1,0 +1,308 @@
+package components
+
+import (
+	"ScrumBoard/internal/models"
+	"fmt"
+	"encoding/json"
+)
+
+// EngineerWorkDistribution shows pie chart of story points vs defect work
+templ EngineerWorkDistribution(stories []models.Story, defects []models.Defect) {
+	<div
+		class="glass rounded-2xl p-6 card-hover animate-scale-in"
+		data-story-points={ fmt.Sprintf("%d", calculateTotalPoints(stories)) }
+		data-defect-count={ fmt.Sprintf("%d", len(defects)) }
+	>
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">📊</span>
+			<span>Work Distribution</span>
+		</h3>
+		<div class="chart-container">
+			<canvas id="workDistributionChart"></canvas>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		(function() {
+			const canvas = document.getElementById('workDistributionChart');
+			if (!canvas) return;
+
+			const chartDiv = canvas.closest('[data-story-points]');
+			if (!chartDiv) return;
+
+			// Calculate story points
+			const storyPoints = parseInt(chartDiv.getAttribute('data-story-points'));
+			const defectCount = parseInt(chartDiv.getAttribute('data-defect-count'));
+
+			// Estimate defect work (assuming 2 points per defect on average)
+			const defectPoints = defectCount * 2;
+			const totalWork = storyPoints + defectPoints;
+
+			const storyPercentage = totalWork > 0 ? ((storyPoints / totalWork) * 100).toFixed(1) : 0;
+			const defectPercentage = totalWork > 0 ? ((defectPoints / totalWork) * 100).toFixed(1) : 0;
+
+			new Chart(canvas.getContext('2d'), {
+				type: 'doughnut',
+				data: {
+					labels: ['User Stories', 'Defects'],
+					datasets: [{
+						data: [storyPoints, defectPoints],
+						backgroundColor: [
+							'rgba(102, 126, 234, 0.8)',
+							'rgba(239, 68, 68, 0.8)'
+						],
+						borderColor: [
+							'rgba(102, 126, 234, 1)',
+							'rgba(239, 68, 68, 1)'
+						],
+						borderWidth: 2
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: {
+							position: 'bottom',
+							labels: {
+								padding: 15,
+								font: { size: 12, weight: 'bold' }
+							}
+						},
+						tooltip: {
+							callbacks: {
+								label: function(context) {
+									const label = context.label || '';
+									const value = context.parsed || 0;
+									const percentage = context.label === 'User Stories' ? storyPercentage : defectPercentage;
+									return label + ': ' + value + ' pts (' + percentage + '%)';
+								}
+							}
+						}
+					}
+				}
+			});
+		})();
+	</script>
+}
+
+// StoryPointsProgress shows animated progress bar
+templ StoryPointsProgress(completed, total int) {
+	<div class="glass rounded-2xl p-6 card-hover animate-slide-left">
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">🎯</span>
+			<span>Story Points Progress</span>
+		</h3>
+		<div class="space-y-4">
+			<div class="flex justify-between items-center">
+				<span class="text-3xl font-bold text-slate-800">{ fmt.Sprintf("%d", completed) }</span>
+				<span class="text-sm text-slate-500">of { fmt.Sprintf("%d", total) } points</span>
+			</div>
+			<div class="relative h-4 bg-slate-200 rounded-full overflow-hidden">
+				<div
+					class="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full transition-all duration-1000 ease-out shimmer"
+					style={ fmt.Sprintf("width: %d%%", getEngineerPercentage(completed, total)) }
+				></div>
+			</div>
+			<div class="text-center">
+				<span class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+					{ fmt.Sprintf("%d%%", getEngineerPercentage(completed, total)) }
+				</span>
+			</div>
+		</div>
+	</div>
+}
+
+func calculateTotalPoints(stories []models.Story) int {
+	total := 0
+	for _, story := range stories {
+		total += story.StoryPoints
+	}
+	return total
+}
+
+func getEngineerPercentage(completed, total int) int {
+	if total == 0 {
+		return 0
+	}
+	return (completed * 100) / total
+}
+
+// EngineerStoryStatusPieChart shows story status distribution
+templ EngineerStoryStatusPieChart(stories []models.Story) {
+	<div
+		class="glass rounded-2xl p-6 card-hover animate-scale-in"
+		data-engineer-stories={ marshalStories(stories) }
+	>
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">📊</span>
+			<span>Story Status</span>
+		</h3>
+		<div class="chart-container">
+			<canvas id="engineerStoryStatusChart"></canvas>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		(function() {
+			const chartDiv = document.querySelector('[data-engineer-stories]');
+			if (!chartDiv) return;
+
+			const stories = JSON.parse(chartDiv.getAttribute('data-engineer-stories'));
+
+			const statusCounts = {
+				'To Do': 0,
+				'In Progress': 0,
+				'Done': 0
+			};
+
+			stories.forEach(story => {
+				if (story.status === 'To Do') statusCounts['To Do']++;
+				else if (story.status === 'In Progress') statusCounts['In Progress']++;
+				else if (story.status === 'Done') statusCounts['Done']++;
+			});
+
+			const ctx = document.getElementById('engineerStoryStatusChart');
+			if (!ctx) return;
+
+			new Chart(ctx.getContext('2d'), {
+				type: 'pie',
+				data: {
+					labels: ['To Do', 'In Progress', 'Done'],
+					datasets: [{
+						data: [statusCounts['To Do'], statusCounts['In Progress'], statusCounts['Done']],
+						backgroundColor: [
+							'rgba(148, 163, 184, 0.8)',
+							'rgba(59, 130, 246, 0.8)',
+							'rgba(16, 185, 129, 0.8)'
+						],
+						borderColor: [
+							'rgba(148, 163, 184, 1)',
+							'rgba(59, 130, 246, 1)',
+							'rgba(16, 185, 129, 1)'
+						],
+						borderWidth: 2
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: {
+							position: 'bottom',
+							labels: {
+								padding: 15,
+								font: { size: 12, weight: 'bold' }
+							}
+						},
+						tooltip: {
+							callbacks: {
+								label: function(context) {
+									const total = stories.length;
+									const value = context.parsed || 0;
+									const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+									return context.label + ': ' + value + ' stories (' + percentage + '%)';
+								}
+							}
+						}
+					}
+				}
+			});
+		})();
+	</script>
+}
+
+// EngineerDefectStatusPieChart shows defect status distribution
+templ EngineerDefectStatusPieChart(defects []models.Defect) {
+	<div
+		class="glass rounded-2xl p-6 card-hover animate-scale-in"
+		data-engineer-defects={ marshalDefects(defects) }
+	>
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">🐛</span>
+			<span>Defect Status</span>
+		</h3>
+		<div class="chart-container">
+			<canvas id="engineerDefectStatusChart"></canvas>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		(function() {
+			const chartDiv = document.querySelector('[data-engineer-defects]');
+			if (!chartDiv) return;
+
+			const defects = JSON.parse(chartDiv.getAttribute('data-engineer-defects'));
+
+			const statusCounts = {
+				'Open': 0,
+				'In Progress': 0,
+				'Resolved': 0
+			};
+
+			defects.forEach(defect => {
+				if (defect.status === 'Open') statusCounts['Open']++;
+				else if (defect.status === 'In Progress') statusCounts['In Progress']++;
+				else if (defect.status === 'Resolved' || defect.status === 'Closed') statusCounts['Resolved']++;
+			});
+
+			const ctx = document.getElementById('engineerDefectStatusChart');
+			if (!ctx) return;
+
+			new Chart(ctx.getContext('2d'), {
+				type: 'doughnut',
+				data: {
+					labels: ['Open', 'In Progress', 'Resolved'],
+					datasets: [{
+						data: [statusCounts['Open'], statusCounts['In Progress'], statusCounts['Resolved']],
+						backgroundColor: [
+							'rgba(239, 68, 68, 0.8)',
+							'rgba(251, 191, 36, 0.8)',
+							'rgba(34, 197, 94, 0.8)'
+						],
+						borderColor: [
+							'rgba(239, 68, 68, 1)',
+							'rgba(251, 191, 36, 1)',
+							'rgba(34, 197, 94, 1)'
+						],
+						borderWidth: 2
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: {
+							position: 'bottom',
+							labels: {
+								padding: 15,
+								font: { size: 12, weight: 'bold' }
+							}
+						},
+						tooltip: {
+							callbacks: {
+								label: function(context) {
+									const total = defects.length;
+									const value = context.parsed || 0;
+									const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+									return context.label + ': ' + value + ' defects (' + percentage + '%)';
+								}
+							}
+						}
+					}
+				}
+			});
+		})();
+	</script>
+}
+
+func marshalStories(stories []models.Story) string {
+	data, _ := json.Marshal(stories)
+	return string(data)
+}
+
+func marshalDefects(defects []models.Defect) string {
+	data, _ := json.Marshal(defects)
+	return string(data)
+}
+

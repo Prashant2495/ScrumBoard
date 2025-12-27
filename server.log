@@ -1,4 +1,4 @@
-2025/12/27 20:05:08 🚀 Scrum Dashboard starting on http://localhost:3000
+2025/12/27 20:36:01 🚀 Scrum Dashboard starting on http://localhost:3000
 
  ┌───────────────────────────────────────────────────┐ 
  │                  Scrum Dashboard                  │ 
@@ -7,48 +7,64 @@
  │       (bound on host 0.0.0.0 and port 3000)       │ 
  │                                                   │ 
  │ Handlers ............ 21  Processes ........... 1 │ 
- │ Prefork ....... Disabled  PID ............. 75808 │ 
+ │ Prefork ....... Disabled  PID ............. 83837 │ 
  └───────────────────────────────────────────────────┘ 
 
-20:05:15 | 200 |   1.76536225s | 127.0.0.1 | GET | / | -
-20:05:21 | 200 |  1.207780125s | 127.0.0.1 | GET | / | -
-20:05:23 | 200 |  1.187100333s | 127.0.0.1 | GET | /api/sprints | -
-20:05:26 | 200 |  1.924944958s | 127.0.0.1 | GET | / | -
-20:05:28 | 200 |     1.240961s | 127.0.0.1 | GET | /api/sprints | -
-20:05:33 | 200 |     1.249927s | 127.0.0.1 | GET | / | -
-20:05:35 | 200 |  1.218941208s | 127.0.0.1 | GET | /api/sprints | -
-20:05:40 | 200 |  1.144570958s | 127.0.0.1 | GET | / | -
-20:05:41 | 200 |  508.854875ms | 127.0.0.1 | GET | /api/sprints | -
-20:05:48 | 200 |     1.673666s | 127.0.0.1 | GET | / | -
-20:05:50 | 200 |  1.063932958s | 127.0.0.1 | GET | /api/sprints | -
-2025/12/27 20:06:08 📊 Found 2 defects in sprint NM-2517
-2025/12/27 20:06:08   Bug 1: BUG-934734 - Assignee: Prashant Dewangan (prdewang@cisco.com)
-2025/12/27 20:06:08   Bug 2: BUG-926223 - Assignee: Prashant Dewangan (prdewang@cisco.com)
-20:06:06 | 200 |  2.082375083s | 127.0.0.1 | GET | /defects | -
-20:06:08 | 200 |  493.031375ms | 127.0.0.1 | GET | /defects/api/sprints | -
-2025/12/27 20:06:14 📊 Found 2 defects in sprint NM-2517
-2025/12/27 20:06:14   Bug 1: BUG-934734 - Assignee: Prashant Dewangan (prdewang@cisco.com)
-2025/12/27 20:06:14   Bug 2: BUG-926223 - Assignee: Prashant Dewangan (prdewang@cisco.com)
-20:06:13 | 200 |     1.067894s | 127.0.0.1 | GET | /defects | -
-20:06:14 | 200 |  556.155209ms | 127.0.0.1 | GET | /defects/api/sprints | -
-2025/12/27 20:06:20 📊 Found 9 defects in sprint NM-2516
-2025/12/27 20:06:20   Bug 1: BUG-911245 - Assignee: Prashant Dewangan (prdewang@cisco.com)
-2025/12/27 20:06:20   Bug 2: BUG-910831 - Assignee: Madhurima Datta (maddatta@cisco.com)
-2025/12/27 20:06:20   Bug 3: BUG-908049 - Assignee: Akshay Bhat (akbhat2@cisco.com)
-2025/12/27 20:06:20   Bug 4: BUG-907755 - Assignee: Suraj Singh (surasin2@cisco.com)
-2025/12/27 20:06:20   Bug 5: BUG-906124 - Assignee: Amit Kumar Singh (amitksi3@cisco.com)
-2025/12/27 20:06:20   Bug 6: BUG-903677 - Assignee: Amit Kumar Singh (amitksi3@cisco.com)
-2025/12/27 20:06:20   Bug 7: BUG-902236 - Assignee: Shashi Kiran Bharti (shabhart@cisco.com)
-2025/12/27 20:06:20   Bug 8: BUG-890229 - Assignee: Prashant Dewangan (prdewang@cisco.com)
-2025/12/27 20:06:20   Bug 9: BUG-883085 - Assignee: Prashant Dewangan (prdewang@cisco.com)
-20:06:19 | 200 |  1.027271333s | 127.0.0.1 | GET | /defects | -
-20:06:20 | 200 |   547.84425ms | 127.0.0.1 | GET | /defects/api/sprints | -
-2025/12/27 20:06:32 📊 Found 6 defects in sprint NM-2514
-2025/12/27 20:06:32   Bug 1: BUG-847766 - Assignee: Amit Kumar Singh (amitksi3@cisco.com)
-2025/12/27 20:06:32   Bug 2: BUG-839435 - Assignee: Prashant Dewangan (prdewang@cisco.com)
-2025/12/27 20:06:32   Bug 3: BUG-826803 - Assignee: Ganesh Agrawal (ganagraw@cisco.com)
-2025/12/27 20:06:32   Bug 4: BUG-825356 - Assignee:  ()
-2025/12/27 20:06:32   Bug 5: BUG-823555 - Assignee: Ganesh Agrawal (ganagraw@cisco.com)
-2025/12/27 20:06:32   Bug 6: BUG-820063 - Assignee: Amit Kumar Singh (amitksi3@cisco.com)
-20:06:30 | 200 |  1.088253625s | 127.0.0.1 | GET | /defects | -
-20:06:31 | 200 |  603.912458ms | 127.0.0.1 | GET | /defects/api/sprints | -
+20:36:08 | 200 |     1.374589s | 127.0.0.1 | GET | / | -
+20:36:10 | 200 |  502.262583ms | 127.0.0.1 | GET | /api/sprints | -
+2025/12/27 20:36:48 📊 Engineer Dashboard Request
+20:36:48 | 200 |     689.375µs | 127.0.0.1 | GET | /engineer | -
+20:36:48 | 200 |  499.867292ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 20:36:53 📊 Engineer Dashboard Request
+2025/12/27 20:36:53 📊 Fetching engineer dashboard for surasin2@cisco.com in sprint 18615
+2025/12/27 20:36:54 📖 Found 3 stories for surasin2@cisco.com in sprint 18615
+2025/12/27 20:36:54 🐛 Found 0 defects for surasin2@cisco.com in sprint 18615
+2025/12/27 20:36:54 ✅ Engineer dashboard: 3 stories, 0 defects
+2025/12/27 20:36:54 ✅ Engineer dashboard rendered for surasin2@cisco.com
+20:36:53 | 200 |  1.257400084s | 127.0.0.1 | GET | /engineer | -
+20:36:54 | 200 |  538.607667ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 20:37:12 📊 Engineer Dashboard Request
+2025/12/27 20:37:12 📊 Fetching engineer dashboard for akbhat2@cisco.com in sprint 18615
+2025/12/27 20:37:13 📖 Found 3 stories for akbhat2@cisco.com in sprint 18615
+2025/12/27 20:37:14 🐛 Found 0 defects for akbhat2@cisco.com in sprint 18615
+2025/12/27 20:37:14 ✅ Engineer dashboard: 3 stories, 0 defects
+2025/12/27 20:37:14 ✅ Engineer dashboard rendered for akbhat2@cisco.com
+20:37:12 | 200 |  1.884528833s | 127.0.0.1 | GET | /engineer | -
+20:37:14 | 200 |  522.083625ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 20:37:24 📊 Engineer Dashboard Request
+2025/12/27 20:37:24 📊 Fetching engineer dashboard for shabhart@cisco.com in sprint 18615
+2025/12/27 20:37:25 📖 Found 1 stories for shabhart@cisco.com in sprint 18615
+2025/12/27 20:37:25 🐛 Found 0 defects for shabhart@cisco.com in sprint 18615
+2025/12/27 20:37:25 ✅ Engineer dashboard: 1 stories, 0 defects
+2025/12/27 20:37:25 ✅ Engineer dashboard rendered for shabhart@cisco.com
+20:37:24 | 200 |  1.187418834s | 127.0.0.1 | GET | /engineer | -
+20:37:25 | 200 |  501.154375ms | 127.0.0.1 | GET | /defects/api/sprints | -
+20:37:32 | 200 |  1.120964042s | 127.0.0.1 | GET | / | -
+20:37:33 | 200 |  485.633791ms | 127.0.0.1 | GET | /api/sprints | -
+20:37:33 | 200 |  1.043945792s | 127.0.0.1 | GET | /api/refresh | -
+2025/12/27 20:37:37 📊 Found 2 defects in sprint NM-2517
+2025/12/27 20:37:37   Bug 1: BUG-934734 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+2025/12/27 20:37:37   Bug 2: BUG-926223 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+20:37:36 | 200 |  871.704334ms | 127.0.0.1 | GET | /defects | -
+20:37:37 | 200 |  506.631125ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 20:37:48 📊 Found 2 defects in sprint NM-2517
+2025/12/27 20:37:48   Bug 1: BUG-934734 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+2025/12/27 20:37:48   Bug 2: BUG-926223 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+20:37:47 | 200 |  1.006233292s | 127.0.0.1 | GET | /defects | -
+20:37:48 | 200 |     531.383ms | 127.0.0.1 | GET | /defects/api/sprints | -
+2025/12/27 20:37:51 📊 Found 9 defects in sprint NM-2516
+2025/12/27 20:37:51   Bug 1: BUG-911245 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+2025/12/27 20:37:51   Bug 2: BUG-910831 - Assignee: Madhurima Datta (maddatta@cisco.com)
+2025/12/27 20:37:51   Bug 3: BUG-908049 - Assignee: Akshay Bhat (akbhat2@cisco.com)
+2025/12/27 20:37:51   Bug 4: BUG-907755 - Assignee: Suraj Singh (surasin2@cisco.com)
+2025/12/27 20:37:51   Bug 5: BUG-906124 - Assignee: Amit Kumar Singh (amitksi3@cisco.com)
+2025/12/27 20:37:51   Bug 6: BUG-903677 - Assignee: Amit Kumar Singh (amitksi3@cisco.com)
+2025/12/27 20:37:51   Bug 7: BUG-902236 - Assignee: Shashi Kiran Bharti (shabhart@cisco.com)
+2025/12/27 20:37:51   Bug 8: BUG-890229 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+2025/12/27 20:37:51   Bug 9: BUG-883085 - Assignee: Prashant Dewangan (prdewang@cisco.com)
+20:37:50 | 200 |  1.153653334s | 127.0.0.1 | GET | /defects | -
+20:37:51 | 200 |  529.460792ms | 127.0.0.1 | GET | /defects/api/sprints | -
+20:38:02 | 200 |  1.100017666s | 127.0.0.1 | GET | / | -
+20:38:03 | 200 |  538.511959ms | 127.0.0.1 | GET | /api/sprints | -
+20:38:05 | 200 |  949.345625ms | 127.0.0.1 | GET | / | -
+20:38:06 | 200 |  500.354292ms | 127.0.0.1 | GET | /api/sprints | -

@@ -138,6 +138,18 @@ templ DefectDashboardContent(data models.DefectDashboardData) {
 		@components.DefectStatsCard("Low", data.Stats.LowDefects, "severity", "ℹ️", "border-l-4 border-green-500")
 	</div>
 
+	<!-- Main Charts Section -->
+	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+		@components.DefectStatusPieChart(data.Stats)
+		@components.DefectSeverityDoughnutChart(data.Stats)
+	</div>
+
+	<!-- Secondary Charts Section -->
+	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+		@components.DefectAgingPieChart(data.Stats)
+		@components.DefectPriorityPieChart(data.AssigneeStats)
+	</div>
+
 	<!-- Charts and Team Stats -->
 	<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
 		@components.SeverityBreakdownChart(data.SeverityBreakdown)

@@ -3,14 +3,14 @@ package components
 import "fmt"
 
 templ StatsCard(title string, value int, subtitle string, icon string, colorClass string) {
-	<div class={ "glass rounded-2xl p-6 card-hover animate-fade-in " + colorClass }>
+	<div class={ "glass rounded-2xl p-6 card-hover animate-scale-in shadow-lg hover:shadow-2xl " + colorClass }>
 		<div class="flex items-center justify-between">
 			<div>
-				<p class="text-sm font-medium text-slate-500 uppercase tracking-wide">{ title }</p>
-				<p class="text-4xl font-bold text-slate-800 mt-2">{ fmt.Sprintf("%d", value) }</p>
-				<p class="text-sm text-slate-500 mt-1">{ subtitle }</p>
+				<p class="text-sm font-semibold text-slate-500 uppercase tracking-wide">{ title }</p>
+				<p class="text-4xl font-extrabold text-slate-800 mt-2 transition-all duration-300">{ fmt.Sprintf("%d", value) }</p>
+				<p class="text-sm text-slate-600 mt-1 font-medium">{ subtitle }</p>
 			</div>
-			<div class={ "w-16 h-16 rounded-2xl flex items-center justify-center text-2xl " + getIconBg(colorClass) }>
+			<div class={ "w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-md transition-transform duration-300 hover:scale-110 " + getIconBg(colorClass) }>
 				{ icon }
 			</div>
 		</div>
@@ -33,22 +33,27 @@ func getIconBg(colorClass string) string {
 }
 
 templ ProgressBar(completed int, total int) {
-	<div class="glass rounded-2xl p-6 card-hover animate-fade-in">
+	<div class="glass rounded-2xl p-6 card-hover animate-slide-left shadow-lg">
 		<div class="flex items-center justify-between mb-4">
-			<h3 class="text-lg font-semibold text-slate-700">Sprint Progress</h3>
-			<span class="text-2xl font-bold text-primary-600">
+			<h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+				<span class="text-2xl">🚀</span>
+				<span>Sprint Progress</span>
+			</h3>
+			<span class="text-3xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
 				{ fmt.Sprintf("%d%%", getPercentage(completed, total)) }
 			</span>
 		</div>
-		<div class="w-full bg-slate-200 rounded-full h-4 overflow-hidden">
-			<div 
-				class="h-full rounded-full bg-gradient-to-r from-primary-400 to-secondary-500 transition-all duration-1000 ease-out"
+		<div class="w-full bg-slate-200 rounded-full h-6 overflow-hidden shadow-inner">
+			<div
+				class="h-full rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 transition-all duration-1000 ease-out shimmer relative"
 				style={ fmt.Sprintf("width: %d%%", getPercentage(completed, total)) }
-			></div>
+			>
+				<div class="absolute inset-0 bg-white/20 rounded-full"></div>
+			</div>
 		</div>
-		<div class="flex justify-between mt-3 text-sm text-slate-500">
-			<span>{ fmt.Sprintf("%d points completed", completed) }</span>
-			<span>{ fmt.Sprintf("%d points total", total) }</span>
+		<div class="flex justify-between mt-4 text-sm font-semibold text-slate-600">
+			<span>✅ { fmt.Sprintf("%d points completed", completed) }</span>
+			<span>🎯 { fmt.Sprintf("%d points total", total) }</span>
 		</div>
 	</div>
 }

@@ -6,38 +6,38 @@ import (
 )
 
 templ StoryCard(story models.Story) {
-	<div class={ "glass rounded-xl p-4 card-hover animate-fade-in " + getPriorityClass(story.Priority) }>
+	<div class={ "glass rounded-xl p-4 card-hover animate-scale-in shadow-md hover:shadow-xl transition-all duration-300 " + getPriorityClass(story.Priority) }>
 		<div class="flex items-start justify-between mb-3">
-			<span class="text-xs font-semibold text-secondary-600 bg-secondary-100 px-2 py-1 rounded-lg">
+			<span class="text-xs font-bold text-secondary-600 bg-secondary-100 px-3 py-1 rounded-lg shadow-sm">
 				{ story.Key }
 			</span>
-			<span class={ "text-xs font-medium px-2 py-1 rounded-lg " + getStatusBadge(story.StatusCategory) }>
+			<span class={ "text-xs font-semibold px-3 py-1 rounded-lg shadow-sm " + getStatusBadge(story.StatusCategory) }>
 				{ story.Status }
 			</span>
 		</div>
 
-		<h4 class="font-semibold text-slate-800 text-sm leading-snug mb-3">
+		<h4 class="font-bold text-slate-800 text-sm leading-snug mb-3 hover:text-blue-600 transition-colors">
 			{ story.Title }
 		</h4>
 
 		<div class="flex items-center justify-between">
 			<div class="flex items-center gap-2">
 				if story.Assignee.Name != "" {
-					<div class="w-7 h-7 rounded-full bg-gradient-to-br from-primary-400 to-secondary-500 flex items-center justify-center text-white text-xs font-semibold">
+					<div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold shadow-md">
 						{ getInitials(story.Assignee.Name) }
 					</div>
-					<span class="text-xs text-slate-600 truncate max-w-[100px]">{ story.Assignee.Name }</span>
+					<span class="text-xs font-medium text-slate-700 truncate max-w-[100px]">{ story.Assignee.Name }</span>
 				} else {
-					<div class="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center text-slate-400 text-xs">
+					<div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-400 text-xs shadow-sm">
 						?
 					</div>
 					<span class="text-xs text-slate-400">Unassigned</span>
 				}
 			</div>
 
-			<div class="flex items-center gap-1 bg-primary-100 text-primary-700 px-2 py-1 rounded-lg">
-				<span class="text-xs">⚡</span>
-				<span class="text-xs font-semibold">{ fmt.Sprintf("%d", story.StoryPoints) }</span>
+			<div class="flex items-center gap-1 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 px-3 py-1 rounded-lg shadow-sm">
+				<span class="text-sm">⚡</span>
+				<span class="text-xs font-bold">{ fmt.Sprintf("%d", story.StoryPoints) }</span>
 			</div>
 		</div>
 	</div>

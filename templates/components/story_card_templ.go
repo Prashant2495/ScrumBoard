@@ -34,7 +34,7 @@ func StoryCard(story models.Story) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		var templ_7745c5c3_Var2 = []any{"glass rounded-xl p-4 card-hover animate-fade-in " + getPriorityClass(story.Priority)}
+		var templ_7745c5c3_Var2 = []any{"glass rounded-xl p-4 card-hover animate-scale-in shadow-md hover:shadow-xl transition-all duration-300 " + getPriorityClass(story.Priority)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var2...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -52,7 +52,7 @@ func StoryCard(story models.Story) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><div class=\"flex items-start justify-between mb-3\"><span class=\"text-xs font-semibold text-secondary-600 bg-secondary-100 px-2 py-1 rounded-lg\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><div class=\"flex items-start justify-between mb-3\"><span class=\"text-xs font-bold text-secondary-600 bg-secondary-100 px-3 py-1 rounded-lg shadow-sm\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -69,7 +69,7 @@ func StoryCard(story models.Story) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var5 = []any{"text-xs font-medium px-2 py-1 rounded-lg " + getStatusBadge(story.StatusCategory)}
+		var templ_7745c5c3_Var5 = []any{"text-xs font-semibold px-3 py-1 rounded-lg shadow-sm " + getStatusBadge(story.StatusCategory)}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var5...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -100,7 +100,7 @@ func StoryCard(story models.Story) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</span></div><h4 class=\"font-semibold text-slate-800 text-sm leading-snug mb-3\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</span></div><h4 class=\"font-bold text-slate-800 text-sm leading-snug mb-3 hover:text-blue-600 transition-colors\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -118,7 +118,7 @@ func StoryCard(story models.Story) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if story.Assignee.Name != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"w-7 h-7 rounded-full bg-gradient-to-br from-primary-400 to-secondary-500 flex items-center justify-center text-white text-xs font-semibold\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<div class=\"w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold shadow-md\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -131,14 +131,14 @@ func StoryCard(story models.Story) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div><span class=\"text-xs text-slate-600 truncate max-w-[100px]\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div><span class=\"text-xs font-medium text-slate-700 truncate max-w-[100px]\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(story.Assignee.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/story_card.templ`, Line: 29, Col: 86}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/story_card.templ`, Line: 29, Col: 98}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -149,19 +149,19 @@ func StoryCard(story models.Story) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div class=\"w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center text-slate-400 text-xs\">?</div><span class=\"text-xs text-slate-400\">Unassigned</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div class=\"w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-400 text-xs shadow-sm\">?</div><span class=\"text-xs text-slate-400\">Unassigned</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div><div class=\"flex items-center gap-1 bg-primary-100 text-primary-700 px-2 py-1 rounded-lg\"><span class=\"text-xs\">⚡</span> <span class=\"text-xs font-semibold\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div><div class=\"flex items-center gap-1 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 px-3 py-1 rounded-lg shadow-sm\"><span class=\"text-sm\">⚡</span> <span class=\"text-xs font-bold\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", story.StoryPoints))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/story_card.templ`, Line: 40, Col: 78}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/story_card.templ`, Line: 40, Col: 74}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {

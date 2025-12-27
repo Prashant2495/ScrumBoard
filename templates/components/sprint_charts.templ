@@ -1,0 +1,509 @@
+package components
+
+import (
+	"ScrumBoard/internal/models"
+	"encoding/json"
+	"fmt"
+)
+
+// TeamWorkDistributionChart shows bar chart of engineer-wise story points
+templ TeamWorkDistributionChart(userStats []models.UserStats) {
+	<div class="glass rounded-2xl p-6 card-hover animate-fade-in" data-user-stats={ marshalUserStats(userStats) }>
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">📊</span>
+			<span>Team Work Distribution</span>
+		</h3>
+		<div class="chart-container">
+			<canvas id="teamWorkChart"></canvas>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		(function() {
+			const chartDiv = document.querySelector('[data-user-stats]');
+			if (!chartDiv) return;
+
+			const userStatsData = JSON.parse(chartDiv.getAttribute('data-user-stats'));
+
+			const labels = userStatsData.map(u => u.user.name.split(' ')[0]); // First name only
+			const assignedPoints = userStatsData.map(u => u.assignedPoints);
+			const completedPoints = userStatsData.map(u => u.completedPoints);
+
+			const ctx = document.getElementById('teamWorkChart');
+			if (!ctx) return;
+
+			new Chart(ctx.getContext('2d'), {
+				type: 'bar',
+				data: {
+					labels: labels,
+					datasets: [
+						{
+							label: 'Assigned Points',
+							data: assignedPoints,
+							backgroundColor: 'rgba(102, 126, 234, 0.7)',
+							borderColor: 'rgba(102, 126, 234, 1)',
+							borderWidth: 2,
+							borderRadius: 8
+						},
+						{
+							label: 'Completed Points',
+							data: completedPoints,
+							backgroundColor: 'rgba(16, 185, 129, 0.7)',
+							borderColor: 'rgba(16, 185, 129, 1)',
+							borderWidth: 2,
+							borderRadius: 8
+						}
+					]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: {
+							position: 'top',
+							labels: {
+								padding: 15,
+								font: { size: 12, weight: 'bold' }
+							}
+						},
+						tooltip: {
+							callbacks: {
+								label: function(context) {
+									return context.dataset.label + ': ' + context.parsed.y + ' points';
+								}
+							}
+						}
+					},
+					scales: {
+						y: {
+							beginAtZero: true,
+							ticks: {
+								stepSize: 5
+							}
+						}
+					}
+				}
+			});
+		})();
+	</script>
+}
+
+// SprintProgressPieChart shows sprint completion status
+templ SprintProgressPieChart(stats models.SprintStats) {
+	<div
+		class="glass rounded-2xl p-6 card-hover animate-scale-in"
+		data-completed={ fmt.Sprintf("%d", stats.CompletedPoints) }
+		data-in-progress={ fmt.Sprintf("%d", stats.InProgressPoints) }
+		data-remaining={ fmt.Sprintf("%d", stats.RemainingPoints) }
+		data-total={ fmt.Sprintf("%d", stats.TotalPoints) }
+	>
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">🎯</span>
+			<span>Sprint Progress</span>
+		</h3>
+		<div class="chart-container">
+			<canvas id="sprintProgressChart"></canvas>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		(function() {
+			const ctx = document.getElementById('sprintProgressChart');
+			if (!ctx) return;
+
+			const chartDiv = ctx.closest('[data-completed]');
+			if (!chartDiv) return;
+
+			const data = {
+				completed: parseInt(chartDiv.getAttribute('data-completed')),
+				inProgress: parseInt(chartDiv.getAttribute('data-in-progress')),
+				remaining: parseInt(chartDiv.getAttribute('data-remaining')),
+				total: parseInt(chartDiv.getAttribute('data-total'))
+			};
+
+			new Chart(ctx.getContext('2d'), {
+				type: 'pie',
+				data: {
+					labels: ['Completed', 'In Progress', 'To Do'],
+					datasets: [{
+						data: [data.completed, data.inProgress, data.remaining],
+						backgroundColor: [
+							'rgba(16, 185, 129, 0.8)',
+							'rgba(59, 130, 246, 0.8)',
+							'rgba(148, 163, 184, 0.8)'
+						],
+						borderColor: [
+							'rgba(16, 185, 129, 1)',
+							'rgba(59, 130, 246, 1)',
+							'rgba(148, 163, 184, 1)'
+						],
+						borderWidth: 2
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: {
+							position: 'bottom',
+							labels: {
+								padding: 15,
+								font: { size: 12, weight: 'bold' }
+							}
+						},
+						tooltip: {
+							callbacks: {
+								label: function(context) {
+									const total = data.total;
+									const value = context.parsed || 0;
+									const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+									return context.label + ': ' + value + ' pts (' + percentage + '%)';
+								}
+							}
+						}
+					}
+				}
+			});
+		})();
+	</script>
+}
+
+func marshalUserStats(stats []models.UserStats) string {
+	data, _ := json.Marshal(stats)
+	return string(data)
+}
+
+// SprintWorkloadChart shows total workload distribution
+templ SprintWorkloadChart(stats models.SprintStats) {
+	<div
+		class="glass rounded-2xl p-6 card-hover animate-fade-in"
+		data-completed={ fmt.Sprintf("%d", stats.CompletedPoints) }
+		data-in-progress={ fmt.Sprintf("%d", stats.InProgressPoints) }
+		data-remaining={ fmt.Sprintf("%d", stats.RemainingPoints) }
+	>
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">📈</span>
+			<span>Sprint Workload</span>
+		</h3>
+		<div class="chart-container">
+			<canvas id="sprintWorkloadChart"></canvas>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		(function() {
+			const chartDiv = document.querySelector('[data-completed][data-in-progress][data-remaining]');
+			if (!chartDiv) return;
+
+			const data = {
+				completed: parseInt(chartDiv.getAttribute('data-completed')),
+				inProgress: parseInt(chartDiv.getAttribute('data-in-progress')),
+				remaining: parseInt(chartDiv.getAttribute('data-remaining'))
+			};
+
+			const ctx = document.getElementById('sprintWorkloadChart');
+			if (!ctx) return;
+
+			new Chart(ctx.getContext('2d'), {
+				type: 'bar',
+				data: {
+					labels: ['Completed', 'In Progress', 'To Do'],
+					datasets: [{
+						label: 'Story Points',
+						data: [data.completed, data.inProgress, data.remaining],
+						backgroundColor: [
+							'rgba(16, 185, 129, 0.7)',
+							'rgba(59, 130, 246, 0.7)',
+							'rgba(148, 163, 184, 0.7)'
+						],
+						borderColor: [
+							'rgba(16, 185, 129, 1)',
+							'rgba(59, 130, 246, 1)',
+							'rgba(148, 163, 184, 1)'
+						],
+						borderWidth: 2,
+						borderRadius: 8
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: {
+							display: false
+						},
+						tooltip: {
+							callbacks: {
+								label: function(context) {
+									const total = data.completed + data.inProgress + data.remaining;
+									const percentage = total > 0 ? ((context.parsed.y / total) * 100).toFixed(1) : 0;
+									return 'Points: ' + context.parsed.y + ' (' + percentage + '%)';
+								}
+							}
+						}
+					},
+					scales: {
+						y: {
+							beginAtZero: true,
+							ticks: {
+								stepSize: 5
+							}
+						}
+					}
+				}
+			});
+		})();
+	</script>
+}
+
+// TeamCapacityChart shows team capacity vs actual work
+templ TeamCapacityChart(userStats []models.UserStats, totalPoints int) {
+	<div class="glass rounded-2xl p-6 card-hover animate-scale-in" data-capacity-stats={ marshalUserStats(userStats) } data-total={ fmt.Sprintf("%d", totalPoints) }>
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">⚡</span>
+			<span>Team Capacity</span>
+		</h3>
+		<div class="chart-container">
+			<canvas id="teamCapacityChart"></canvas>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		(function() {
+			const chartDiv = document.querySelector('[data-capacity-stats]');
+			if (!chartDiv) return;
+
+			const userStatsData = JSON.parse(chartDiv.getAttribute('data-capacity-stats'));
+			const totalPoints = parseInt(chartDiv.getAttribute('data-total'));
+
+			const labels = userStatsData.map(u => u.user.name.split(' ')[0]);
+			const assignedPoints = userStatsData.map(u => u.assignedPoints);
+
+			// Estimate capacity as 120% of assigned (assuming some buffer)
+			const capacity = assignedPoints.map(p => Math.ceil(p * 1.2));
+
+			const ctx = document.getElementById('teamCapacityChart');
+			if (!ctx) return;
+
+			new Chart(ctx.getContext('2d'), {
+				type: 'bar',
+				data: {
+					labels: labels,
+					datasets: [
+						{
+							label: 'Assigned Points',
+							data: assignedPoints,
+							backgroundColor: 'rgba(102, 126, 234, 0.7)',
+							borderColor: 'rgba(102, 126, 234, 1)',
+							borderWidth: 2,
+							borderRadius: 8
+						},
+						{
+							label: 'Estimated Capacity',
+							data: capacity,
+							backgroundColor: 'rgba(251, 191, 36, 0.5)',
+							borderColor: 'rgba(251, 191, 36, 1)',
+							borderWidth: 2,
+							borderRadius: 8,
+							borderDash: [5, 5]
+						}
+					]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: {
+							position: 'top',
+							labels: {
+								padding: 15,
+								font: { size: 12, weight: 'bold' }
+							}
+						},
+						tooltip: {
+							callbacks: {
+								label: function(context) {
+									return context.dataset.label + ': ' + context.parsed.y + ' pts';
+								}
+							}
+						}
+					},
+					scales: {
+						y: {
+							beginAtZero: true,
+							ticks: {
+								stepSize: 5
+							}
+						}
+					}
+				}
+			});
+		})();
+	</script>
+}
+
+// StoryStatusDistributionPieChart shows all stories status
+templ StoryStatusDistributionPieChart(todoStories, inProgress, doneStories []models.Story) {
+	<div
+		class="glass rounded-2xl p-6 card-hover animate-scale-in"
+		data-todo={ fmt.Sprintf("%d", len(todoStories)) }
+		data-progress={ fmt.Sprintf("%d", len(inProgress)) }
+		data-done={ fmt.Sprintf("%d", len(doneStories)) }
+	>
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">📋</span>
+			<span>Story Distribution</span>
+		</h3>
+		<div class="chart-container">
+			<canvas id="storyDistributionChart"></canvas>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		(function() {
+			const chartDiv = document.querySelector('[data-todo][data-progress][data-done]');
+			if (!chartDiv) return;
+
+			const data = {
+				todo: parseInt(chartDiv.getAttribute('data-todo')),
+				progress: parseInt(chartDiv.getAttribute('data-progress')),
+				done: parseInt(chartDiv.getAttribute('data-done'))
+			};
+
+			const ctx = document.getElementById('storyDistributionChart');
+			if (!ctx) return;
+
+			new Chart(ctx.getContext('2d'), {
+				type: 'doughnut',
+				data: {
+					labels: ['To Do', 'In Progress', 'Done'],
+					datasets: [{
+						data: [data.todo, data.progress, data.done],
+						backgroundColor: [
+							'rgba(148, 163, 184, 0.8)',
+							'rgba(59, 130, 246, 0.8)',
+							'rgba(16, 185, 129, 0.8)'
+						],
+						borderColor: [
+							'rgba(148, 163, 184, 1)',
+							'rgba(59, 130, 246, 1)',
+							'rgba(16, 185, 129, 1)'
+						],
+						borderWidth: 2
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: {
+							position: 'bottom',
+							labels: {
+								padding: 15,
+								font: { size: 12, weight: 'bold' }
+							}
+						},
+						tooltip: {
+							callbacks: {
+								label: function(context) {
+									const total = data.todo + data.progress + data.done;
+									const value = context.parsed || 0;
+									const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+									return context.label + ': ' + value + ' stories (' + percentage + '%)';
+								}
+							}
+						}
+					}
+				}
+			});
+		})();
+	</script>
+}
+
+// TeamWorkloadPieChart shows team workload distribution
+templ TeamWorkloadPieChart(userStats []models.UserStats) {
+	<div class="glass rounded-2xl p-6 card-hover animate-scale-in" data-workload-stats={ marshalUserStats(userStats) }>
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">👥</span>
+			<span>Team Workload Share</span>
+		</h3>
+		<div class="chart-container">
+			<canvas id="teamWorkloadPieChart"></canvas>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		(function() {
+			const chartDiv = document.querySelector('[data-workload-stats]');
+			if (!chartDiv) return;
+
+			const userStatsData = JSON.parse(chartDiv.getAttribute('data-workload-stats'));
+
+			const labels = userStatsData.map(u => u.user.name.split(' ')[0]);
+			const assignedPoints = userStatsData.map(u => u.assignedPoints);
+
+			// Generate colors
+			const colors = [
+				'rgba(239, 68, 68, 0.8)',
+				'rgba(251, 191, 36, 0.8)',
+				'rgba(34, 197, 94, 0.8)',
+				'rgba(59, 130, 246, 0.8)',
+				'rgba(168, 85, 247, 0.8)',
+				'rgba(236, 72, 153, 0.8)',
+				'rgba(20, 184, 166, 0.8)',
+				'rgba(249, 115, 22, 0.8)'
+			];
+
+			const borderColors = [
+				'rgba(239, 68, 68, 1)',
+				'rgba(251, 191, 36, 1)',
+				'rgba(34, 197, 94, 1)',
+				'rgba(59, 130, 246, 1)',
+				'rgba(168, 85, 247, 1)',
+				'rgba(236, 72, 153, 1)',
+				'rgba(20, 184, 166, 1)',
+				'rgba(249, 115, 22, 1)'
+			];
+
+			const ctx = document.getElementById('teamWorkloadPieChart');
+			if (!ctx) return;
+
+			new Chart(ctx.getContext('2d'), {
+				type: 'pie',
+				data: {
+					labels: labels,
+					datasets: [{
+						data: assignedPoints,
+						backgroundColor: colors.slice(0, labels.length),
+						borderColor: borderColors.slice(0, labels.length),
+						borderWidth: 2
+					}]
+				},
+				options: {
+					responsive: true,
+					maintainAspectRatio: false,
+					plugins: {
+						legend: {
+							position: 'bottom',
+							labels: {
+								padding: 15,
+								font: { size: 12, weight: 'bold' }
+							}
+						},
+						tooltip: {
+							callbacks: {
+								label: function(context) {
+									const total = assignedPoints.reduce((a, b) => a + b, 0);
+									const value = context.parsed || 0;
+									const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+									return context.label + ': ' + value + ' pts (' + percentage + '%)';
+								}
+							}
+						}
+					}
+				}
+			});
+		})();
+	</script>
+}
+
