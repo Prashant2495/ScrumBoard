@@ -1,4 +1,4 @@
-2025/12/27 20:44:37 🚀 Scrum Dashboard starting on http://localhost:3000
+2025/12/27 20:56:20 🚀 Scrum Dashboard starting on http://localhost:3000
 
  ┌───────────────────────────────────────────────────┐ 
  │                  Scrum Dashboard                  │ 
@@ -7,53 +7,8 @@
  │       (bound on host 0.0.0.0 and port 3000)       │ 
  │                                                   │ 
  │ Handlers ............ 21  Processes ........... 1 │ 
- │ Prefork ....... Disabled  PID ............. 86112 │ 
+ │ Prefork ....... Disabled  PID ............. 88915 │ 
  └───────────────────────────────────────────────────┘ 
 
-20:44:41 | 200 |  1.378310458s | 127.0.0.1 | GET | / | -
-20:44:42 | 200 |  657.648084ms | 127.0.0.1 | GET | /api/sprints | -
-20:44:46 | 200 |  1.766853375s | 127.0.0.1 | GET | / | -
-20:44:47 | 200 |  582.569209ms | 127.0.0.1 | GET | /api/sprints | -
-2025/12/27 20:44:49 📊 Engineer Dashboard Request
-20:44:49 | 200 |     440.333µs | 127.0.0.1 | GET | /engineer | -
-20:44:49 | 200 |  1.170759125s | 127.0.0.1 | GET | /defects/api/sprints | -
-2025/12/27 20:44:56 📊 Engineer Dashboard Request
-2025/12/27 20:44:56 📊 Fetching engineer dashboard for prdewang@cisco.com in sprint 0
-2025/12/27 20:44:57 📖 Found 0 stories for prdewang@cisco.com in sprint 0
-2025/12/27 20:44:57 📊 Engineer Dashboard Request
-2025/12/27 20:44:57 📊 Fetching engineer dashboard for prdewang@cisco.com in sprint 18615
-2025/12/27 20:44:58 🐛 Found 0 defects for prdewang@cisco.com in sprint 0
-2025/12/27 20:44:58 ✅ Engineer dashboard: 0 stories, 0 defects
-2025/12/27 20:44:58 ✅ Engineer dashboard rendered for prdewang@cisco.com
-20:44:56 | 200 |  1.791781459s | 127.0.0.1 | GET | /engineer | -
-2025/12/27 20:45:00 📖 Found 1 stories for prdewang@cisco.com in sprint 18615
-2025/12/27 20:45:00 🐛 Found 2 defects for prdewang@cisco.com in sprint 18615
-2025/12/27 20:45:00 ✅ Engineer dashboard: 1 stories, 2 defects
-2025/12/27 20:45:00 ✅ Engineer dashboard rendered for prdewang@cisco.com
-20:44:57 | 200 |  2.748063417s | 127.0.0.1 | GET | /engineer | -
-20:45:00 | 200 |  1.369536958s | 127.0.0.1 | GET | /defects/api/sprints | -
-2025/12/27 20:45:11 📊 Engineer Dashboard Request
-2025/12/27 20:45:11 📊 Fetching engineer dashboard for prdewang@cisco.com in sprint 18612
-2025/12/27 20:45:12 📖 Found 1 stories for prdewang@cisco.com in sprint 18612
-2025/12/27 20:45:13 🐛 Found 2 defects for prdewang@cisco.com in sprint 18612
-2025/12/27 20:45:13 ✅ Engineer dashboard: 1 stories, 2 defects
-2025/12/27 20:45:13 ✅ Engineer dashboard rendered for prdewang@cisco.com
-20:45:11 | 200 |  2.128017208s | 127.0.0.1 | GET | /engineer | -
-20:45:13 | 200 |  499.193042ms | 127.0.0.1 | GET | /defects/api/sprints | -
-2025/12/27 20:45:39 📊 Found 2 defects in sprint NM-2517
-2025/12/27 20:45:39   Bug 1: BUG-934734 - Assignee: Prashant Dewangan (prdewang@cisco.com)
-2025/12/27 20:45:39   Bug 2: BUG-926223 - Assignee: Prashant Dewangan (prdewang@cisco.com)
-20:45:38 | 200 |  1.006568541s | 127.0.0.1 | GET | /defects | -
-20:45:39 | 200 |   1.02185775s | 127.0.0.1 | GET | /defects/api/sprints | -
-2025/12/27 20:45:50 📊 Found 9 defects in sprint NM-2516
-2025/12/27 20:45:50   Bug 1: BUG-911245 - Assignee: Prashant Dewangan (prdewang@cisco.com)
-2025/12/27 20:45:50   Bug 2: BUG-910831 - Assignee: Madhurima Datta (maddatta@cisco.com)
-2025/12/27 20:45:50   Bug 3: BUG-908049 - Assignee: Akshay Bhat (akbhat2@cisco.com)
-2025/12/27 20:45:50   Bug 4: BUG-907755 - Assignee: Suraj Singh (surasin2@cisco.com)
-2025/12/27 20:45:50   Bug 5: BUG-906124 - Assignee: Amit Kumar Singh (amitksi3@cisco.com)
-2025/12/27 20:45:50   Bug 6: BUG-903677 - Assignee: Amit Kumar Singh (amitksi3@cisco.com)
-2025/12/27 20:45:50   Bug 7: BUG-902236 - Assignee: Shashi Kiran Bharti (shabhart@cisco.com)
-2025/12/27 20:45:50   Bug 8: BUG-890229 - Assignee: Prashant Dewangan (prdewang@cisco.com)
-2025/12/27 20:45:50   Bug 9: BUG-883085 - Assignee: Prashant Dewangan (prdewang@cisco.com)
-20:45:49 | 200 |  1.126576125s | 127.0.0.1 | GET | /defects | -
-20:45:50 | 200 |  1.174644834s | 127.0.0.1 | GET | /defects/api/sprints | -
+20:56:27 | 200 |  1.831123792s | 127.0.0.1 | GET | / | -
+20:56:29 | 200 |  550.753083ms | 127.0.0.1 | GET | /api/sprints | -

@@ -17,24 +17,24 @@ templ Layout(title string) {
 					extend: {
 						colors: {
 							primary: {
-								50: '#ecfdf5',
-								100: '#d1fae5',
-								200: '#a7f3d0',
-								300: '#6ee7b7',
-								400: '#34d399',
-								500: '#10b981',
-								600: '#059669',
-								700: '#047857',
+								50: '#f0fdfa',
+								100: '#ccfbf1',
+								200: '#99f6e4',
+								300: '#5eead4',
+								400: '#2dd4bf',
+								500: '#14b8a6',
+								600: '#0d9488',
+								700: '#0f766e',
 							},
 							secondary: {
-								50: '#eff6ff',
-								100: '#dbeafe',
-								200: '#bfdbfe',
-								300: '#93c5fd',
-								400: '#60a5fa',
-								500: '#3b82f6',
-								600: '#2563eb',
-								700: '#1d4ed8',
+								50: '#f0f9ff',
+								100: '#e0f2fe',
+								200: '#bae6fd',
+								300: '#7dd3fc',
+								400: '#38bdf8',
+								500: '#0ea5e9',
+								600: '#0284c7',
+								700: '#0369a1',
 							}
 						},
 						fontFamily: {
@@ -45,24 +45,111 @@ templ Layout(title string) {
 			}
 		</script>
 		<style>
+			/* Live Wallpaper Background - Dark Navy Blue with Bubbles */
+			body {
+				background: linear-gradient(135deg, #0a1628 0%, #0c1e3d 25%, #1e3a8a 50%, #1e40af 75%, #2563eb 100%);
+				background-size: 400% 400%;
+				animation: gradientShift 20s ease infinite;
+				position: relative;
+				overflow-x: hidden;
+			}
+
+			/* Animated Bubbles */
+			body::before,
+			body::after {
+				content: '';
+				position: fixed;
+				border-radius: 50%;
+				pointer-events: none;
+				z-index: 0;
+			}
+
+			body::before {
+				width: 400px;
+				height: 400px;
+				background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(147, 197, 253, 0.1) 50%, transparent 70%);
+				top: -150px;
+				left: -150px;
+				animation: bubble1 25s ease-in-out infinite;
+				box-shadow: 0 0 150px rgba(147, 197, 253, 0.3);
+			}
+
+			body::after {
+				width: 500px;
+				height: 500px;
+				background: radial-gradient(circle, rgba(147, 197, 253, 0.2) 0%, rgba(59, 130, 246, 0.15) 40%, transparent 70%);
+				bottom: -200px;
+				right: -200px;
+				animation: bubble2 30s ease-in-out infinite;
+				box-shadow: 0 0 180px rgba(59, 130, 246, 0.4);
+			}
+
+			@keyframes gradientShift {
+				0% { background-position: 0% 50%; }
+				50% { background-position: 100% 50%; }
+				100% { background-position: 0% 50%; }
+			}
+
+			@keyframes bubble1 {
+				0%, 100% {
+					transform: translate(0, 0) scale(1);
+					opacity: 0.6;
+				}
+				25% {
+					transform: translate(100vw, 30vh) scale(1.3);
+					opacity: 0.8;
+				}
+				50% {
+					transform: translate(80vw, 80vh) scale(0.8);
+					opacity: 0.5;
+				}
+				75% {
+					transform: translate(20vw, 50vh) scale(1.1);
+					opacity: 0.7;
+				}
+			}
+
+			@keyframes bubble2 {
+				0%, 100% {
+					transform: translate(0, 0) scale(1);
+					opacity: 0.5;
+				}
+				33% {
+					transform: translate(-60vw, -40vh) scale(1.2);
+					opacity: 0.7;
+				}
+				66% {
+					transform: translate(-30vw, -70vh) scale(0.9);
+					opacity: 0.6;
+				}
+			}
+
 			.glass {
-				background: rgba(255, 255, 255, 0.7);
-				backdrop-filter: blur(10px);
-				border: 1px solid rgba(255, 255, 255, 0.2);
+				background: rgba(255, 255, 255, 0.98);
+				backdrop-filter: blur(30px);
+				border: 2px solid rgba(255, 255, 255, 0.6);
+				box-shadow:
+					0 8px 32px rgba(59, 130, 246, 0.3),
+					0 0 80px rgba(147, 197, 253, 0.2),
+					inset 0 1px 0 rgba(255, 255, 255, 0.9);
 			}
 			.glass-dark {
-				background: rgba(30, 41, 59, 0.8);
-				backdrop-filter: blur(10px);
+				background: rgba(30, 58, 138, 0.95);
+				backdrop-filter: blur(25px);
+				border: 2px solid rgba(147, 197, 253, 0.4);
+				box-shadow: 0 8px 32px rgba(59, 130, 246, 0.4);
 			}
 			.gradient-bg {
-				background: linear-gradient(135deg, #667eea 0%, #10b981 50%, #3b82f6 100%);
+				background: linear-gradient(135deg, #0c1e3d 0%, #1e3a8a 50%, #1e40af 100%);
+				box-shadow: 0 10px 40px rgba(12, 30, 61, 0.6);
+				border-bottom: 2px solid rgba(59, 130, 246, 0.3);
 			}
 			.card-hover {
 				transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 			}
 			.card-hover:hover {
 				transform: translateY(-8px) scale(1.02);
-				box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+				box-shadow: 0 25px 50px rgba(14, 165, 233, 0.25);
 			}
 			@keyframes fadeIn {
 				from { opacity: 0; transform: translateY(20px); }
@@ -101,22 +188,22 @@ templ Layout(title string) {
 				background-size: 1000px 100%;
 				animation: shimmer 2s infinite;
 			}
-			.priority-high { border-left: 4px solid #ef4444; }
-			.priority-medium { border-left: 4px solid #f59e0b; }
-			.priority-low { border-left: 4px solid #10b981; }
+			.priority-high { border-left: 4px solid #3b82f6; }
+			.priority-medium { border-left: 4px solid #60a5fa; }
+			.priority-low { border-left: 4px solid #93c5fd; }
 
-			/* Gradient cards */
+			/* Gradient cards - Blue & White theme */
 			.gradient-card-1 {
-				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
 			}
 			.gradient-card-2 {
-				background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+				background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
 			}
 			.gradient-card-3 {
-				background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+				background: linear-gradient(135deg, #2563eb 0%, #93c5fd 100%);
 			}
 			.gradient-card-4 {
-				background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+				background: linear-gradient(135deg, #60a5fa 0%, #dbeafe 100%);
 			}
 
 			/* Chart container */
@@ -130,8 +217,79 @@ templ Layout(title string) {
 			}
 		</style>
 	</head>
-	<body class="font-sans bg-gradient-to-br from-slate-50 via-white to-blue-50 min-h-screen">
-		{ children... }
+	<body class="font-sans min-h-screen relative">
+		<!-- Animated Bubbles Container -->
+		<div id="bubbles-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden;"></div>
+
+		<div class="relative z-10">
+			{ children... }
+		</div>
+
+		<script>
+			// Create animated bubbles
+			function createBubbles() {
+				const container = document.getElementById('bubbles-container');
+				const bubbleCount = 20;
+
+				for (let i = 0; i < bubbleCount; i++) {
+					const bubble = document.createElement('div');
+					const size = Math.random() * 150 + 50; // 50-200px
+					const startX = Math.random() * 100; // 0-100%
+					const duration = Math.random() * 20 + 15; // 15-35s
+					const delay = Math.random() * 10; // 0-10s
+
+					bubble.style.cssText = `
+						position: absolute;
+						width: ${size}px;
+						height: ${size}px;
+						border-radius: 50%;
+						background: radial-gradient(circle at 30% 30%,
+							rgba(147, 197, 253, 0.3) 0%,
+							rgba(59, 130, 246, 0.2) 30%,
+							rgba(37, 99, 235, 0.15) 60%,
+							transparent 100%);
+						bottom: -${size}px;
+						left: ${startX}%;
+						animation: floatUp ${duration}s ease-in-out ${delay}s infinite;
+						box-shadow:
+							inset 0 0 40px rgba(147, 197, 253, 0.4),
+							0 0 60px rgba(59, 130, 246, 0.3);
+						opacity: 0.8;
+					`;
+
+					container.appendChild(bubble);
+				}
+			}
+
+			// Add CSS animation for bubbles
+			const style = document.createElement('style');
+			style.textContent = `
+				@keyframes floatUp {
+					0% {
+						transform: translateY(0) translateX(0) scale(1);
+						opacity: 0;
+					}
+					10% {
+						opacity: 0.7;
+					}
+					50% {
+						transform: translateY(-50vh) translateX(${Math.random() * 100 - 50}px) scale(1.1);
+						opacity: 0.8;
+					}
+					90% {
+						opacity: 0.5;
+					}
+					100% {
+						transform: translateY(-100vh) translateX(${Math.random() * 150 - 75}px) scale(0.8);
+						opacity: 0;
+					}
+				}
+			`;
+			document.head.appendChild(style);
+
+			// Initialize bubbles when page loads
+			window.addEventListener('load', createBubbles);
+		</script>
 	</body>
 	</html>
 }
