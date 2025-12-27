@@ -602,12 +602,13 @@ func (j *JiraService) GetSprintIssuesByJQL(sprintID int) ([]models.Story, error)
 	return stories, nil
 }
 
-// GetSprintIssues fetches all issues for a specific sprint filtered by team name containing "AMF"
+// GetSprintIssues fetches all PARENT stories (not subtasks) for a specific sprint filtered by team name containing "AMF"
 func (j *JiraService) GetSprintIssues(boardID string, sprintID int) ([]models.Story, error) {
 	// Use Board + Sprint API to get issues for a specific sprint
 	// customfield_10028 = Story Points
 	// customfield_10001 = Team field (contains team name like "AMF: Interstellar", "AMF: Avengers")
-	url := fmt.Sprintf("%s/rest/agile/1.0/board/%s/sprint/%d/issue?fields=summary,status,assignee,priority,customfield_10028,customfield_10001,labels,created,updated,description&maxResults=500", j.BaseURL, boardID, sprintID)
+	// Filter: issuetype != Sub-task to exclude subtasks and show only parent stories
+	url := fmt.Sprintf("%s/rest/agile/1.0/board/%s/sprint/%d/issue?jql=issuetype!=Sub-task&fields=summary,status,assignee,priority,customfield_10028,customfield_10001,labels,created,updated,description,issuetype&maxResults=500", j.BaseURL, boardID, sprintID)
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
