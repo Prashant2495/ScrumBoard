@@ -253,28 +253,30 @@ templ DefectAssigneeBarChart(assigneeStats []models.DefectByAssignee) {
 // DefectResolutionProgress shows resolution progress
 templ DefectResolutionProgress(stats models.DefectStats) {
 	<div class="glass rounded-2xl p-6 card-hover animate-slide-left shadow-lg">
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-			<span class="text-2xl">✅</span>
-			<span>Resolution Progress</span>
-		</h3>
-		<div class="space-y-4">
-			<div class="flex justify-between items-center">
-				<span class="text-3xl font-bold text-slate-800">{ fmt.Sprintf("%d", stats.ResolvedDefects) }</span>
-				<span class="text-sm text-slate-500">of { fmt.Sprintf("%d", stats.TotalDefects) } defects</span>
-			</div>
-			<div class="relative h-6 bg-slate-200 rounded-full overflow-hidden shadow-inner">
-				<div
-					class="h-full rounded-full bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 transition-all duration-1000 ease-out shimmer relative"
-					style={ fmt.Sprintf("width: %d%%", getDefectPercentage(stats.ResolvedDefects, stats.TotalDefects)) }
-				>
-					<div class="absolute inset-0 bg-white/20 rounded-full"></div>
+		<div class="flex items-center justify-between mb-4">
+			<h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+				<span class="text-2xl">✅</span>
+				<span>Resolution Progress</span>
+			</h3>
+			<span class={ "text-3xl font-extrabold " + getDefectProgressTextColor(getDefectPercentage(stats.ResolvedDefects, stats.TotalDefects)) }>
+				{ fmt.Sprintf("%d%%", getDefectPercentage(stats.ResolvedDefects, stats.TotalDefects)) }
+			</span>
+		</div>
+		<div class="w-full bg-slate-200 rounded-lg h-8 overflow-hidden shadow-inner relative">
+			<div
+				class={ "h-full rounded-lg transition-all duration-1000 ease-out relative " + getDefectProgressBarColor(getDefectPercentage(stats.ResolvedDefects, stats.TotalDefects)) }
+				style={ fmt.Sprintf("width: %d%%", getDefectPercentage(stats.ResolvedDefects, stats.TotalDefects)) }
+			>
+				<div class="absolute inset-0 flex items-center justify-center">
+					<span class="text-white font-bold text-sm drop-shadow-lg">
+						{ fmt.Sprintf("%d / %d defects", stats.ResolvedDefects, stats.TotalDefects) }
+					</span>
 				</div>
 			</div>
-			<div class="text-center">
-				<span class="text-3xl font-extrabold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
-					{ fmt.Sprintf("%d%%", getDefectPercentage(stats.ResolvedDefects, stats.TotalDefects)) }
-				</span>
-			</div>
+		</div>
+		<div class="flex justify-between mt-4 text-sm font-semibold text-slate-600">
+			<span>✅ { fmt.Sprintf("%d defects resolved", stats.ResolvedDefects) }</span>
+			<span>🎯 { fmt.Sprintf("%d defects total", stats.TotalDefects) }</span>
 		</div>
 	</div>
 }
@@ -289,6 +291,34 @@ func getDefectPercentage(resolved, total int) int {
 		return 0
 	}
 	return (resolved * 100) / total
+}
+
+func getDefectProgressBarColor(percentage int) string {
+	if percentage < 30 {
+		return "bg-gradient-to-r from-red-500 to-red-600"
+	} else if percentage < 50 {
+		return "bg-gradient-to-r from-orange-500 to-orange-600"
+	} else if percentage < 70 {
+		return "bg-gradient-to-r from-yellow-500 to-yellow-600"
+	} else if percentage < 90 {
+		return "bg-gradient-to-r from-blue-500 to-blue-600"
+	} else {
+		return "bg-gradient-to-r from-green-500 to-green-600"
+	}
+}
+
+func getDefectProgressTextColor(percentage int) string {
+	if percentage < 30 {
+		return "text-red-600"
+	} else if percentage < 50 {
+		return "text-orange-600"
+	} else if percentage < 70 {
+		return "text-yellow-600"
+	} else if percentage < 90 {
+		return "text-blue-600"
+	} else {
+		return "text-green-600"
+	}
 }
 
 // DefectAgingPieChart shows defect aging distribution
