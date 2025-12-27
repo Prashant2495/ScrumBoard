@@ -1,0 +1,112 @@
+package components
+
+import (
+	"ScrumBoard/internal/models"
+	"fmt"
+)
+
+templ DefectCard(defect models.Defect) {
+	<div class="glass rounded-xl p-4 hover:shadow-lg transition-all animate-fade-in border-l-4 { getSeverityBorderClass(defect.Severity) }">
+		<!-- Header -->
+		<div class="flex items-start justify-between mb-3">
+			<div class="flex-1">
+				<div class="flex items-center gap-2 mb-1">
+					<span class="text-xs font-mono text-slate-500">{ defect.Key }</span>
+					@SeverityBadge(defect.Severity)
+					@PriorityBadge(defect.Priority)
+				</div>
+				<h3 class="font-semibold text-slate-800 text-sm leading-tight">
+					{ defect.Summary }
+				</h3>
+			</div>
+		</div>
+
+		<!-- Metadata -->
+		<div class="flex items-center gap-4 text-xs text-slate-600 mb-3">
+			if defect.Environment != "" {
+				<div class="flex items-center gap-1">
+					<span>🌍</span>
+					<span>{ defect.Environment }</span>
+				</div>
+			}
+			<div class="flex items-center gap-1">
+				<span>📅</span>
+				<span>{ fmt.Sprintf("%dd old", defect.AgeInDays) }</span>
+			</div>
+			if defect.ResolutionTime > 0 {
+				<div class="flex items-center gap-1">
+					<span>⏱️</span>
+					<span>{ fmt.Sprintf("%dh to resolve", defect.ResolutionTime) }</span>
+				</div>
+			}
+		</div>
+
+		<!-- Assignee -->
+		if defect.Assignee.Name != "" {
+			<div class="flex items-center gap-2 pt-2 border-t border-slate-200">
+				<div class="w-6 h-6 rounded-full bg-gradient-to-br from-primary-400 to-secondary-400 flex items-center justify-center text-white text-xs font-semibold">
+					{ string([]rune(defect.Assignee.Name)[0]) }
+				</div>
+				<span class="text-xs text-slate-600">{ defect.Assignee.Name }</span>
+			</div>
+		}
+	</div>
+}
+
+templ SeverityBadge(severity string) {
+	<span class={ "px-2 py-0.5 rounded-full text-xs font-semibold " + getSeverityClass(severity) }>
+		{ severity }
+	</span>
+}
+
+templ PriorityBadge(priority string) {
+	<span class={ "px-2 py-0.5 rounded-full text-xs font-medium " + getDefectPriorityClass(priority) }>
+		{ priority }
+	</span>
+}
+
+func getSeverityClass(severity string) string {
+	switch severity {
+	case "Critical":
+		return "bg-red-100 text-red-700"
+	case "High":
+		return "bg-orange-100 text-orange-700"
+	case "Medium":
+		return "bg-yellow-100 text-yellow-700"
+	case "Low":
+		return "bg-green-100 text-green-700"
+	default:
+		return "bg-slate-100 text-slate-600"
+	}
+}
+
+func getSeverityBorderClass(severity string) string {
+	switch severity {
+	case "Critical":
+		return "border-red-500"
+	case "High":
+		return "border-orange-500"
+	case "Medium":
+		return "border-yellow-500"
+	case "Low":
+		return "border-green-500"
+	default:
+		return "border-slate-300"
+	}
+}
+
+func getDefectPriorityClass(priority string) string {
+	switch priority {
+	case "Blocker", "Highest":
+		return "bg-purple-100 text-purple-700"
+	case "Critical", "High":
+		return "bg-red-100 text-red-600"
+	case "Major", "Medium":
+		return "bg-blue-100 text-blue-600"
+	case "Minor", "Low":
+		return "bg-slate-100 text-slate-600"
+	default:
+		return "bg-slate-100 text-slate-500"
+	}
+}
+

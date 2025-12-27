@@ -1,0 +1,52 @@
+package components
+
+import (
+	"ScrumBoard/internal/models"
+	"fmt"
+)
+
+templ DefectBoard(openDefects, inProgressDefects, resolvedDefects []models.Defect) {
+	<div class="mt-8">
+		<h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+			<span>🐛</span>
+			<span>Defect Board</span>
+		</h2>
+		
+		<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+			@DefectColumn("Open", openDefects, "🔴", "bg-red-50", len(openDefects))
+			@DefectColumn("In Progress", inProgressDefects, "🟡", "bg-yellow-50", len(inProgressDefects))
+			@DefectColumn("Resolved", resolvedDefects, "🟢", "bg-green-50", len(resolvedDefects))
+		</div>
+	</div>
+}
+
+templ DefectColumn(title string, defects []models.Defect, icon string, bgClass string, count int) {
+	<div class="flex flex-col">
+		<!-- Column Header -->
+		<div class={ "rounded-t-2xl p-4 " + bgClass }>
+			<div class="flex items-center justify-between">
+				<div class="flex items-center gap-2">
+					<span class="text-xl">{ icon }</span>
+					<h3 class="font-semibold text-slate-800">{ title }</h3>
+				</div>
+				<span class="px-3 py-1 bg-white rounded-full text-sm font-semibold text-slate-700">
+					{ fmt.Sprintf("%d", count) }
+				</span>
+			</div>
+		</div>
+		
+		<!-- Column Content -->
+		<div class="glass rounded-b-2xl p-4 min-h-[400px] space-y-3">
+			if len(defects) == 0 {
+				<div class="flex items-center justify-center h-full text-slate-400">
+					<p class="text-sm">No defects</p>
+				</div>
+			} else {
+				for _, defect := range defects {
+					@DefectCard(defect)
+				}
+			}
+		</div>
+	</div>
+}
+
