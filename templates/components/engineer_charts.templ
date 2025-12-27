@@ -8,79 +8,30 @@ import (
 
 // EngineerWorkDistribution shows pie chart of story points vs defect work
 templ EngineerWorkDistribution(stories []models.Story, defects []models.Defect) {
-	<div
-		class="glass rounded-2xl p-6 card-hover animate-scale-in"
-		data-story-points={ fmt.Sprintf("%d", calculateTotalPoints(stories)) }
-		data-defect-count={ fmt.Sprintf("%d", len(defects)) }
-	>
+	<div class="glass rounded-2xl p-6 card-hover animate-scale-in"
+		data-story-points={ fmt.Sprintf("%d", calcEngTotalPoints(stories)) }
+		data-defect-count={ fmt.Sprintf("%d", len(defects)) }>
 		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
 			<span class="text-2xl">📊</span>
 			<span>Work Distribution</span>
 		</h3>
-		<div class="chart-container">
-			<canvas id="workDistributionChart"></canvas>
-		</div>
+		<div class="chart-container"><canvas id="workDistributionChart"></canvas></div>
 	</div>
-
 	<script type="text/javascript">
 		(function() {
 			const canvas = document.getElementById('workDistributionChart');
 			if (!canvas) return;
-
 			const chartDiv = canvas.closest('[data-story-points]');
 			if (!chartDiv) return;
-
-			// Calculate story points
-			const storyPoints = parseInt(chartDiv.getAttribute('data-story-points'));
-			const defectCount = parseInt(chartDiv.getAttribute('data-defect-count'));
-
-			// Estimate defect work (assuming 2 points per defect on average)
-			const defectPoints = defectCount * 2;
-			const totalWork = storyPoints + defectPoints;
-
-			const storyPercentage = totalWork > 0 ? ((storyPoints / totalWork) * 100).toFixed(1) : 0;
-			const defectPercentage = totalWork > 0 ? ((defectPoints / totalWork) * 100).toFixed(1) : 0;
-
+			const storyPts = parseInt(chartDiv.getAttribute('data-story-points'));
+			const defectPts = parseInt(chartDiv.getAttribute('data-defect-count')) * 2;
 			new Chart(canvas.getContext('2d'), {
 				type: 'doughnut',
 				data: {
 					labels: ['User Stories', 'Defects'],
-					datasets: [{
-						data: [storyPoints, defectPoints],
-						backgroundColor: [
-							'rgba(102, 126, 234, 0.8)',
-							'rgba(239, 68, 68, 0.8)'
-						],
-						borderColor: [
-							'rgba(102, 126, 234, 1)',
-							'rgba(239, 68, 68, 1)'
-						],
-						borderWidth: 2
-					}]
+					datasets: [{ data: [storyPts, defectPts], backgroundColor: ['rgba(102,126,234,0.8)', 'rgba(239,68,68,0.8)'], borderWidth: 2 }]
 				},
-				options: {
-					responsive: true,
-					maintainAspectRatio: false,
-					plugins: {
-						legend: {
-							position: 'bottom',
-							labels: {
-								padding: 15,
-								font: { size: 12, weight: 'bold' }
-							}
-						},
-						tooltip: {
-							callbacks: {
-								label: function(context) {
-									const label = context.label || '';
-									const value = context.parsed || 0;
-									const percentage = context.label === 'User Stories' ? storyPercentage : defectPercentage;
-									return label + ': ' + value + ' pts (' + percentage + '%)';
-								}
-							}
-						}
-					}
-				}
+				options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
 			});
 		})();
 	</script>
@@ -94,156 +45,54 @@ templ StoryPointsProgress(completed, total int) {
 				<span class="text-2xl">🎯</span>
 				<span>Story Points Progress</span>
 			</h3>
-			<span class={ "text-3xl font-extrabold " + getEngineerProgressTextColor(getEngineerPercentage(completed, total)) }>
-				{ fmt.Sprintf("%d%%", getEngineerPercentage(completed, total)) }
+			<span class={ "text-3xl font-extrabold " + getEngTextColor(calcEngPct(completed, total)) }>
+				{ fmt.Sprintf("%d%%", calcEngPct(completed, total)) }
 			</span>
 		</div>
 		<div class="w-full bg-slate-200 rounded-lg h-8 overflow-hidden shadow-inner relative">
-			<div
-				class={ "h-full rounded-lg transition-all duration-1000 ease-out relative " + getEngineerProgressBarColor(getEngineerPercentage(completed, total)) }
-				style={ fmt.Sprintf("width: %d%%", getEngineerPercentage(completed, total)) }
-			>
+			<div class={ "h-full rounded-lg transition-all duration-1000 ease-out " + getEngBarColor(calcEngPct(completed, total)) }
+				style={ fmt.Sprintf("width: %d%%", calcEngPct(completed, total)) }>
 				<div class="absolute inset-0 flex items-center justify-center">
-					<span class="text-white font-bold text-sm drop-shadow-lg">
-						{ fmt.Sprintf("%d / %d pts", completed, total) }
-					</span>
+					<span class="text-white font-bold text-sm">{ fmt.Sprintf("%d / %d pts", completed, total) }</span>
 				</div>
 			</div>
 		</div>
 		<div class="flex justify-between mt-4 text-sm font-semibold text-slate-600">
-			<span>✅ { fmt.Sprintf("%d points completed", completed) }</span>
-			<span>🎯 { fmt.Sprintf("%d points total", total) }</span>
+			<span>✅ { fmt.Sprintf("%d completed", completed) }</span>
+			<span>🎯 { fmt.Sprintf("%d total", total) }</span>
 		</div>
 	</div>
-}
-
-func calculateTotalPoints(stories []models.Story) int {
-	total := 0
-	for _, story := range stories {
-		total += story.StoryPoints
-	}
-	return total
-}
-
-func getEngineerPercentage(completed, total int) int {
-	if total == 0 {
-		return 0
-	}
-	return (completed * 100) / total
-}
-
-func getEngineerProgressBarColor(percentage int) string {
-	if percentage < 30 {
-		return "bg-gradient-to-r from-red-500 to-red-600"
-	} else if percentage < 50 {
-		return "bg-gradient-to-r from-orange-500 to-orange-600"
-	} else if percentage < 70 {
-		return "bg-gradient-to-r from-yellow-500 to-yellow-600"
-	} else if percentage < 90 {
-		return "bg-gradient-to-r from-blue-500 to-blue-600"
-	} else {
-		return "bg-gradient-to-r from-green-500 to-green-600"
-	}
-}
-
-func getEngineerProgressTextColor(percentage int) string {
-	if percentage < 30 {
-		return "text-red-600"
-	} else if percentage < 50 {
-		return "text-orange-600"
-	} else if percentage < 70 {
-		return "text-yellow-600"
-	} else if percentage < 90 {
-		return "text-blue-600"
-	} else {
-		return "text-green-600"
-	}
 }
 
 // EngineerStoryStatusPieChart shows story status distribution
 templ EngineerStoryStatusPieChart(stories []models.Story) {
-	<div
-		class="glass rounded-2xl p-6 card-hover animate-scale-in"
-		data-engineer-stories={ marshalStories(stories) }
-	>
+	<div class="glass rounded-2xl p-6 card-hover animate-scale-in" data-eng-stories={ marshalEngStories(stories) }>
 		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
 			<span class="text-2xl">📊</span>
 			<span>Story Status</span>
 		</h3>
-		<div class="chart-container">
-			<canvas id="engineerStoryStatusChart"></canvas>
-		</div>
+		<div class="chart-container"><canvas id="engineerStoryStatusChart"></canvas></div>
 	</div>
-
 	<script type="text/javascript">
 		(function() {
-			const chartDiv = document.querySelector('[data-engineer-stories]');
-			if (!chartDiv) return;
-
-			const stories = JSON.parse(chartDiv.getAttribute('data-engineer-stories'));
-
-			const statusCounts = {
-				'To Do': 0,
-				'In Progress': 0,
-				'Done': 0
-			};
-
-			stories.forEach(story => {
-				// Map statusCategory to display status
-				if (story.statusCategory === 'new' || story.statusCategory === 'todo') {
-					statusCounts['To Do']++;
-				} else if (story.statusCategory === 'indeterminate') {
-					statusCounts['In Progress']++;
-				} else if (story.statusCategory === 'done') {
-					statusCounts['Done']++;
-				}
+			const div = document.querySelector('[data-eng-stories]');
+			if (!div) return;
+			const stories = JSON.parse(div.getAttribute('data-eng-stories'));
+			const counts = { todo: 0, progress: 0, done: 0 };
+			stories.forEach(s => {
+				if (s.statusCategory === 'new' || s.statusCategory === 'todo') counts.todo++;
+				else if (s.statusCategory === 'indeterminate') counts.progress++;
+				else if (s.statusCategory === 'done') counts.done++;
 			});
-
 			const ctx = document.getElementById('engineerStoryStatusChart');
 			if (!ctx) return;
-
 			new Chart(ctx.getContext('2d'), {
 				type: 'pie',
 				data: {
 					labels: ['To Do', 'In Progress', 'Done'],
-					datasets: [{
-						data: [statusCounts['To Do'], statusCounts['In Progress'], statusCounts['Done']],
-						backgroundColor: [
-							'rgba(148, 163, 184, 0.8)',
-							'rgba(59, 130, 246, 0.8)',
-							'rgba(16, 185, 129, 0.8)'
-						],
-						borderColor: [
-							'rgba(148, 163, 184, 1)',
-							'rgba(59, 130, 246, 1)',
-							'rgba(16, 185, 129, 1)'
-						],
-						borderWidth: 2
-					}]
+					datasets: [{ data: [counts.todo, counts.progress, counts.done], backgroundColor: ['rgba(148,163,184,0.8)', 'rgba(59,130,246,0.8)', 'rgba(16,185,129,0.8)'], borderWidth: 2 }]
 				},
-				options: {
-					responsive: true,
-					maintainAspectRatio: false,
-					plugins: {
-						legend: {
-							position: 'bottom',
-							labels: {
-								padding: 15,
-								font: { size: 12, weight: 'bold' }
-							}
-						},
-						tooltip: {
-							callbacks: {
-								label: function(context) {
-									const total = stories.length;
-									const value = context.parsed || 0;
-									const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-									return context.label + ': ' + value + ' stories (' + percentage + '%)';
-								}
-							}
-						}
-					}
-				}
+				options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
 			});
 		})();
 	</script>
@@ -251,100 +100,75 @@ templ EngineerStoryStatusPieChart(stories []models.Story) {
 
 // EngineerDefectStatusPieChart shows defect status distribution
 templ EngineerDefectStatusPieChart(defects []models.Defect) {
-	<div
-		class="glass rounded-2xl p-6 card-hover animate-scale-in"
-		data-engineer-defects={ marshalDefects(defects) }
-	>
+	<div class="glass rounded-2xl p-6 card-hover animate-scale-in" data-eng-defects={ marshalEngDefects(defects) }>
 		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
 			<span class="text-2xl">🐛</span>
 			<span>Defect Status</span>
 		</h3>
-		<div class="chart-container">
-			<canvas id="engineerDefectStatusChart"></canvas>
-		</div>
+		<div class="chart-container"><canvas id="engineerDefectStatusChart"></canvas></div>
 	</div>
-
 	<script type="text/javascript">
 		(function() {
-			const chartDiv = document.querySelector('[data-engineer-defects]');
-			if (!chartDiv) return;
-
-			const defects = JSON.parse(chartDiv.getAttribute('data-engineer-defects'));
-
-			const statusCounts = {
-				'Open': 0,
-				'In Progress': 0,
-				'Resolved': 0
-			};
-
-			defects.forEach(defect => {
-				// Map statusCategory to display status
-				if (defect.statusCategory === 'new' || defect.status === 'Open' || defect.status === 'Opened') {
-					statusCounts['Open']++;
-				} else if (defect.statusCategory === 'indeterminate' || defect.status === 'In Progress') {
-					statusCounts['In Progress']++;
-				} else if (defect.statusCategory === 'done' || defect.status === 'Resolved' || defect.status === 'Closed') {
-					statusCounts['Resolved']++;
-				}
+			const div = document.querySelector('[data-eng-defects]');
+			if (!div) return;
+			const defects = JSON.parse(div.getAttribute('data-eng-defects'));
+			const counts = { open: 0, progress: 0, resolved: 0 };
+			defects.forEach(d => {
+				if (d.statusCategory === 'new' || d.status === 'Open') counts.open++;
+				else if (d.statusCategory === 'indeterminate') counts.progress++;
+				else if (d.statusCategory === 'done' || d.status === 'Resolved') counts.resolved++;
 			});
-
 			const ctx = document.getElementById('engineerDefectStatusChart');
 			if (!ctx) return;
-
 			new Chart(ctx.getContext('2d'), {
 				type: 'doughnut',
 				data: {
 					labels: ['Open', 'In Progress', 'Resolved'],
-					datasets: [{
-						data: [statusCounts['Open'], statusCounts['In Progress'], statusCounts['Resolved']],
-						backgroundColor: [
-							'rgba(239, 68, 68, 0.8)',
-							'rgba(251, 191, 36, 0.8)',
-							'rgba(34, 197, 94, 0.8)'
-						],
-						borderColor: [
-							'rgba(239, 68, 68, 1)',
-							'rgba(251, 191, 36, 1)',
-							'rgba(34, 197, 94, 1)'
-						],
-						borderWidth: 2
-					}]
+					datasets: [{ data: [counts.open, counts.progress, counts.resolved], backgroundColor: ['rgba(239,68,68,0.8)', 'rgba(251,191,36,0.8)', 'rgba(34,197,94,0.8)'], borderWidth: 2 }]
 				},
-				options: {
-					responsive: true,
-					maintainAspectRatio: false,
-					plugins: {
-						legend: {
-							position: 'bottom',
-							labels: {
-								padding: 15,
-								font: { size: 12, weight: 'bold' }
-							}
-						},
-						tooltip: {
-							callbacks: {
-								label: function(context) {
-									const total = defects.length;
-									const value = context.parsed || 0;
-									const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-									return context.label + ': ' + value + ' defects (' + percentage + '%)';
-								}
-							}
-						}
-					}
-				}
+				options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
 			});
 		})();
 	</script>
 }
 
-func marshalStories(stories []models.Story) string {
-	data, _ := json.Marshal(stories)
-	return string(data)
+func calcEngTotalPoints(stories []models.Story) int {
+	t := 0
+	for _, s := range stories { t += s.StoryPoints }
+	return t
 }
 
-func marshalDefects(defects []models.Defect) string {
-	data, _ := json.Marshal(defects)
-	return string(data)
+func calcEngPct(c, t int) int {
+	if t == 0 { return 0 }
+	return (c * 100) / t
 }
 
+func getEngBarColor(p int) string {
+	switch {
+	case p < 30: return "bg-gradient-to-r from-red-500 to-red-600"
+	case p < 50: return "bg-gradient-to-r from-orange-500 to-orange-600"
+	case p < 70: return "bg-gradient-to-r from-yellow-500 to-yellow-600"
+	case p < 90: return "bg-gradient-to-r from-blue-500 to-blue-600"
+	default: return "bg-gradient-to-r from-green-500 to-green-600"
+	}
+}
+
+func getEngTextColor(p int) string {
+	switch {
+	case p < 30: return "text-red-600"
+	case p < 50: return "text-orange-600"
+	case p < 70: return "text-yellow-600"
+	case p < 90: return "text-blue-600"
+	default: return "text-green-600"
+	}
+}
+
+func marshalEngStories(s []models.Story) string {
+	d, _ := json.Marshal(s)
+	return string(d)
+}
+
+func marshalEngDefects(d []models.Defect) string {
+	b, _ := json.Marshal(d)
+	return string(b)
+}

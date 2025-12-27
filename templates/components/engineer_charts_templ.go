@@ -41,9 +41,9 @@ func EngineerWorkDistribution(stories []models.Story, defects []models.Defect) t
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", calculateTotalPoints(stories)))
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", calcEngTotalPoints(stories)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/engineer_charts.templ`, Line: 13, Col: 70}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/engineer_charts.templ`, Line: 12, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -56,13 +56,13 @@ func EngineerWorkDistribution(stories []models.Story, defects []models.Defect) t
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(defects)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/engineer_charts.templ`, Line: 14, Col: 53}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/engineer_charts.templ`, Line: 13, Col: 53}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><h3 class=\"text-lg font-bold text-slate-800 mb-4 flex items-center gap-2\"><span class=\"text-2xl\">📊</span> <span>Work Distribution</span></h3><div class=\"chart-container\"><canvas id=\"workDistributionChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst canvas = document.getElementById('workDistributionChart');\n\t\t\tif (!canvas) return;\n\n\t\t\tconst chartDiv = canvas.closest('[data-story-points]');\n\t\t\tif (!chartDiv) return;\n\n\t\t\t// Calculate story points\n\t\t\tconst storyPoints = parseInt(chartDiv.getAttribute('data-story-points'));\n\t\t\tconst defectCount = parseInt(chartDiv.getAttribute('data-defect-count'));\n\n\t\t\t// Estimate defect work (assuming 2 points per defect on average)\n\t\t\tconst defectPoints = defectCount * 2;\n\t\t\tconst totalWork = storyPoints + defectPoints;\n\n\t\t\tconst storyPercentage = totalWork > 0 ? ((storyPoints / totalWork) * 100).toFixed(1) : 0;\n\t\t\tconst defectPercentage = totalWork > 0 ? ((defectPoints / totalWork) * 100).toFixed(1) : 0;\n\n\t\t\tnew Chart(canvas.getContext('2d'), {\n\t\t\t\ttype: 'doughnut',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['User Stories', 'Defects'],\n\t\t\t\t\tdatasets: [{\n\t\t\t\t\t\tdata: [storyPoints, defectPoints],\n\t\t\t\t\t\tbackgroundColor: [\n\t\t\t\t\t\t\t'rgba(102, 126, 234, 0.8)',\n\t\t\t\t\t\t\t'rgba(239, 68, 68, 0.8)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderColor: [\n\t\t\t\t\t\t\t'rgba(102, 126, 234, 1)',\n\t\t\t\t\t\t\t'rgba(239, 68, 68, 1)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderWidth: 2\n\t\t\t\t\t}]\n\t\t\t\t},\n\t\t\t\toptions: {\n\t\t\t\t\tresponsive: true,\n\t\t\t\t\tmaintainAspectRatio: false,\n\t\t\t\t\tplugins: {\n\t\t\t\t\t\tlegend: {\n\t\t\t\t\t\t\tposition: 'bottom',\n\t\t\t\t\t\t\tlabels: {\n\t\t\t\t\t\t\t\tpadding: 15,\n\t\t\t\t\t\t\t\tfont: { size: 12, weight: 'bold' }\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\ttooltip: {\n\t\t\t\t\t\t\tcallbacks: {\n\t\t\t\t\t\t\t\tlabel: function(context) {\n\t\t\t\t\t\t\t\t\tconst label = context.label || '';\n\t\t\t\t\t\t\t\t\tconst value = context.parsed || 0;\n\t\t\t\t\t\t\t\t\tconst percentage = context.label === 'User Stories' ? storyPercentage : defectPercentage;\n\t\t\t\t\t\t\t\t\treturn label + ': ' + value + ' pts (' + percentage + '%)';\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\t\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><h3 class=\"text-lg font-bold text-slate-800 mb-4 flex items-center gap-2\"><span class=\"text-2xl\">📊</span> <span>Work Distribution</span></h3><div class=\"chart-container\"><canvas id=\"workDistributionChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst canvas = document.getElementById('workDistributionChart');\n\t\t\tif (!canvas) return;\n\t\t\tconst chartDiv = canvas.closest('[data-story-points]');\n\t\t\tif (!chartDiv) return;\n\t\t\tconst storyPts = parseInt(chartDiv.getAttribute('data-story-points'));\n\t\t\tconst defectPts = parseInt(chartDiv.getAttribute('data-defect-count')) * 2;\n\t\t\tnew Chart(canvas.getContext('2d'), {\n\t\t\t\ttype: 'doughnut',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['User Stories', 'Defects'],\n\t\t\t\t\tdatasets: [{ data: [storyPts, defectPts], backgroundColor: ['rgba(102,126,234,0.8)', 'rgba(239,68,68,0.8)'], borderWidth: 2 }]\n\t\t\t\t},\n\t\t\t\toptions: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }\n\t\t\t});\n\t\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -96,7 +96,7 @@ func StoryPointsProgress(completed, total int) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var5 = []any{"text-3xl font-extrabold " + getEngineerProgressTextColor(getEngineerPercentage(completed, total))}
+		var templ_7745c5c3_Var5 = []any{"text-3xl font-extrabold " + getEngTextColor(calcEngPct(completed, total))}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var5...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -119,9 +119,9 @@ func StoryPointsProgress(completed, total int) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var7 string
-		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d%%", getEngineerPercentage(completed, total)))
+		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d%%", calcEngPct(completed, total)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/engineer_charts.templ`, Line: 98, Col: 66}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/engineer_charts.templ`, Line: 49, Col: 55}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -131,7 +131,7 @@ func StoryPointsProgress(completed, total int) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var8 = []any{"h-full rounded-lg transition-all duration-1000 ease-out relative " + getEngineerProgressBarColor(getEngineerPercentage(completed, total))}
+		var templ_7745c5c3_Var8 = []any{"h-full rounded-lg transition-all duration-1000 ease-out " + getEngBarColor(calcEngPct(completed, total))}
 		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var8...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -154,22 +154,22 @@ func StoryPointsProgress(completed, total int) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var10 string
-		templ_7745c5c3_Var10, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(fmt.Sprintf("width: %d%%", getEngineerPercentage(completed, total)))
+		templ_7745c5c3_Var10, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(fmt.Sprintf("width: %d%%", calcEngPct(completed, total)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/engineer_charts.templ`, Line: 104, Col: 79}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/engineer_charts.templ`, Line: 54, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\"><div class=\"absolute inset-0 flex items-center justify-center\"><span class=\"text-white font-bold text-sm drop-shadow-lg\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\"><div class=\"absolute inset-0 flex items-center justify-center\"><span class=\"text-white font-bold text-sm\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d / %d pts", completed, total))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/engineer_charts.templ`, Line: 108, Col: 52}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/engineer_charts.templ`, Line: 56, Col: 94}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
@@ -180,9 +180,9 @@ func StoryPointsProgress(completed, total int) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var12 string
-		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d points completed", completed))
+		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d completed", completed))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/engineer_charts.templ`, Line: 114, Col: 60}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/engineer_charts.templ`, Line: 61, Col: 53}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
@@ -193,9 +193,9 @@ func StoryPointsProgress(completed, total int) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var13 string
-		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d points total", total))
+		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d total", total))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/engineer_charts.templ`, Line: 115, Col: 53}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/engineer_charts.templ`, Line: 62, Col: 46}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 		if templ_7745c5c3_Err != nil {
@@ -207,49 +207,6 @@ func StoryPointsProgress(completed, total int) templ.Component {
 		}
 		return nil
 	})
-}
-
-func calculateTotalPoints(stories []models.Story) int {
-	total := 0
-	for _, story := range stories {
-		total += story.StoryPoints
-	}
-	return total
-}
-
-func getEngineerPercentage(completed, total int) int {
-	if total == 0 {
-		return 0
-	}
-	return (completed * 100) / total
-}
-
-func getEngineerProgressBarColor(percentage int) string {
-	if percentage < 30 {
-		return "bg-gradient-to-r from-red-500 to-red-600"
-	} else if percentage < 50 {
-		return "bg-gradient-to-r from-orange-500 to-orange-600"
-	} else if percentage < 70 {
-		return "bg-gradient-to-r from-yellow-500 to-yellow-600"
-	} else if percentage < 90 {
-		return "bg-gradient-to-r from-blue-500 to-blue-600"
-	} else {
-		return "bg-gradient-to-r from-green-500 to-green-600"
-	}
-}
-
-func getEngineerProgressTextColor(percentage int) string {
-	if percentage < 30 {
-		return "text-red-600"
-	} else if percentage < 50 {
-		return "text-orange-600"
-	} else if percentage < 70 {
-		return "text-yellow-600"
-	} else if percentage < 90 {
-		return "text-blue-600"
-	} else {
-		return "text-green-600"
-	}
 }
 
 // EngineerStoryStatusPieChart shows story status distribution
@@ -274,20 +231,20 @@ func EngineerStoryStatusPieChart(stories []models.Story) templ.Component {
 			templ_7745c5c3_Var14 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<div class=\"glass rounded-2xl p-6 card-hover animate-scale-in\" data-engineer-stories=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "<div class=\"glass rounded-2xl p-6 card-hover animate-scale-in\" data-eng-stories=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var15 string
-		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(marshalStories(stories))
+		templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(marshalEngStories(stories))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/engineer_charts.templ`, Line: 167, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/engineer_charts.templ`, Line: 69, Col: 109}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\"><h3 class=\"text-lg font-bold text-slate-800 mb-4 flex items-center gap-2\"><span class=\"text-2xl\">📊</span> <span>Story Status</span></h3><div class=\"chart-container\"><canvas id=\"engineerStoryStatusChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst chartDiv = document.querySelector('[data-engineer-stories]');\n\t\t\tif (!chartDiv) return;\n\n\t\t\tconst stories = JSON.parse(chartDiv.getAttribute('data-engineer-stories'));\n\n\t\t\tconst statusCounts = {\n\t\t\t\t'To Do': 0,\n\t\t\t\t'In Progress': 0,\n\t\t\t\t'Done': 0\n\t\t\t};\n\n\t\t\tstories.forEach(story => {\n\t\t\t\t// Map statusCategory to display status\n\t\t\t\tif (story.statusCategory === 'new' || story.statusCategory === 'todo') {\n\t\t\t\t\tstatusCounts['To Do']++;\n\t\t\t\t} else if (story.statusCategory === 'indeterminate') {\n\t\t\t\t\tstatusCounts['In Progress']++;\n\t\t\t\t} else if (story.statusCategory === 'done') {\n\t\t\t\t\tstatusCounts['Done']++;\n\t\t\t\t}\n\t\t\t});\n\n\t\t\tconst ctx = document.getElementById('engineerStoryStatusChart');\n\t\t\tif (!ctx) return;\n\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'pie',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['To Do', 'In Progress', 'Done'],\n\t\t\t\t\tdatasets: [{\n\t\t\t\t\t\tdata: [statusCounts['To Do'], statusCounts['In Progress'], statusCounts['Done']],\n\t\t\t\t\t\tbackgroundColor: [\n\t\t\t\t\t\t\t'rgba(148, 163, 184, 0.8)',\n\t\t\t\t\t\t\t'rgba(59, 130, 246, 0.8)',\n\t\t\t\t\t\t\t'rgba(16, 185, 129, 0.8)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderColor: [\n\t\t\t\t\t\t\t'rgba(148, 163, 184, 1)',\n\t\t\t\t\t\t\t'rgba(59, 130, 246, 1)',\n\t\t\t\t\t\t\t'rgba(16, 185, 129, 1)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderWidth: 2\n\t\t\t\t\t}]\n\t\t\t\t},\n\t\t\t\toptions: {\n\t\t\t\t\tresponsive: true,\n\t\t\t\t\tmaintainAspectRatio: false,\n\t\t\t\t\tplugins: {\n\t\t\t\t\t\tlegend: {\n\t\t\t\t\t\t\tposition: 'bottom',\n\t\t\t\t\t\t\tlabels: {\n\t\t\t\t\t\t\t\tpadding: 15,\n\t\t\t\t\t\t\t\tfont: { size: 12, weight: 'bold' }\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\ttooltip: {\n\t\t\t\t\t\t\tcallbacks: {\n\t\t\t\t\t\t\t\tlabel: function(context) {\n\t\t\t\t\t\t\t\t\tconst total = stories.length;\n\t\t\t\t\t\t\t\t\tconst value = context.parsed || 0;\n\t\t\t\t\t\t\t\t\tconst percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;\n\t\t\t\t\t\t\t\t\treturn context.label + ': ' + value + ' stories (' + percentage + '%)';\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\t\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\"><h3 class=\"text-lg font-bold text-slate-800 mb-4 flex items-center gap-2\"><span class=\"text-2xl\">📊</span> <span>Story Status</span></h3><div class=\"chart-container\"><canvas id=\"engineerStoryStatusChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst div = document.querySelector('[data-eng-stories]');\n\t\t\tif (!div) return;\n\t\t\tconst stories = JSON.parse(div.getAttribute('data-eng-stories'));\n\t\t\tconst counts = { todo: 0, progress: 0, done: 0 };\n\t\t\tstories.forEach(s => {\n\t\t\t\tif (s.statusCategory === 'new' || s.statusCategory === 'todo') counts.todo++;\n\t\t\t\telse if (s.statusCategory === 'indeterminate') counts.progress++;\n\t\t\t\telse if (s.statusCategory === 'done') counts.done++;\n\t\t\t});\n\t\t\tconst ctx = document.getElementById('engineerStoryStatusChart');\n\t\t\tif (!ctx) return;\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'pie',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['To Do', 'In Progress', 'Done'],\n\t\t\t\t\tdatasets: [{ data: [counts.todo, counts.progress, counts.done], backgroundColor: ['rgba(148,163,184,0.8)', 'rgba(59,130,246,0.8)', 'rgba(16,185,129,0.8)'], borderWidth: 2 }]\n\t\t\t\t},\n\t\t\t\toptions: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }\n\t\t\t});\n\t\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -317,20 +274,20 @@ func EngineerDefectStatusPieChart(defects []models.Defect) templ.Component {
 			templ_7745c5c3_Var16 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div class=\"glass rounded-2xl p-6 card-hover animate-scale-in\" data-engineer-defects=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<div class=\"glass rounded-2xl p-6 card-hover animate-scale-in\" data-eng-defects=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var17 string
-		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(marshalDefects(defects))
+		templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(marshalEngDefects(defects))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/engineer_charts.templ`, Line: 256, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/engineer_charts.templ`, Line: 103, Col: 109}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\"><h3 class=\"text-lg font-bold text-slate-800 mb-4 flex items-center gap-2\"><span class=\"text-2xl\">🐛</span> <span>Defect Status</span></h3><div class=\"chart-container\"><canvas id=\"engineerDefectStatusChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst chartDiv = document.querySelector('[data-engineer-defects]');\n\t\t\tif (!chartDiv) return;\n\n\t\t\tconst defects = JSON.parse(chartDiv.getAttribute('data-engineer-defects'));\n\n\t\t\tconst statusCounts = {\n\t\t\t\t'Open': 0,\n\t\t\t\t'In Progress': 0,\n\t\t\t\t'Resolved': 0\n\t\t\t};\n\n\t\t\tdefects.forEach(defect => {\n\t\t\t\t// Map statusCategory to display status\n\t\t\t\tif (defect.statusCategory === 'new' || defect.status === 'Open' || defect.status === 'Opened') {\n\t\t\t\t\tstatusCounts['Open']++;\n\t\t\t\t} else if (defect.statusCategory === 'indeterminate' || defect.status === 'In Progress') {\n\t\t\t\t\tstatusCounts['In Progress']++;\n\t\t\t\t} else if (defect.statusCategory === 'done' || defect.status === 'Resolved' || defect.status === 'Closed') {\n\t\t\t\t\tstatusCounts['Resolved']++;\n\t\t\t\t}\n\t\t\t});\n\n\t\t\tconst ctx = document.getElementById('engineerDefectStatusChart');\n\t\t\tif (!ctx) return;\n\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'doughnut',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['Open', 'In Progress', 'Resolved'],\n\t\t\t\t\tdatasets: [{\n\t\t\t\t\t\tdata: [statusCounts['Open'], statusCounts['In Progress'], statusCounts['Resolved']],\n\t\t\t\t\t\tbackgroundColor: [\n\t\t\t\t\t\t\t'rgba(239, 68, 68, 0.8)',\n\t\t\t\t\t\t\t'rgba(251, 191, 36, 0.8)',\n\t\t\t\t\t\t\t'rgba(34, 197, 94, 0.8)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderColor: [\n\t\t\t\t\t\t\t'rgba(239, 68, 68, 1)',\n\t\t\t\t\t\t\t'rgba(251, 191, 36, 1)',\n\t\t\t\t\t\t\t'rgba(34, 197, 94, 1)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderWidth: 2\n\t\t\t\t\t}]\n\t\t\t\t},\n\t\t\t\toptions: {\n\t\t\t\t\tresponsive: true,\n\t\t\t\t\tmaintainAspectRatio: false,\n\t\t\t\t\tplugins: {\n\t\t\t\t\t\tlegend: {\n\t\t\t\t\t\t\tposition: 'bottom',\n\t\t\t\t\t\t\tlabels: {\n\t\t\t\t\t\t\t\tpadding: 15,\n\t\t\t\t\t\t\t\tfont: { size: 12, weight: 'bold' }\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\ttooltip: {\n\t\t\t\t\t\t\tcallbacks: {\n\t\t\t\t\t\t\t\tlabel: function(context) {\n\t\t\t\t\t\t\t\t\tconst total = defects.length;\n\t\t\t\t\t\t\t\t\tconst value = context.parsed || 0;\n\t\t\t\t\t\t\t\t\tconst percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;\n\t\t\t\t\t\t\t\t\treturn context.label + ': ' + value + ' defects (' + percentage + '%)';\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\t\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\"><h3 class=\"text-lg font-bold text-slate-800 mb-4 flex items-center gap-2\"><span class=\"text-2xl\">🐛</span> <span>Defect Status</span></h3><div class=\"chart-container\"><canvas id=\"engineerDefectStatusChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst div = document.querySelector('[data-eng-defects]');\n\t\t\tif (!div) return;\n\t\t\tconst defects = JSON.parse(div.getAttribute('data-eng-defects'));\n\t\t\tconst counts = { open: 0, progress: 0, resolved: 0 };\n\t\t\tdefects.forEach(d => {\n\t\t\t\tif (d.statusCategory === 'new' || d.status === 'Open') counts.open++;\n\t\t\t\telse if (d.statusCategory === 'indeterminate') counts.progress++;\n\t\t\t\telse if (d.statusCategory === 'done' || d.status === 'Resolved') counts.resolved++;\n\t\t\t});\n\t\t\tconst ctx = document.getElementById('engineerDefectStatusChart');\n\t\t\tif (!ctx) return;\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'doughnut',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['Open', 'In Progress', 'Resolved'],\n\t\t\t\t\tdatasets: [{ data: [counts.open, counts.progress, counts.resolved], backgroundColor: ['rgba(239,68,68,0.8)', 'rgba(251,191,36,0.8)', 'rgba(34,197,94,0.8)'], borderWidth: 2 }]\n\t\t\t\t},\n\t\t\t\toptions: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }\n\t\t\t});\n\t\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -338,14 +295,59 @@ func EngineerDefectStatusPieChart(defects []models.Defect) templ.Component {
 	})
 }
 
-func marshalStories(stories []models.Story) string {
-	data, _ := json.Marshal(stories)
-	return string(data)
+func calcEngTotalPoints(stories []models.Story) int {
+	t := 0
+	for _, s := range stories {
+		t += s.StoryPoints
+	}
+	return t
 }
 
-func marshalDefects(defects []models.Defect) string {
-	data, _ := json.Marshal(defects)
-	return string(data)
+func calcEngPct(c, t int) int {
+	if t == 0 {
+		return 0
+	}
+	return (c * 100) / t
+}
+
+func getEngBarColor(p int) string {
+	switch {
+	case p < 30:
+		return "bg-gradient-to-r from-red-500 to-red-600"
+	case p < 50:
+		return "bg-gradient-to-r from-orange-500 to-orange-600"
+	case p < 70:
+		return "bg-gradient-to-r from-yellow-500 to-yellow-600"
+	case p < 90:
+		return "bg-gradient-to-r from-blue-500 to-blue-600"
+	default:
+		return "bg-gradient-to-r from-green-500 to-green-600"
+	}
+}
+
+func getEngTextColor(p int) string {
+	switch {
+	case p < 30:
+		return "text-red-600"
+	case p < 50:
+		return "text-orange-600"
+	case p < 70:
+		return "text-yellow-600"
+	case p < 90:
+		return "text-blue-600"
+	default:
+		return "text-green-600"
+	}
+}
+
+func marshalEngStories(s []models.Story) string {
+	d, _ := json.Marshal(s)
+	return string(d)
+}
+
+func marshalEngDefects(d []models.Defect) string {
+	b, _ := json.Marshal(d)
+	return string(b)
 }
 
 var _ = templruntime.GeneratedTemplate

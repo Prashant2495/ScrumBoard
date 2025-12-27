@@ -22,11 +22,13 @@ func main() {
 	dashboardService := services.NewDashboardService(jiraService)
 	defectDashboardService := services.NewDefectDashboardService(jiraService)
 	engineerDashboardService := services.NewEngineerDashboardService(jiraService)
+	scrumMasterService := services.NewScrumMasterService(jiraService, dashboardService)
 
 	// Initialize handlers
 	dashboardHandler := handlers.NewDashboardHandler(dashboardService)
 	defectHandler := handlers.NewDefectHandler(defectDashboardService)
 	engineerHandler := handlers.NewEngineerHandler(engineerDashboardService, jiraService)
+	scrumMasterHandler := handlers.NewScrumMasterHandler(scrumMasterService, jiraService)
 	homeHandler := handlers.NewHomeHandler()
 
 	// Create Fiber app
@@ -56,6 +58,14 @@ func main() {
 	// Engineer Dashboard Routes
 	app.Get("/engineer", engineerHandler.HandleEngineerDashboard)
 	app.Get("/engineer/api/refresh", engineerHandler.HandleEngineerRefresh)
+
+	// Scrum Master Dashboard Routes
+	app.Get("/scrum-master", scrumMasterHandler.Dashboard)
+	app.Get("/scrum-master/api/refresh", scrumMasterHandler.Refresh)
+	app.Get("/scrum-master/api/velocity", scrumMasterHandler.GetVelocityData)
+	app.Get("/scrum-master/api/health", scrumMasterHandler.GetTeamHealth)
+	app.Get("/scrum-master/api/blockers", scrumMasterHandler.GetBlockers)
+	app.Get("/scrum-master/api/risks", scrumMasterHandler.GetRisks)
 
 	// Get port from env or default
 	port := os.Getenv("PORT")

@@ -1,0 +1,448 @@
+package templates
+
+import (
+	"ScrumBoard/internal/models"
+	"encoding/json"
+	"fmt"
+	"strings"
+)
+
+// SMStatCard is a simple stat card for scrum master dashboard
+templ SMStatCard(icon, title, value, colorClass string) {
+	<div class={ "glass rounded-2xl p-6 card-hover animate-scale-in shadow-lg " + colorClass }>
+		<div class="flex items-center gap-4">
+			<div class="text-3xl">{ icon }</div>
+			<div>
+				<p class="text-sm font-semibold text-white/80 uppercase tracking-wide">{ title }</p>
+				<p class="text-2xl font-extrabold text-white">{ value }</p>
+			</div>
+		</div>
+	</div>
+}
+
+templ ScrumMasterDashboard(data models.ScrumMasterDashboardData) {
+	@Layout("Scrum Master Dashboard") {
+		<div class="min-h-screen">
+			<!-- Header -->
+			<header class="gradient-bg text-white py-6 px-8 shadow-lg">
+				<div class="max-w-7xl mx-auto flex items-center justify-between">
+					<div class="flex items-center gap-4">
+						<div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl backdrop-blur">
+							👨‍💼
+						</div>
+						<div>
+							<h1 class="text-2xl font-bold">Scrum Master Dashboard</h1>
+							<p class="text-white/80 text-sm">Team Health & Sprint Analytics</p>
+						</div>
+					</div>
+					<div class="flex items-center gap-4">
+						<!-- Sprint Selector -->
+						<div class="glass-dark px-4 py-2 rounded-xl">
+							<p class="text-xs text-white/70 mb-1">Sprint</p>
+							<select id="sprint-selector" class="bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30">
+								<option value="0">Loading...</option>
+							</select>
+						</div>
+						<!-- Jira Link -->
+						<a id="jira-sprint-link" href="#" target="_blank" class="bg-blue-500/80 hover:bg-blue-600/90 px-4 py-2 rounded-xl transition-all flex items-center gap-2" title="Open in Jira">
+							<span>🔗</span>
+							<span class="hidden sm:inline">Jira</span>
+						</a>
+						<a href="/" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm font-semibold transition backdrop-blur">
+							🏠 Home
+						</a>
+						<a href="/sprint" class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm font-semibold transition backdrop-blur">
+							📊 Sprint
+						</a>
+					</div>
+				</div>
+			</header>
+
+			<!-- Dashboard Content -->
+			<main id="dashboard-content" class="max-w-7xl mx-auto px-4 py-8">
+				@ScrumMasterDashboardContent(data)
+			</main>
+		</div>
+
+		<!-- Sprint Selection Script -->
+		<script>
+			const jiraBaseUrl = 'https://jira-eng-gpk1.cisco.com/jira';
+			const urlParams = new URLSearchParams(window.location.search);
+			const currentSprintId = parseInt(urlParams.get('sprint') || '0');
+
+			// Update Jira link
+			function updateJiraLink(sprintId) {
+				const jiraLink = document.getElementById('jira-sprint-link');
+				if (sprintId && sprintId !== '0') {
+					jiraLink.href = `${jiraBaseUrl}/secure/RapidBoard.jspa?rapidView=6991&sprint=${sprintId}`;
+				} else {
+					jiraLink.href = `${jiraBaseUrl}/secure/RapidBoard.jspa?rapidView=6991`;
+				}
+			}
+
+			// Set initial Jira link
+			updateJiraLink(currentSprintId);
+
+			// Load sprints
+			fetch('/api/sprints')
+				.then(res => res.json())
+				.then(sprints => {
+					const selector = document.getElementById('sprint-selector');
+					selector.innerHTML = '<option value="0">🟢 Active Sprint</option>';
+
+					sprints.sort((a, b) => b.id - a.id).forEach(sprint => {
+						const option = document.createElement('option');
+						option.value = sprint.id;
+						const stateEmoji = sprint.state === 'active' ? '🟢' : '🔴';
+						option.textContent = `${stateEmoji} ${sprint.name}`;
+						if (sprint.id === currentSprintId) option.selected = true;
+						selector.appendChild(option);
+					});
+				});
+
+			// Handle sprint change
+			document.getElementById('sprint-selector').addEventListener('change', function() {
+				const sprintId = this.value;
+				updateJiraLink(sprintId);
+				window.location.href = `/scrum-master?sprint=${sprintId}`;
+			});
+		</script>
+	}
+}
+
+templ ScrumMasterDashboardContent(data models.ScrumMasterDashboardData) {
+	<!-- Sprint Info & Health Score -->
+	<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+		@SMStatCard("📅", "Sprint", data.Sprint.Name, "bg-gradient-to-br from-blue-500 to-blue-600")
+		@SMStatCard("💪", "Health Score", fmt.Sprintf("%d%%", data.TeamHealth.OverallScore), getHealthColor(data.TeamHealth.HealthStatus))
+		@SMStatCard("🚀", "Velocity", fmt.Sprintf("%d pts", data.VelocityData.CurrentVelocity), "bg-gradient-to-br from-purple-500 to-purple-600")
+		@SMStatCard("⚠️", "Risks", fmt.Sprintf("%d", len(data.RiskIndicators)), getRiskColor(len(data.RiskIndicators)))
+	</div>
+
+	<!-- Velocity & Burndown Charts -->
+	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+		@VelocityChart(data.VelocityData)
+		@BurndownChart(data.TeamHealth.SprintBurndown, data.Stats.TotalPoints)
+	</div>
+
+	<!-- Team Capacity & Risk Indicators -->
+	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+		@TeamCapacityCard(data.UserStats, data.TeamHealth)
+		@RiskIndicatorsCard(data.RiskIndicators)
+	</div>
+
+	<!-- Sprint History & Blockers -->
+	<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+		@SprintHistoryCard(data.SprintHistory)
+		@BlockersCard(data.Blockers)
+	</div>
+}
+
+// VelocityChart shows team velocity over sprints
+templ VelocityChart(velocity models.VelocityData) {
+	<div class="glass rounded-2xl p-6 card-hover animate-fade-in" data-velocity={ marshalVelocityData(velocity) }>
+		<div class="flex items-center justify-between mb-4">
+			<h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+				<span class="text-2xl">📈</span>
+				<span>Team Velocity</span>
+			</h3>
+			<div class={ "px-3 py-1 rounded-full text-sm font-bold " + getVelocityTrendClass(velocity.VelocityTrend) }>
+				{ getVelocityTrendIcon(velocity.VelocityTrend) } { velocity.VelocityTrend }
+			</div>
+		</div>
+		<div class="grid grid-cols-3 gap-4 mb-4 text-center">
+			<div class="bg-blue-50 rounded-lg p-3">
+				<div class="text-2xl font-bold text-blue-600">{ fmt.Sprintf("%d", velocity.CurrentVelocity) }</div>
+				<div class="text-xs text-slate-600">Current</div>
+			</div>
+			<div class="bg-green-50 rounded-lg p-3">
+				<div class="text-2xl font-bold text-green-600">{ fmt.Sprintf("%d", velocity.AverageVelocity) }</div>
+				<div class="text-xs text-slate-600">Average</div>
+			</div>
+			<div class="bg-purple-50 rounded-lg p-3">
+				<div class="text-2xl font-bold text-purple-600">{ fmt.Sprintf("%d", velocity.PredictedNext) }</div>
+				<div class="text-xs text-slate-600">Predicted</div>
+			</div>
+		</div>
+		<div class="chart-container h-64">
+			<canvas id="velocityChart"></canvas>
+		</div>
+	</div>
+	<script type="text/javascript">
+		(function() {
+			const div = document.querySelector('[data-velocity]');
+			if (!div) return;
+			const velocity = JSON.parse(div.getAttribute('data-velocity'));
+			const ctx = document.getElementById('velocityChart');
+			if (!ctx || !velocity.sprintVelocities) return;
+			
+			const labels = velocity.sprintVelocities.map(v => v.sprintName.replace('NM-', '')).reverse();
+			const committed = velocity.sprintVelocities.map(v => v.committed).reverse();
+			const completed = velocity.sprintVelocities.map(v => v.completed).reverse();
+			
+			new Chart(ctx.getContext('2d'), {
+				type: 'bar',
+				data: {
+					labels: labels,
+					datasets: [
+						{ label: 'Committed', data: committed, backgroundColor: 'rgba(59,130,246,0.7)', borderRadius: 8 },
+						{ label: 'Completed', data: completed, backgroundColor: 'rgba(16,185,129,0.7)', borderRadius: 8 }
+					]
+				},
+				options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
+			});
+		})();
+	</script>
+}
+
+// BurndownChart shows sprint burndown
+templ BurndownChart(burndown []models.BurndownPoint, totalPoints int) {
+	<div class="glass rounded-2xl p-6 card-hover animate-fade-in" data-burndown={ marshalBurndownData(burndown) } data-total={ fmt.Sprintf("%d", totalPoints) }>
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">🔥</span>
+			<span>Sprint Burndown</span>
+		</h3>
+		<div class="chart-container h-64">
+			<canvas id="burndownChart"></canvas>
+		</div>
+	</div>
+	<script type="text/javascript">
+		(function() {
+			const div = document.querySelector('[data-burndown]');
+			if (!div) return;
+			const burndown = JSON.parse(div.getAttribute('data-burndown'));
+			const ctx = document.getElementById('burndownChart');
+			if (!ctx || !burndown) return;
+			
+			const labels = burndown.map(b => b.date);
+			const actual = burndown.map(b => b.remainingPoints);
+			const ideal = burndown.map(b => b.idealRemaining);
+			
+			new Chart(ctx.getContext('2d'), {
+				type: 'line',
+				data: {
+					labels: labels,
+					datasets: [
+						{ label: 'Ideal', data: ideal, borderColor: 'rgba(148,163,184,0.8)', borderDash: [5,5], fill: false, tension: 0.1 },
+						{ label: 'Actual', data: actual, borderColor: 'rgba(239,68,68,0.8)', backgroundColor: 'rgba(239,68,68,0.1)', fill: true, tension: 0.3 }
+					]
+				},
+				options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
+			});
+		})();
+	</script>
+}
+
+// TeamCapacityCard shows team capacity utilization
+templ TeamCapacityCard(userStats []models.UserStats, health models.TeamHealth) {
+	<div class="glass rounded-2xl p-6 card-hover animate-fade-in">
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">👥</span>
+			<span>Team Capacity</span>
+		</h3>
+		<div class="space-y-3 max-h-80 overflow-y-auto">
+			for _, us := range userStats {
+				<div class="flex items-center gap-3 p-3 bg-white/50 rounded-xl">
+					<div class={ "w-10 h-10 rounded-full flex items-center justify-center text-white font-bold " + smGetAvatarColor(us.User.Name) }>
+						{ smGetInitials(us.User.Name) }
+					</div>
+					<div class="flex-1">
+						<div class="font-semibold text-slate-800">{ us.User.Name }</div>
+						<div class="flex items-center gap-2">
+							<div class="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
+								<div class={ "h-full " + getLoadColor(us.AssignedPoints, 10) } style={ fmt.Sprintf("width: %d%%", minInt(us.AssignedPoints*10, 100)) }></div>
+							</div>
+							<span class="text-sm font-bold text-slate-600">{ fmt.Sprintf("%d pts", us.AssignedPoints) }</span>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+		if len(health.CapacityBalance.OverloadedMembers) > 0 {
+			<div class="mt-4 p-3 bg-red-50 rounded-xl border border-red-200">
+				<div class="text-sm font-bold text-red-700 mb-1">⚠️ Overloaded Members</div>
+				for _, m := range health.CapacityBalance.OverloadedMembers {
+					<div class="text-sm text-red-600">{ m.Name } ({ fmt.Sprintf("%.0f%%", m.LoadPercentage) } load)</div>
+				}
+			</div>
+		}
+	</div>
+}
+
+// RiskIndicatorsCard shows risk indicators
+templ RiskIndicatorsCard(risks []models.RiskIndicator) {
+	<div class="glass rounded-2xl p-6 card-hover animate-fade-in">
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">⚠️</span>
+			<span>Risk Indicators</span>
+		</h3>
+		if len(risks) == 0 {
+			<div class="text-center py-8">
+				<div class="text-4xl mb-2">✅</div>
+				<div class="text-slate-600">No risks identified</div>
+			</div>
+		} else {
+			<div class="space-y-3">
+				for _, risk := range risks {
+					<div class={ "p-4 rounded-xl border-l-4 " + getRiskBorderColor(risk.Severity) }>
+						<div class="flex items-center gap-2 mb-1">
+							<span class={ "px-2 py-0.5 rounded text-xs font-bold " + getRiskBadgeColor(risk.Severity) }>
+								{ risk.Severity }
+							</span>
+							<span class="font-bold text-slate-800">{ risk.Title }</span>
+						</div>
+						<div class="text-sm text-slate-600">{ risk.Description }</div>
+					</div>
+				}
+			</div>
+		}
+	</div>
+}
+
+// SprintHistoryCard shows past sprint performance
+templ SprintHistoryCard(history []models.SprintSummary) {
+	<div class="glass rounded-2xl p-6 card-hover animate-fade-in">
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">📜</span>
+			<span>Sprint History</span>
+		</h3>
+		<div class="space-y-2 max-h-80 overflow-y-auto">
+			for _, sprint := range history {
+				<div class="flex items-center justify-between p-3 bg-white/50 rounded-xl hover:bg-white/70 transition">
+					<div>
+						<div class="font-semibold text-slate-800">{ sprint.SprintName }</div>
+						<div class="text-xs text-slate-500">{ fmt.Sprintf("%d/%d pts completed", sprint.Completed, sprint.Committed) }</div>
+					</div>
+					<div class={ "text-lg font-bold " + getCompletionColor(sprint.CompletionPct) }>
+						{ fmt.Sprintf("%.0f%%", sprint.CompletionPct) }
+					</div>
+				</div>
+			}
+		</div>
+	</div>
+}
+
+// BlockersCard shows active blockers
+templ BlockersCard(blockers []models.Blocker) {
+	<div class="glass rounded-2xl p-6 card-hover animate-fade-in">
+		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<span class="text-2xl">🚫</span>
+			<span>Active Blockers</span>
+			if len(blockers) > 0 {
+				<span class="ml-2 px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded-full">{ fmt.Sprintf("%d", len(blockers)) }</span>
+			}
+		</h3>
+		if len(blockers) == 0 {
+			<div class="text-center py-8">
+				<div class="text-4xl mb-2">🎉</div>
+				<div class="text-slate-600">No blockers! Team is running smoothly</div>
+			</div>
+		} else {
+			<div class="space-y-3 max-h-80 overflow-y-auto">
+				for _, blocker := range blockers {
+					<div class="p-4 bg-red-50 rounded-xl border border-red-200">
+						<div class="flex items-center justify-between mb-2">
+							<a href={ templ.SafeURL("https://jira-eng-sjc4.cisco.com/jira/browse/" + blocker.Key) } target="_blank" class="font-bold text-red-700 hover:underline">{ blocker.Key }</a>
+							<span class="text-xs text-red-500">{ fmt.Sprintf("%d days", blocker.AgeInDays) }</span>
+						</div>
+						<div class="text-sm text-slate-700">{ blocker.Title }</div>
+						<div class="text-xs text-slate-500 mt-1">Assigned: { blocker.AssignedTo }</div>
+					</div>
+				}
+			</div>
+		}
+	</div>
+}
+
+// Helper functions
+func getHealthColor(status string) string {
+	switch status {
+	case "healthy": return "bg-gradient-to-br from-green-500 to-green-600"
+	case "at-risk": return "bg-gradient-to-br from-yellow-500 to-yellow-600"
+	case "critical": return "bg-gradient-to-br from-red-500 to-red-600"
+	default: return "bg-gradient-to-br from-slate-500 to-slate-600"
+	}
+}
+
+func getRiskColor(count int) string {
+	if count == 0 { return "bg-gradient-to-br from-green-500 to-green-600" }
+	if count <= 2 { return "bg-gradient-to-br from-yellow-500 to-yellow-600" }
+	return "bg-gradient-to-br from-red-500 to-red-600"
+}
+
+func getVelocityTrendClass(trend string) string {
+	switch trend {
+	case "up": return "bg-green-100 text-green-700"
+	case "down": return "bg-red-100 text-red-700"
+	default: return "bg-slate-100 text-slate-700"
+	}
+}
+
+func getVelocityTrendIcon(trend string) string {
+	switch trend {
+	case "up": return "📈"
+	case "down": return "📉"
+	default: return "➡️"
+	}
+}
+
+func getLoadColor(points, capacity int) string {
+	pct := float64(points) / float64(capacity) * 100
+	if pct > 130 { return "bg-red-500" }
+	if pct > 100 { return "bg-yellow-500" }
+	return "bg-green-500"
+}
+
+func getRiskBorderColor(severity string) string {
+	switch severity {
+	case "high": return "border-red-500 bg-red-50"
+	case "medium": return "border-yellow-500 bg-yellow-50"
+	default: return "border-blue-500 bg-blue-50"
+	}
+}
+
+func getRiskBadgeColor(severity string) string {
+	switch severity {
+	case "high": return "bg-red-500 text-white"
+	case "medium": return "bg-yellow-500 text-white"
+	default: return "bg-blue-500 text-white"
+	}
+}
+
+func getCompletionColor(pct float64) string {
+	if pct >= 90 { return "text-green-600" }
+	if pct >= 70 { return "text-blue-600" }
+	if pct >= 50 { return "text-yellow-600" }
+	return "text-red-600"
+}
+
+func minInt(a, b int) int {
+	if a < b { return a }
+	return b
+}
+
+func marshalVelocityData(v models.VelocityData) string {
+	data, _ := json.Marshal(v)
+	return string(data)
+}
+
+func marshalBurndownData(b []models.BurndownPoint) string {
+	data, _ := json.Marshal(b)
+	return string(data)
+}
+
+func smGetAvatarColor(name string) string {
+	colors := []string{"bg-blue-500", "bg-green-500", "bg-purple-500", "bg-pink-500", "bg-indigo-500", "bg-teal-500"}
+	hash := 0
+	for _, c := range name { hash += int(c) }
+	return colors[hash%len(colors)]
+}
+
+func smGetInitials(name string) string {
+	if name == "" { return "?" }
+	parts := strings.Split(name, " ")
+	if len(parts) >= 2 {
+		return strings.ToUpper(string(parts[0][0])) + strings.ToUpper(string(parts[len(parts)-1][0]))
+	}
+	return strings.ToUpper(string(name[0]))
+}
