@@ -50,19 +50,41 @@ templ DefectCard(defect models.Defect) {
 					</div>
 					<span class="text-xs text-cyan-200">{ defect.Assignee.Name }</span>
 				</div>
-				if defect.Assignee.Email != "" {
-					<button
-						class="request-info-btn px-2 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold rounded-lg transition-all shadow-sm"
-						data-email={ defect.Assignee.Email }
-						data-name={ defect.Assignee.Name }
-						data-item-key={ defect.Key }
-						data-item-title={ defect.Summary }
-						data-item-type="defect"
-						title="Request info via Webex"
+				<div class="flex items-center gap-2">
+					<a
+						href={ templ.SafeURL("https://miggbo.atlassian.net/browse/" + defect.Key) }
+						target="_blank"
+						class="px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold rounded-lg transition-all shadow-sm"
+						title="Open in Jira"
 					>
-						📋
-					</button>
-				}
+						🔗
+					</a>
+					if defect.Assignee.Email != "" {
+						<button
+							class="request-info-btn px-2 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold rounded-lg transition-all shadow-sm"
+							data-email={ defect.Assignee.Email }
+							data-name={ defect.Assignee.Name }
+							data-item-key={ defect.Key }
+							data-item-title={ defect.Summary }
+							data-item-type="defect"
+							title="Request info via Webex"
+						>
+							📋
+						</button>
+					}
+				</div>
+			</div>
+		} else {
+			<!-- Show Jira link even without assignee -->
+			<div class="flex items-center justify-end pt-2 border-t border-slate-200">
+				<a
+					href={ templ.SafeURL("https://miggbo.atlassian.net/browse/" + defect.Key) }
+					target="_blank"
+					class="px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold rounded-lg transition-all shadow-sm"
+					title="Open in Jira"
+				>
+					🔗
+				</a>
 			</div>
 		}
 	</div>

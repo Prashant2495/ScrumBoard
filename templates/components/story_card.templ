@@ -40,6 +40,14 @@ templ StoryCard(story models.Story) {
 					<span class="text-sm">⚡</span>
 					<span class="text-xs font-bold">{ fmt.Sprintf("%d", story.StoryPoints) }</span>
 				</div>
+				<a
+					href={ templ.SafeURL("https://miggbo.atlassian.net/browse/" + story.Key) }
+					target="_blank"
+					class="px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold rounded-lg transition-all shadow-sm"
+					title="Open in Jira"
+				>
+					🔗
+				</a>
 				if story.Assignee.Email != "" {
 					<button
 						class="request-info-btn px-2 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold rounded-lg transition-all shadow-sm"
