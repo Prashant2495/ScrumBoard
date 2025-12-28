@@ -68,14 +68,14 @@ func SMStatCard(icon, title, value, colorClass string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div><div><p class=\"text-sm font-semibold text-white/80 uppercase tracking-wide\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div><div><p class=\"text-sm font-semibold text-white uppercase tracking-wide\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 16, Col: 82}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 16, Col: 79}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -135,7 +135,7 @@ func ScrumMasterDashboard(data models.ScrumMasterDashboardData) templ.Component 
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div class=\"min-h-screen\"><!-- Header --><header class=\"gradient-bg text-white/90 py-6 px-8 shadow-lg backdrop-blur-sm\"><div class=\"w-full flex items-center justify-between\"><div class=\"flex items-center gap-4\"><div class=\"w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center text-2xl backdrop-blur-md border border-white/20\">👨\u200d💼</div><div><h1 class=\"text-2xl font-bold text-white/75\">Scrum Master Dashboard</h1><p class=\"text-white/50 text-sm\">Team Health & Sprint Analytics</p></div></div><div class=\"flex items-center gap-4\"><!-- Sprint Selector --><div class=\"glass-dark px-4 py-2 rounded-xl\"><p class=\"text-xs text-white/70 mb-1\">Sprint</p><select id=\"sprint-selector\" class=\"bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30\"><option value=\"0\">Loading...</option></select></div><!-- Jira Link --><a id=\"jira-sprint-link\" href=\"#\" target=\"_blank\" class=\"bg-blue-500/80 hover:bg-blue-600/90 px-4 py-2 rounded-xl transition-all flex items-center gap-2\" title=\"Open in Jira\"><span>🔗</span> <span class=\"hidden sm:inline\">Jira</span></a> <a href=\"/\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm font-semibold transition backdrop-blur\">🏠 Home</a> <a href=\"/sprint\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm font-semibold transition backdrop-blur\">📊 Sprint</a></div></div></header><!-- Dashboard Content --><main id=\"dashboard-content\" class=\"w-full px-6 py-8\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div class=\"min-h-screen\"><!-- Header --><header class=\"bg-slate-900/80 backdrop-blur-lg text-white py-6 px-8 shadow-xl border-b border-slate-700/50\"><div class=\"w-full flex items-center justify-between\"><div class=\"flex items-center gap-4\"><div class=\"w-12 h-12 bg-slate-800/80 rounded-xl flex items-center justify-center text-2xl shadow-xl\">👨\u200d💼</div><div><h1 class=\"text-2xl font-bold text-white\">Scrum Master Dashboard</h1><p class=\"text-white/70 text-sm\">Team Health & Sprint Analytics</p></div></div><div class=\"flex items-center gap-4\"><!-- Sprint Selector --><div class=\"glass-dark px-4 py-2 rounded-xl\"><p class=\"text-xs text-white/70 mb-1\">Sprint</p><select id=\"sprint-selector\" class=\"bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30\"><option value=\"0\">Loading...</option></select></div><!-- Jira Link --><a id=\"jira-sprint-link\" href=\"#\" target=\"_blank\" class=\"bg-blue-500/80 hover:bg-blue-600/90 px-4 py-2 rounded-xl transition-all flex items-center gap-2\" title=\"Open in Jira\"><span>🔗</span> <span class=\"hidden sm:inline\">Jira</span></a> <a href=\"/\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm font-semibold transition backdrop-blur\">🏠 Home</a> <a href=\"/sprint\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg text-sm font-semibold transition backdrop-blur\">📊 Sprint</a></div></div></header><!-- Dashboard Content --><main id=\"dashboard-content\" class=\"w-full px-6 py-8\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -234,7 +234,7 @@ func ScrumMasterDashboardContent(data models.ScrumMasterDashboardData) templ.Com
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div><!-- At-Risk Prediction Section --><div class=\"glass rounded-2xl p-6 card-hover animate-fade-in mb-8\"><h3 class=\"text-lg font-bold text-slate-800 mb-4 flex items-center gap-2\"><span class=\"text-2xl\">🔮</span> <span>Sprint Completion Prediction</span><div class=\"ml-auto flex gap-2\"><button onclick=\"analyzeRisks()\" class=\"px-3 py-1 bg-purple-500 hover:bg-purple-600 text-white text-xs font-semibold rounded-lg transition-all\">🔍 Analyze</button> <button id=\"alert-risk-btn\" onclick=\"sendRiskAlerts()\" class=\"px-3 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold rounded-lg transition-all hidden\">📣 Alert All via Webex</button></div></h3><p class=\"text-sm text-slate-500 mb-4\">AI predicts which stories/bugs may not complete before sprint ends based on status, days left, and activity.</p><div id=\"risk-prediction-list\" class=\"space-y-3 max-h-96 overflow-y-auto\"><p class=\"text-slate-500 text-center py-4\">Click \"Analyze\" to check for at-risk items...</p></div></div><!-- Info Requests Section --><div class=\"glass rounded-2xl p-6 card-hover animate-fade-in mb-8\"><h3 class=\"text-lg font-bold text-slate-800 mb-4 flex items-center gap-2\"><span class=\"text-2xl\">�</span> <span>Info Requests & Responses</span> <button onclick=\"loadAllInfoRequests()\" class=\"ml-auto px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold rounded-lg transition-all\">🔄 Refresh</button></h3><div id=\"info-request-list\" class=\"space-y-3 max-h-96 overflow-y-auto\"><p class=\"text-slate-500 text-center py-4\">Loading info requests...</p></div></div><script>\n\t\tfunction loadAllInfoRequests() {\n\t\t\tfetch('/engineer/api/pings')\n\t\t\t\t.then(function(res) { return res.json(); })\n\t\t\t\t.then(function(data) {\n\t\t\t\t\tvar reqList = document.getElementById('info-request-list');\n\t\t\t\t\tif (!reqList) return;\n\n\t\t\t\t\tif (!data.pings || data.pings.length === 0) {\n\t\t\t\t\t\treqList.innerHTML = '<p class=\"text-slate-500 text-center py-4\">No info requests yet. Use \"Request Info\" button on stories/defects.</p>';\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\n\t\t\t\t\treqList.innerHTML = data.pings.map(function(ping) {\n\t\t\t\t\t\tvar borderClass = ping.status === 'responded' ? 'border-green-300 bg-green-50' : 'border-yellow-300 bg-yellow-50';\n\t\t\t\t\t\tvar statusClass = ping.status === 'responded' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';\n\t\t\t\t\t\tvar statusText = ping.status === 'responded' ? '✅ Responded' : '⏳ Awaiting Reply';\n\t\t\t\t\t\tvar responseHtml = '';\n\t\t\t\t\t\tif (ping.response) {\n\t\t\t\t\t\t\tresponseHtml = '<div class=\"mt-3 bg-green-100 rounded-lg p-3 border border-green-200\">' +\n\t\t\t\t\t\t\t\t'<p class=\"text-xs text-green-600 mb-1\">📩 Response (' + ping.responded_at + '):</p>' +\n\t\t\t\t\t\t\t\t'<p class=\"text-sm text-green-800 font-medium\">' + ping.response + '</p></div>';\n\t\t\t\t\t\t}\n\t\t\t\t\t\tvar itemHtml = ping.item_key ? '<p class=\"text-sm font-bold text-blue-600 mb-1\">🎯 ' + ping.item_key + ': ' + (ping.item_title || '') + '</p>' : '';\n\t\t\t\t\t\treturn '<div class=\"rounded-xl p-4 border-2 ' + borderClass + '\">' +\n\t\t\t\t\t\t\t'<div class=\"flex items-center justify-between mb-2\">' +\n\t\t\t\t\t\t\t'<div class=\"flex items-center gap-2\">' +\n\t\t\t\t\t\t\t'<span class=\"font-bold text-slate-800\">' + ping.engineer_name + '</span>' +\n\t\t\t\t\t\t\t'<span class=\"text-xs text-slate-500\">(' + ping.engineer_email + ')</span></div>' +\n\t\t\t\t\t\t\t'<span class=\"px-2 py-1 rounded-full text-xs font-semibold ' + statusClass + '\">' + statusText + '</span></div>' +\n\t\t\t\t\t\t\titemHtml +\n\t\t\t\t\t\t\t'<div class=\"flex items-center gap-4 text-xs text-slate-500 mb-2\">' +\n\t\t\t\t\t\t\t'<span>📤 Requested: ' + ping.sent_at + '</span>' +\n\t\t\t\t\t\t\t'<span>🏃 Sprint: ' + ping.sprint_name + '</span></div>' +\n\t\t\t\t\t\t\tresponseHtml + '</div>';\n\t\t\t\t\t}).join('');\n\t\t\t\t})\n\t\t\t\t.catch(function(err) {\n\t\t\t\t\tconsole.error('Error loading info requests:', err);\n\t\t\t\t\tdocument.getElementById('info-request-list').innerHTML = '<p class=\"text-red-500 text-center py-4\">Error loading info requests</p>';\n\t\t\t\t});\n\t\t}\n\n\t\t// Load info requests on page load\n\t\tloadAllInfoRequests();\n\n\t\t// Risk prediction functions\n\t\tfunction analyzeRisks() {\n\t\t\tvar riskList = document.getElementById('risk-prediction-list');\n\t\t\triskList.innerHTML = '<p class=\"text-slate-500 text-center py-4\">🔄 Analyzing sprint risks...</p>';\n\n\t\t\tvar sprintId = document.getElementById('sprint-selector').value || '0';\n\t\t\tfetch('/api/risk/items?sprint=' + sprintId)\n\t\t\t\t.then(function(res) { return res.json(); })\n\t\t\t\t.then(function(data) {\n\t\t\t\t\tif (!data.risks || data.risks.length === 0) {\n\t\t\t\t\t\triskList.innerHTML = '<div class=\"text-center py-8\"><div class=\"text-4xl mb-2\">✅</div><div class=\"text-green-600 font-semibold\">All items on track!</div><div class=\"text-slate-500 text-sm\">No items predicted to miss sprint completion.</div></div>';\n\t\t\t\t\t\tdocument.getElementById('alert-risk-btn').classList.add('hidden');\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\n\t\t\t\t\tdocument.getElementById('alert-risk-btn').classList.remove('hidden');\n\n\t\t\t\t\triskList.innerHTML = data.risks.map(function(risk) {\n\t\t\t\t\t\tvar riskColor = risk.riskLevel === 'high' ? 'border-red-400 bg-red-50' : 'border-yellow-400 bg-yellow-50';\n\t\t\t\t\t\tvar riskBadge = risk.riskLevel === 'high' ? 'bg-red-500 text-white' : 'bg-yellow-500 text-white';\n\t\t\t\t\t\tvar typeEmoji = risk.type === 'story' ? '📖' : '🐛';\n\t\t\t\t\t\treturn '<div class=\"rounded-xl p-4 border-2 ' + riskColor + '\">' +\n\t\t\t\t\t\t\t'<div class=\"flex items-center justify-between mb-2\">' +\n\t\t\t\t\t\t\t'<div class=\"flex items-center gap-2\">' +\n\t\t\t\t\t\t\t'<span class=\"text-lg\">' + typeEmoji + '</span>' +\n\t\t\t\t\t\t\t'<span class=\"font-bold text-slate-800\">' + risk.key + '</span>' +\n\t\t\t\t\t\t\t'<span class=\"px-2 py-0.5 rounded text-xs font-bold ' + riskBadge + '\">' + risk.riskLevel.toUpperCase() + '</span>' +\n\t\t\t\t\t\t\t'</div>' +\n\t\t\t\t\t\t\t'<span class=\"text-xs text-slate-500\">⏰ ' + risk.daysLeft + ' days left</span>' +\n\t\t\t\t\t\t\t'</div>' +\n\t\t\t\t\t\t\t'<p class=\"text-sm text-slate-700 mb-1\">' + risk.title + '</p>' +\n\t\t\t\t\t\t\t'<div class=\"flex items-center gap-4 text-xs\">' +\n\t\t\t\t\t\t\t'<span class=\"text-orange-600\">⚠️ ' + risk.reason + '</span>' +\n\t\t\t\t\t\t\t'<span class=\"text-slate-500\">👤 ' + (risk.assignee || 'Unassigned') + '</span>' +\n\t\t\t\t\t\t\t'</div>' +\n\t\t\t\t\t\t\t'</div>';\n\t\t\t\t\t}).join('');\n\t\t\t\t})\n\t\t\t\t.catch(function(err) {\n\t\t\t\t\tconsole.error('Error analyzing risks:', err);\n\t\t\t\t\triskList.innerHTML = '<p class=\"text-red-500 text-center py-4\">Error analyzing risks</p>';\n\t\t\t\t});\n\t\t}\n\n\t\tfunction sendRiskAlerts() {\n\t\t\tif (!confirm('Send Webex alerts to all assignees of at-risk items?')) return;\n\n\t\t\tvar alertBtn = document.getElementById('alert-risk-btn');\n\t\t\talertBtn.textContent = '⏳ Sending...';\n\t\t\talertBtn.disabled = true;\n\n\t\t\tvar sprintId = document.getElementById('sprint-selector').value || '0';\n\t\t\tvar formData = new FormData();\n\t\t\tformData.append('sprint', sprintId);\n\n\t\t\tfetch('/api/risk/alert', {\n\t\t\t\tmethod: 'POST',\n\t\t\t\tbody: formData\n\t\t\t})\n\t\t\t\t.then(function(res) { return res.json(); })\n\t\t\t\t.then(function(data) {\n\t\t\t\t\talertBtn.textContent = '📣 Alert All via Webex';\n\t\t\t\t\talertBtn.disabled = false;\n\n\t\t\t\t\tif (data.success) {\n\t\t\t\t\t\talert('✅ Sent ' + data.sent + ' of ' + data.total + ' alerts successfully!');\n\t\t\t\t\t} else {\n\t\t\t\t\t\talert('❌ Failed: ' + data.message);\n\t\t\t\t\t}\n\t\t\t\t})\n\t\t\t\t.catch(function(err) {\n\t\t\t\t\talertBtn.textContent = '📣 Alert All via Webex';\n\t\t\t\t\talertBtn.disabled = false;\n\t\t\t\t\talert('❌ Error sending alerts');\n\t\t\t\t});\n\t\t}\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div><!-- At-Risk Prediction Section --><div class=\"glass rounded-2xl p-6 card-hover animate-fade-in mb-8\"><h3 class=\"text-lg font-bold text-white mb-4 flex items-center gap-2\"><span class=\"text-2xl\">🔮</span> <span>Sprint Completion Prediction</span><div class=\"ml-auto flex gap-2\"><button onclick=\"analyzeRisks()\" class=\"px-3 py-1 bg-purple-500 hover:bg-purple-600 text-white text-xs font-semibold rounded-lg transition-all\">🔍 Analyze</button> <button id=\"alert-risk-btn\" onclick=\"sendRiskAlerts()\" class=\"px-3 py-1 bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold rounded-lg transition-all hidden\">📣 Alert All via Webex</button></div></h3><p class=\"text-sm text-cyan-200 mb-4\">AI predicts which stories/bugs may not complete before sprint ends based on status, days left, and activity.</p><div id=\"risk-prediction-list\" class=\"space-y-3 max-h-96 overflow-y-auto\"><p class=\"text-cyan-200 text-center py-4\">Click \"Analyze\" to check for at-risk items...</p></div></div><!-- Info Requests Section --><div class=\"glass rounded-2xl p-6 card-hover animate-fade-in mb-8\"><h3 class=\"text-lg font-bold text-white mb-4 flex items-center gap-2\"><span class=\"text-2xl\">�</span> <span>Info Requests & Responses</span> <button onclick=\"loadAllInfoRequests()\" class=\"ml-auto px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold rounded-lg transition-all\">🔄 Refresh</button></h3><div id=\"info-request-list\" class=\"space-y-3 max-h-96 overflow-y-auto\"><p class=\"text-cyan-200 text-center py-4\">Loading info requests...</p></div></div><script>\n\t\tfunction loadAllInfoRequests() {\n\t\t\tfetch('/engineer/api/pings')\n\t\t\t\t.then(function(res) { return res.json(); })\n\t\t\t\t.then(function(data) {\n\t\t\t\t\tvar reqList = document.getElementById('info-request-list');\n\t\t\t\t\tif (!reqList) return;\n\n\t\t\t\t\tif (!data.pings || data.pings.length === 0) {\n\t\t\t\t\t\treqList.innerHTML = '<p class=\"text-cyan-200 text-center py-4\">No info requests yet. Use \"Request Info\" button on stories/defects.</p>';\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\n\t\t\t\t\treqList.innerHTML = data.pings.map(function(ping) {\n\t\t\t\t\t\tvar borderClass = ping.status === 'responded' ? 'border-green-300 bg-green-50' : 'border-yellow-300 bg-yellow-50';\n\t\t\t\t\t\tvar statusClass = ping.status === 'responded' ? 'bg-green-500/30 text-green-300' : 'bg-yellow-500/30 text-yellow-300';\n\t\t\t\t\t\tvar statusText = ping.status === 'responded' ? '✅ Responded' : '⏳ Awaiting Reply';\n\t\t\t\t\t\tvar responseHtml = '';\n\t\t\t\t\t\tif (ping.response) {\n\t\t\t\t\t\t\tresponseHtml = '<div class=\"mt-3 bg-green-500/20 rounded-lg p-3 border border-green-400/50\">' +\n\t\t\t\t\t\t\t\t'<p class=\"text-xs text-green-300 mb-1\">📩 Response (' + ping.responded_at + '):</p>' +\n\t\t\t\t\t\t\t\t'<p class=\"text-sm text-green-200 font-medium\">' + ping.response + '</p></div>';\n\t\t\t\t\t\t}\n\t\t\t\t\t\tvar itemHtml = ping.item_key ? '<p class=\"text-sm font-bold text-blue-300 mb-1\">🎯 ' + ping.item_key + ': ' + (ping.item_title || '') + '</p>' : '';\n\t\t\t\t\t\treturn '<div class=\"rounded-xl p-4 border-2 ' + borderClass + '\">' +\n\t\t\t\t\t\t\t'<div class=\"flex items-center justify-between mb-2\">' +\n\t\t\t\t\t\t\t'<div class=\"flex items-center gap-2\">' +\n\t\t\t\t\t\t\t'<span class=\"font-bold text-white\">' + ping.engineer_name + '</span>' +\n\t\t\t\t\t\t\t'<span class=\"text-xs text-cyan-200\">(' + ping.engineer_email + ')</span></div>' +\n\t\t\t\t\t\t\t'<span class=\"px-2 py-1 rounded-full text-xs font-semibold ' + statusClass + '\">' + statusText + '</span></div>' +\n\t\t\t\t\t\t\titemHtml +\n\t\t\t\t\t\t\t'<div class=\"flex items-center gap-4 text-xs text-cyan-200 mb-2\">' +\n\t\t\t\t\t\t\t'<span>📤 Requested: ' + ping.sent_at + '</span>' +\n\t\t\t\t\t\t\t'<span>🏃 Sprint: ' + ping.sprint_name + '</span></div>' +\n\t\t\t\t\t\t\tresponseHtml + '</div>';\n\t\t\t\t\t}).join('');\n\t\t\t\t})\n\t\t\t\t.catch(function(err) {\n\t\t\t\t\tconsole.error('Error loading info requests:', err);\n\t\t\t\t\tdocument.getElementById('info-request-list').innerHTML = '<p class=\"text-red-500 text-center py-4\">Error loading info requests</p>';\n\t\t\t\t});\n\t\t}\n\n\t\t// Load info requests on page load\n\t\tloadAllInfoRequests();\n\n\t\t// Risk prediction functions\n\t\tfunction analyzeRisks() {\n\t\t\tvar riskList = document.getElementById('risk-prediction-list');\n\t\t\triskList.innerHTML = '<p class=\"text-cyan-200 text-center py-4\">🔄 Analyzing sprint risks...</p>';\n\n\t\t\tvar sprintId = document.getElementById('sprint-selector').value || '0';\n\t\t\tfetch('/api/risk/items?sprint=' + sprintId)\n\t\t\t\t.then(function(res) { return res.json(); })\n\t\t\t\t.then(function(data) {\n\t\t\t\t\tif (!data.risks || data.risks.length === 0) {\n\t\t\t\t\t\triskList.innerHTML = '<div class=\"text-center py-8\"><div class=\"text-4xl mb-2\">✅</div><div class=\"text-green-300 font-semibold\">All items on track!</div><div class=\"text-cyan-200 text-sm\">No items predicted to miss sprint completion.</div></div>';\n\t\t\t\t\t\tdocument.getElementById('alert-risk-btn').classList.add('hidden');\n\t\t\t\t\t\treturn;\n\t\t\t\t\t}\n\n\t\t\t\t\tdocument.getElementById('alert-risk-btn').classList.remove('hidden');\n\n\t\t\t\t\triskList.innerHTML = data.risks.map(function(risk) {\n\t\t\t\t\t\tvar riskColor = risk.riskLevel === 'high' ? 'border-red-400 bg-red-500/20' : 'border-yellow-400 bg-yellow-500/20';\n\t\t\t\t\t\tvar riskBadge = risk.riskLevel === 'high' ? 'bg-red-500 text-white' : 'bg-yellow-500 text-white';\n\t\t\t\t\t\tvar typeEmoji = risk.type === 'story' ? '📖' : '🐛';\n\t\t\t\t\t\treturn '<div class=\"rounded-xl p-4 border-2 ' + riskColor + '\">' +\n\t\t\t\t\t\t\t'<div class=\"flex items-center justify-between mb-2\">' +\n\t\t\t\t\t\t\t'<div class=\"flex items-center gap-2\">' +\n\t\t\t\t\t\t\t'<span class=\"text-lg\">' + typeEmoji + '</span>' +\n\t\t\t\t\t\t\t'<span class=\"font-bold text-white\">' + risk.key + '</span>' +\n\t\t\t\t\t\t\t'<span class=\"px-2 py-0.5 rounded text-xs font-bold ' + riskBadge + '\">' + risk.riskLevel.toUpperCase() + '</span>' +\n\t\t\t\t\t\t\t'</div>' +\n\t\t\t\t\t\t\t'<span class=\"text-xs text-cyan-200\">⏰ ' + risk.daysLeft + ' days left</span>' +\n\t\t\t\t\t\t\t'</div>' +\n\t\t\t\t\t\t\t'<p class=\"text-sm text-white mb-1\">' + risk.title + '</p>' +\n\t\t\t\t\t\t\t'<div class=\"flex items-center gap-4 text-xs\">' +\n\t\t\t\t\t\t\t'<span class=\"text-orange-300\">⚠️ ' + risk.reason + '</span>' +\n\t\t\t\t\t\t\t'<span class=\"text-cyan-200\">👤 ' + (risk.assignee || 'Unassigned') + '</span>' +\n\t\t\t\t\t\t\t'</div>' +\n\t\t\t\t\t\t\t'</div>';\n\t\t\t\t\t}).join('');\n\t\t\t\t})\n\t\t\t\t.catch(function(err) {\n\t\t\t\t\tconsole.error('Error analyzing risks:', err);\n\t\t\t\t\triskList.innerHTML = '<p class=\"text-red-500 text-center py-4\">Error analyzing risks</p>';\n\t\t\t\t});\n\t\t}\n\n\t\tfunction sendRiskAlerts() {\n\t\t\tif (!confirm('Send Webex alerts to all assignees of at-risk items?')) return;\n\n\t\t\tvar alertBtn = document.getElementById('alert-risk-btn');\n\t\t\talertBtn.textContent = '⏳ Sending...';\n\t\t\talertBtn.disabled = true;\n\n\t\t\tvar sprintId = document.getElementById('sprint-selector').value || '0';\n\t\t\tvar formData = new FormData();\n\t\t\tformData.append('sprint', sprintId);\n\n\t\t\tfetch('/api/risk/alert', {\n\t\t\t\tmethod: 'POST',\n\t\t\t\tbody: formData\n\t\t\t})\n\t\t\t\t.then(function(res) { return res.json(); })\n\t\t\t\t.then(function(data) {\n\t\t\t\t\talertBtn.textContent = '📣 Alert All via Webex';\n\t\t\t\t\talertBtn.disabled = false;\n\n\t\t\t\t\tif (data.success) {\n\t\t\t\t\t\talert('✅ Sent ' + data.sent + ' of ' + data.total + ' alerts successfully!');\n\t\t\t\t\t} else {\n\t\t\t\t\t\talert('❌ Failed: ' + data.message);\n\t\t\t\t\t}\n\t\t\t\t})\n\t\t\t\t.catch(function(err) {\n\t\t\t\t\talertBtn.textContent = '📣 Alert All via Webex';\n\t\t\t\t\talertBtn.disabled = false;\n\t\t\t\t\talert('❌ Error sending alerts');\n\t\t\t\t});\n\t\t}\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -277,7 +277,7 @@ func VelocityChart(velocity models.VelocityData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\"><div class=\"flex items-center justify-between mb-4\"><h3 class=\"text-lg font-bold text-slate-800 flex items-center gap-2\"><span class=\"text-2xl\">📈</span> <span>Team Velocity</span></h3>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 14, "\"><div class=\"flex items-center justify-between mb-4\"><h3 class=\"text-lg font-bold text-white flex items-center gap-2\"><span class=\"text-2xl\">📈</span> <span>Team Velocity</span></h3>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -325,7 +325,7 @@ func VelocityChart(velocity models.VelocityData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div></div><div class=\"grid grid-cols-3 gap-4 mb-4 text-center\"><div class=\"bg-blue-50 rounded-lg p-3\"><div class=\"text-2xl font-bold text-blue-600\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, "</div></div><div class=\"grid grid-cols-3 gap-4 mb-4 text-center\"><div class=\"bg-blue-500/20 rounded-lg p-3 border border-blue-400/30\"><div class=\"text-2xl font-bold text-blue-300\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -338,7 +338,7 @@ func VelocityChart(velocity models.VelocityData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</div><div class=\"text-xs text-slate-600\">Current</div></div><div class=\"bg-green-50 rounded-lg p-3\"><div class=\"text-2xl font-bold text-green-600\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</div><div class=\"text-xs text-cyan-200\">Current</div></div><div class=\"bg-green-500/20 rounded-lg p-3 border border-green-400/30\"><div class=\"text-2xl font-bold text-green-300\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -351,7 +351,7 @@ func VelocityChart(velocity models.VelocityData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</div><div class=\"text-xs text-slate-600\">Average</div></div><div class=\"bg-purple-50 rounded-lg p-3\"><div class=\"text-2xl font-bold text-purple-600\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</div><div class=\"text-xs text-cyan-200\">Average</div></div><div class=\"bg-purple-500/20 rounded-lg p-3 border border-purple-400/30\"><div class=\"text-2xl font-bold text-purple-300\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -364,7 +364,7 @@ func VelocityChart(velocity models.VelocityData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</div><div class=\"text-xs text-slate-600\">Predicted</div></div></div><div class=\"chart-container h-64\"><canvas id=\"velocityChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst div = document.querySelector('[data-velocity]');\n\t\t\tif (!div) return;\n\t\t\tconst velocity = JSON.parse(div.getAttribute('data-velocity'));\n\t\t\tconst ctx = document.getElementById('velocityChart');\n\t\t\tif (!ctx || !velocity.sprintVelocities) return;\n\n\t\t\tconst labels = velocity.sprintVelocities.map(v => v.sprintName.replace('NM-', '')).reverse();\n\t\t\tconst committed = velocity.sprintVelocities.map(v => v.committed).reverse();\n\t\t\tconst completed = velocity.sprintVelocities.map(v => v.completed).reverse();\n\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'bar',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: labels,\n\t\t\t\t\tdatasets: [\n\t\t\t\t\t\t{ label: 'Committed', data: committed, backgroundColor: 'rgba(59,130,246,0.7)', borderRadius: 8 },\n\t\t\t\t\t\t{ label: 'Completed', data: completed, backgroundColor: 'rgba(16,185,129,0.7)', borderRadius: 8 }\n\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\toptions: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }\n\t\t\t});\n\t\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</div><div class=\"text-xs text-cyan-200\">Predicted</div></div></div><div class=\"chart-container h-64\"><canvas id=\"velocityChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst div = document.querySelector('[data-velocity]');\n\t\t\tif (!div) return;\n\t\t\tconst velocity = JSON.parse(div.getAttribute('data-velocity'));\n\t\t\tconst ctx = document.getElementById('velocityChart');\n\t\t\tif (!ctx || !velocity.sprintVelocities) return;\n\n\t\t\tconst labels = velocity.sprintVelocities.map(v => v.sprintName.replace('NM-', '')).reverse();\n\t\t\tconst committed = velocity.sprintVelocities.map(v => v.committed).reverse();\n\t\t\tconst completed = velocity.sprintVelocities.map(v => v.completed).reverse();\n\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'bar',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: labels,\n\t\t\t\t\tdatasets: [\n\t\t\t\t\t\t{ label: 'Committed', data: committed, backgroundColor: 'rgba(59,130,246,0.7)', borderRadius: 8 },\n\t\t\t\t\t\t{ label: 'Completed', data: completed, backgroundColor: 'rgba(16,185,129,0.7)', borderRadius: 8 }\n\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\toptions: {\n\t\t\t\t\t\tresponsive: true,\n\t\t\t\t\t\tmaintainAspectRatio: false,\n\t\t\t\t\t\tplugins: {\n\t\t\t\t\t\t\tlegend: { position: 'top', labels: { color: '#fff' } }\n\t\t\t\t\t\t},\n\t\t\t\t\t\tscales: {\n\t\t\t\t\t\t\tx: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } },\n\t\t\t\t\t\t\ty: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } }\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t});\n\t\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -401,7 +401,7 @@ func BurndownChart(burndown []models.BurndownPoint, totalPoints int) templ.Compo
 		var templ_7745c5c3_Var20 string
 		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(marshalBurndownData(burndown))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 359, Col: 108}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 369, Col: 108}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 		if templ_7745c5c3_Err != nil {
@@ -414,13 +414,13 @@ func BurndownChart(burndown []models.BurndownPoint, totalPoints int) templ.Compo
 		var templ_7745c5c3_Var21 string
 		templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", totalPoints))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 359, Col: 154}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 369, Col: 154}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "\"><h3 class=\"text-lg font-bold text-slate-800 mb-4 flex items-center gap-2\"><span class=\"text-2xl\">🔥</span> <span>Sprint Burndown</span></h3><div class=\"chart-container h-64\"><canvas id=\"burndownChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst div = document.querySelector('[data-burndown]');\n\t\t\tif (!div) return;\n\t\t\tconst burndown = JSON.parse(div.getAttribute('data-burndown'));\n\t\t\tconst ctx = document.getElementById('burndownChart');\n\t\t\tif (!ctx || !burndown) return;\n\n\t\t\tconst labels = burndown.map(b => b.date);\n\t\t\tconst actual = burndown.map(b => b.remainingPoints);\n\t\t\tconst ideal = burndown.map(b => b.idealRemaining);\n\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'line',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: labels,\n\t\t\t\t\tdatasets: [\n\t\t\t\t\t\t{ label: 'Ideal', data: ideal, borderColor: 'rgba(148,163,184,0.8)', borderDash: [5,5], fill: false, tension: 0.1 },\n\t\t\t\t\t\t{ label: 'Actual', data: actual, borderColor: 'rgba(239,68,68,0.8)', backgroundColor: 'rgba(239,68,68,0.1)', fill: true, tension: 0.3 }\n\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\toptions: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }\n\t\t\t});\n\t\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "\"><h3 class=\"text-lg font-bold text-white mb-4 flex items-center gap-2\"><span class=\"text-2xl\">🔥</span> <span>Sprint Burndown</span></h3><div class=\"chart-container h-64\"><canvas id=\"burndownChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst div = document.querySelector('[data-burndown]');\n\t\t\tif (!div) return;\n\t\t\tconst burndown = JSON.parse(div.getAttribute('data-burndown'));\n\t\t\tconst ctx = document.getElementById('burndownChart');\n\t\t\tif (!ctx || !burndown) return;\n\n\t\t\tconst labels = burndown.map(b => b.date);\n\t\t\tconst actual = burndown.map(b => b.remainingPoints);\n\t\t\tconst ideal = burndown.map(b => b.idealRemaining);\n\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'line',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: labels,\n\t\t\t\t\tdatasets: [\n\t\t\t\t\t\t{ label: 'Ideal', data: ideal, borderColor: 'rgba(148,163,184,0.8)', borderDash: [5,5], fill: false, tension: 0.1 },\n\t\t\t\t\t\t{ label: 'Actual', data: actual, borderColor: 'rgba(239,68,68,0.8)', backgroundColor: 'rgba(239,68,68,0.1)', fill: true, tension: 0.3 }\n\t\t\t\t\t]\n\t\t\t\t},\n\t\t\t\toptions: {\n\t\t\t\t\t\tresponsive: true,\n\t\t\t\t\t\tmaintainAspectRatio: false,\n\t\t\t\t\t\tplugins: {\n\t\t\t\t\t\t\tlegend: { position: 'top', labels: { color: '#fff' } }\n\t\t\t\t\t\t},\n\t\t\t\t\t\tscales: {\n\t\t\t\t\t\t\tx: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } },\n\t\t\t\t\t\t\ty: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } }\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t});\n\t\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -450,12 +450,12 @@ func TeamCapacityCard(userStats []models.UserStats, health models.TeamHealth, sp
 			templ_7745c5c3_Var22 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<div class=\"glass rounded-2xl p-6 card-hover animate-fade-in\"><h3 class=\"text-lg font-bold text-slate-800 mb-4 flex items-center gap-2\"><span class=\"text-2xl\">👥</span> <span>Team Capacity</span></h3><div class=\"space-y-3 max-h-80 overflow-y-auto\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "<div class=\"glass rounded-2xl p-6 card-hover animate-fade-in\"><h3 class=\"text-lg font-bold text-white mb-4 flex items-center gap-2\"><span class=\"text-2xl\">👥</span> <span>Team Capacity</span></h3><div class=\"space-y-3 max-h-80 overflow-y-auto\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		for _, us := range userStats {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "<div class=\"flex items-center gap-3 p-3 bg-white/50 rounded-xl\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "<div class=\"flex items-center gap-3 p-3 bg-white/10 rounded-xl border border-white/20\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -484,26 +484,26 @@ func TeamCapacityCard(userStats []models.UserStats, health models.TeamHealth, sp
 			var templ_7745c5c3_Var25 string
 			templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(smGetInitials(us.User.Name))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 406, Col: 35}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 426, Col: 35}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</div><div class=\"flex-1\"><div class=\"font-semibold text-slate-800\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</div><div class=\"flex-1\"><div class=\"font-semibold text-white\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var26 string
 			templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(us.User.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 409, Col: 62}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 429, Col: 58}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</div><div class=\"flex items-center gap-2\"><div class=\"flex-1 h-2 bg-slate-200 rounded-full overflow-hidden\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</div><div class=\"flex items-center gap-2\"><div class=\"flex-1 h-2 bg-white/20 rounded-full overflow-hidden\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -532,20 +532,20 @@ func TeamCapacityCard(userStats []models.UserStats, health models.TeamHealth, sp
 			var templ_7745c5c3_Var29 string
 			templ_7745c5c3_Var29, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(fmt.Sprintf("width: %d%%", minInt(us.AssignedPoints*10, 100)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 412, Col: 140}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 432, Col: 140}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "\"></div></div><span class=\"text-sm font-bold text-slate-600\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "\"></div></div><span class=\"text-sm font-bold text-cyan-200\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var30 string
 			templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d pts", us.AssignedPoints))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 414, Col: 96}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 434, Col: 95}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
 			if templ_7745c5c3_Err != nil {
@@ -561,19 +561,19 @@ func TeamCapacityCard(userStats []models.UserStats, health models.TeamHealth, sp
 			return templ_7745c5c3_Err
 		}
 		if len(health.CapacityBalance.OverloadedMembers) > 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "<div class=\"mt-4 p-3 bg-red-50 rounded-xl border border-red-200\"><div class=\"text-sm font-bold text-red-700 mb-1\">⚠️ Overloaded Members</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "<div class=\"mt-4 p-3 bg-red-500/20 rounded-xl border border-red-400/50\"><div class=\"text-sm font-bold text-red-300 mb-1\">⚠️ Overloaded Members</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			for _, m := range health.CapacityBalance.OverloadedMembers {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<div class=\"text-sm text-red-600\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<div class=\"text-sm text-red-200\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var31 string
 				templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs(m.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 424, Col: 47}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 444, Col: 47}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
 				if templ_7745c5c3_Err != nil {
@@ -586,7 +586,7 @@ func TeamCapacityCard(userStats []models.UserStats, health models.TeamHealth, sp
 				var templ_7745c5c3_Var32 string
 				templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f%%", m.LoadPercentage))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 424, Col: 92}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 444, Col: 92}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var32))
 				if templ_7745c5c3_Err != nil {
@@ -632,12 +632,12 @@ func RiskIndicatorsCard(risks []models.RiskIndicator) templ.Component {
 			templ_7745c5c3_Var33 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "<div class=\"glass rounded-2xl p-6 card-hover animate-fade-in\"><h3 class=\"text-lg font-bold text-slate-800 mb-4 flex items-center gap-2\"><span class=\"text-2xl\">⚠️</span> <span>Risk Indicators</span></h3>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "<div class=\"glass rounded-2xl p-6 card-hover animate-fade-in\"><h3 class=\"text-lg font-bold text-white mb-4 flex items-center gap-2\"><span class=\"text-2xl\">⚠️</span> <span>Risk Indicators</span></h3>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if len(risks) == 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "<div class=\"text-center py-8\"><div class=\"text-4xl mb-2\">✅</div><div class=\"text-slate-600\">No risks identified</div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "<div class=\"text-center py-8\"><div class=\"text-4xl mb-2\">✅</div><div class=\"text-white\">No risks identified</div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -694,33 +694,33 @@ func RiskIndicatorsCard(risks []models.RiskIndicator) templ.Component {
 				var templ_7745c5c3_Var38 string
 				templ_7745c5c3_Var38, templ_7745c5c3_Err = templ.JoinStringErrs(risk.Severity)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 449, Col: 23}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 469, Col: 23}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var38))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</span> <span class=\"font-bold text-slate-800\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</span> <span class=\"font-bold text-white\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var39 string
 				templ_7745c5c3_Var39, templ_7745c5c3_Err = templ.JoinStringErrs(risk.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 451, Col: 58}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 471, Col: 54}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var39))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "</span></div><div class=\"text-sm text-slate-600\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "</span></div><div class=\"text-sm text-white\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var40 string
 				templ_7745c5c3_Var40, templ_7745c5c3_Err = templ.JoinStringErrs(risk.Description)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 453, Col: 60}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 473, Col: 56}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var40))
 				if templ_7745c5c3_Err != nil {
@@ -766,32 +766,32 @@ func SprintHistoryCard(history []models.SprintSummary) templ.Component {
 			templ_7745c5c3_Var41 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "<div class=\"glass rounded-2xl p-6 card-hover animate-fade-in\"><h3 class=\"text-lg font-bold text-slate-800 mb-4 flex items-center gap-2\"><span class=\"text-2xl\">📜</span> <span>Sprint History</span></h3><div class=\"space-y-2 max-h-80 overflow-y-auto\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "<div class=\"glass rounded-2xl p-6 card-hover animate-fade-in\"><h3 class=\"text-lg font-bold text-white mb-4 flex items-center gap-2\"><span class=\"text-2xl\">📜</span> <span>Sprint History</span></h3><div class=\"space-y-2 max-h-80 overflow-y-auto\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		for _, sprint := range history {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "<div class=\"flex items-center justify-between p-3 bg-white/50 rounded-xl hover:bg-white/70 transition\"><div><div class=\"font-semibold text-slate-800\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "<div class=\"flex items-center justify-between p-3 bg-white/10 rounded-xl hover:bg-white/20 transition border border-white/20\"><div><div class=\"font-semibold text-white\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var42 string
 			templ_7745c5c3_Var42, templ_7745c5c3_Err = templ.JoinStringErrs(sprint.SprintName)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 472, Col: 67}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 492, Col: 63}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var42))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "</div><div class=\"text-xs text-slate-500\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "</div><div class=\"text-xs text-cyan-200\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var43 string
 			templ_7745c5c3_Var43, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d/%d pts completed", sprint.Completed, sprint.Committed))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 473, Col: 114}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 493, Col: 113}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var43))
 			if templ_7745c5c3_Err != nil {
@@ -826,7 +826,7 @@ func SprintHistoryCard(history []models.SprintSummary) templ.Component {
 			var templ_7745c5c3_Var46 string
 			templ_7745c5c3_Var46, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.0f%%", sprint.CompletionPct))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 476, Col: 51}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 496, Col: 51}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var46))
 			if templ_7745c5c3_Err != nil {
@@ -867,7 +867,7 @@ func BlockersCard(blockers []models.Blocker) templ.Component {
 			templ_7745c5c3_Var47 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "<div class=\"glass rounded-2xl p-6 card-hover animate-fade-in\"><h3 class=\"text-lg font-bold text-slate-800 mb-4 flex items-center gap-2\"><span class=\"text-2xl\">🚫</span> <span>Active Blockers</span> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "<div class=\"glass rounded-2xl p-6 card-hover animate-fade-in\"><h3 class=\"text-lg font-bold text-white mb-4 flex items-center gap-2\"><span class=\"text-2xl\">🚫</span> <span>Active Blockers</span> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -879,7 +879,7 @@ func BlockersCard(blockers []models.Blocker) templ.Component {
 			var templ_7745c5c3_Var48 string
 			templ_7745c5c3_Var48, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(blockers)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 491, Col: 122}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 511, Col: 122}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var48))
 			if templ_7745c5c3_Err != nil {
@@ -895,7 +895,7 @@ func BlockersCard(blockers []models.Blocker) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if len(blockers) == 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "<div class=\"text-center py-8\"><div class=\"text-4xl mb-2\">🎉</div><div class=\"text-slate-600\">No blockers! Team is running smoothly</div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "<div class=\"text-center py-8\"><div class=\"text-4xl mb-2\">🎉</div><div class=\"text-white\">No blockers! Team is running smoothly</div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -905,66 +905,66 @@ func BlockersCard(blockers []models.Blocker) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			for _, blocker := range blockers {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "<div class=\"p-4 bg-red-50 rounded-xl border border-red-200\"><div class=\"flex items-center justify-between mb-2\"><a href=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "<div class=\"p-4 bg-red-500/20 rounded-xl border border-red-400/50\"><div class=\"flex items-center justify-between mb-2\"><a href=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var49 templ.SafeURL
 				templ_7745c5c3_Var49, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("https://jira-eng-sjc4.cisco.com/jira/browse/" + blocker.Key))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 504, Col: 92}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 524, Col: 92}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var49))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "\" target=\"_blank\" class=\"font-bold text-red-700 hover:underline\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "\" target=\"_blank\" class=\"font-bold text-red-300 hover:underline\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var50 string
 				templ_7745c5c3_Var50, templ_7745c5c3_Err = templ.JoinStringErrs(blocker.Key)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 504, Col: 171}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 524, Col: 171}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var50))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "</a> <span class=\"text-xs text-red-500\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "</a> <span class=\"text-xs text-red-200\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var51 string
 				templ_7745c5c3_Var51, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d days", blocker.AgeInDays))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 505, Col: 85}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 525, Col: 85}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var51))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "</span></div><div class=\"text-sm text-slate-700\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "</span></div><div class=\"text-sm text-white\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var52 string
 				templ_7745c5c3_Var52, templ_7745c5c3_Err = templ.JoinStringErrs(blocker.Title)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 507, Col: 57}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 527, Col: 53}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var52))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "</div><div class=\"text-xs text-slate-500 mt-1\">Assigned: ")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "</div><div class=\"text-xs text-cyan-200 mt-1\">Assigned: ")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var53 string
 				templ_7745c5c3_Var53, templ_7745c5c3_Err = templ.JoinStringErrs(blocker.AssignedTo)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 508, Col: 77}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/scrum_master_dashboard.templ`, Line: 528, Col: 76}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var53))
 				if templ_7745c5c3_Err != nil {
@@ -1015,11 +1015,11 @@ func getRiskColor(count int) string {
 func getVelocityTrendClass(trend string) string {
 	switch trend {
 	case "up":
-		return "bg-green-100 text-green-700"
+		return "bg-green-500/30 text-green-300"
 	case "down":
-		return "bg-red-100 text-red-700"
+		return "bg-red-500/30 text-red-300"
 	default:
-		return "bg-slate-100 text-slate-700"
+		return "bg-white/20 text-white"
 	}
 }
 
@@ -1048,11 +1048,11 @@ func getLoadColor(points, capacity int) string {
 func getRiskBorderColor(severity string) string {
 	switch severity {
 	case "high":
-		return "border-red-500 bg-red-50"
+		return "border-red-400 bg-red-500/20"
 	case "medium":
-		return "border-yellow-500 bg-yellow-50"
+		return "border-yellow-400 bg-yellow-500/20"
 	default:
-		return "border-blue-500 bg-blue-50"
+		return "border-blue-400 bg-blue-500/20"
 	}
 }
 
@@ -1069,15 +1069,15 @@ func getRiskBadgeColor(severity string) string {
 
 func getCompletionColor(pct float64) string {
 	if pct >= 90 {
-		return "text-green-600"
+		return "text-green-400"
 	}
 	if pct >= 70 {
-		return "text-blue-600"
+		return "text-blue-400"
 	}
 	if pct >= 50 {
-		return "text-yellow-600"
+		return "text-yellow-400"
 	}
-	return "text-red-600"
+	return "text-red-400"
 }
 
 func minInt(a, b int) int {

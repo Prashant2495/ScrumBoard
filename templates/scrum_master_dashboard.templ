@@ -13,7 +13,7 @@ templ SMStatCard(icon, title, value, colorClass string) {
 		<div class="flex items-center gap-4">
 			<div class="text-3xl">{ icon }</div>
 			<div>
-				<p class="text-sm font-semibold text-white/80 uppercase tracking-wide">{ title }</p>
+				<p class="text-sm font-semibold text-white uppercase tracking-wide">{ title }</p>
 				<p class="text-2xl font-extrabold text-white">{ value }</p>
 			</div>
 		</div>
@@ -24,15 +24,15 @@ templ ScrumMasterDashboard(data models.ScrumMasterDashboardData) {
 	@Layout("Scrum Master Dashboard") {
 		<div class="min-h-screen">
 			<!-- Header -->
-			<header class="gradient-bg text-white/90 py-6 px-8 shadow-lg backdrop-blur-sm">
+			<header class="bg-slate-900/80 backdrop-blur-lg text-white py-6 px-8 shadow-xl border-b border-slate-700/50">
 				<div class="w-full flex items-center justify-between">
 					<div class="flex items-center gap-4">
-						<div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center text-2xl backdrop-blur-md border border-white/20">
+						<div class="w-12 h-12 bg-slate-800/80 rounded-xl flex items-center justify-center text-2xl shadow-xl">
 							👨‍💼
 						</div>
 						<div>
-							<h1 class="text-2xl font-bold text-white/75">Scrum Master Dashboard</h1>
-							<p class="text-white/50 text-sm">Team Health & Sprint Analytics</p>
+							<h1 class="text-2xl font-bold text-white">Scrum Master Dashboard</h1>
+							<p class="text-white/70 text-sm">Team Health & Sprint Analytics</p>
 						</div>
 					</div>
 					<div class="flex items-center gap-4">
@@ -140,7 +140,7 @@ templ ScrumMasterDashboardContent(data models.ScrumMasterDashboardData) {
 
 	<!-- At-Risk Prediction Section -->
 	<div class="glass rounded-2xl p-6 card-hover animate-fade-in mb-8">
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">🔮</span>
 			<span>Sprint Completion Prediction</span>
 			<div class="ml-auto flex gap-2">
@@ -152,15 +152,15 @@ templ ScrumMasterDashboardContent(data models.ScrumMasterDashboardData) {
 				</button>
 			</div>
 		</h3>
-		<p class="text-sm text-slate-500 mb-4">AI predicts which stories/bugs may not complete before sprint ends based on status, days left, and activity.</p>
+		<p class="text-sm text-cyan-200 mb-4">AI predicts which stories/bugs may not complete before sprint ends based on status, days left, and activity.</p>
 		<div id="risk-prediction-list" class="space-y-3 max-h-96 overflow-y-auto">
-			<p class="text-slate-500 text-center py-4">Click "Analyze" to check for at-risk items...</p>
+			<p class="text-cyan-200 text-center py-4">Click "Analyze" to check for at-risk items...</p>
 		</div>
 	</div>
 
 	<!-- Info Requests Section -->
 	<div class="glass rounded-2xl p-6 card-hover animate-fade-in mb-8">
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">�</span>
 			<span>Info Requests & Responses</span>
 			<button onclick="loadAllInfoRequests()" class="ml-auto px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold rounded-lg transition-all">
@@ -168,7 +168,7 @@ templ ScrumMasterDashboardContent(data models.ScrumMasterDashboardData) {
 			</button>
 		</h3>
 		<div id="info-request-list" class="space-y-3 max-h-96 overflow-y-auto">
-			<p class="text-slate-500 text-center py-4">Loading info requests...</p>
+			<p class="text-cyan-200 text-center py-4">Loading info requests...</p>
 		</div>
 	</div>
 
@@ -181,29 +181,29 @@ templ ScrumMasterDashboardContent(data models.ScrumMasterDashboardData) {
 					if (!reqList) return;
 
 					if (!data.pings || data.pings.length === 0) {
-						reqList.innerHTML = '<p class="text-slate-500 text-center py-4">No info requests yet. Use "Request Info" button on stories/defects.</p>';
+						reqList.innerHTML = '<p class="text-cyan-200 text-center py-4">No info requests yet. Use "Request Info" button on stories/defects.</p>';
 						return;
 					}
 
 					reqList.innerHTML = data.pings.map(function(ping) {
 						var borderClass = ping.status === 'responded' ? 'border-green-300 bg-green-50' : 'border-yellow-300 bg-yellow-50';
-						var statusClass = ping.status === 'responded' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';
+						var statusClass = ping.status === 'responded' ? 'bg-green-500/30 text-green-300' : 'bg-yellow-500/30 text-yellow-300';
 						var statusText = ping.status === 'responded' ? '✅ Responded' : '⏳ Awaiting Reply';
 						var responseHtml = '';
 						if (ping.response) {
-							responseHtml = '<div class="mt-3 bg-green-100 rounded-lg p-3 border border-green-200">' +
-								'<p class="text-xs text-green-600 mb-1">📩 Response (' + ping.responded_at + '):</p>' +
-								'<p class="text-sm text-green-800 font-medium">' + ping.response + '</p></div>';
+							responseHtml = '<div class="mt-3 bg-green-500/20 rounded-lg p-3 border border-green-400/50">' +
+								'<p class="text-xs text-green-300 mb-1">📩 Response (' + ping.responded_at + '):</p>' +
+								'<p class="text-sm text-green-200 font-medium">' + ping.response + '</p></div>';
 						}
-						var itemHtml = ping.item_key ? '<p class="text-sm font-bold text-blue-600 mb-1">🎯 ' + ping.item_key + ': ' + (ping.item_title || '') + '</p>' : '';
+						var itemHtml = ping.item_key ? '<p class="text-sm font-bold text-blue-300 mb-1">🎯 ' + ping.item_key + ': ' + (ping.item_title || '') + '</p>' : '';
 						return '<div class="rounded-xl p-4 border-2 ' + borderClass + '">' +
 							'<div class="flex items-center justify-between mb-2">' +
 							'<div class="flex items-center gap-2">' +
-							'<span class="font-bold text-slate-800">' + ping.engineer_name + '</span>' +
-							'<span class="text-xs text-slate-500">(' + ping.engineer_email + ')</span></div>' +
+							'<span class="font-bold text-white">' + ping.engineer_name + '</span>' +
+							'<span class="text-xs text-cyan-200">(' + ping.engineer_email + ')</span></div>' +
 							'<span class="px-2 py-1 rounded-full text-xs font-semibold ' + statusClass + '">' + statusText + '</span></div>' +
 							itemHtml +
-							'<div class="flex items-center gap-4 text-xs text-slate-500 mb-2">' +
+							'<div class="flex items-center gap-4 text-xs text-cyan-200 mb-2">' +
 							'<span>📤 Requested: ' + ping.sent_at + '</span>' +
 							'<span>🏃 Sprint: ' + ping.sprint_name + '</span></div>' +
 							responseHtml + '</div>';
@@ -221,14 +221,14 @@ templ ScrumMasterDashboardContent(data models.ScrumMasterDashboardData) {
 		// Risk prediction functions
 		function analyzeRisks() {
 			var riskList = document.getElementById('risk-prediction-list');
-			riskList.innerHTML = '<p class="text-slate-500 text-center py-4">🔄 Analyzing sprint risks...</p>';
+			riskList.innerHTML = '<p class="text-cyan-200 text-center py-4">🔄 Analyzing sprint risks...</p>';
 
 			var sprintId = document.getElementById('sprint-selector').value || '0';
 			fetch('/api/risk/items?sprint=' + sprintId)
 				.then(function(res) { return res.json(); })
 				.then(function(data) {
 					if (!data.risks || data.risks.length === 0) {
-						riskList.innerHTML = '<div class="text-center py-8"><div class="text-4xl mb-2">✅</div><div class="text-green-600 font-semibold">All items on track!</div><div class="text-slate-500 text-sm">No items predicted to miss sprint completion.</div></div>';
+						riskList.innerHTML = '<div class="text-center py-8"><div class="text-4xl mb-2">✅</div><div class="text-green-300 font-semibold">All items on track!</div><div class="text-cyan-200 text-sm">No items predicted to miss sprint completion.</div></div>';
 						document.getElementById('alert-risk-btn').classList.add('hidden');
 						return;
 					}
@@ -236,22 +236,22 @@ templ ScrumMasterDashboardContent(data models.ScrumMasterDashboardData) {
 					document.getElementById('alert-risk-btn').classList.remove('hidden');
 
 					riskList.innerHTML = data.risks.map(function(risk) {
-						var riskColor = risk.riskLevel === 'high' ? 'border-red-400 bg-red-50' : 'border-yellow-400 bg-yellow-50';
+						var riskColor = risk.riskLevel === 'high' ? 'border-red-400 bg-red-500/20' : 'border-yellow-400 bg-yellow-500/20';
 						var riskBadge = risk.riskLevel === 'high' ? 'bg-red-500 text-white' : 'bg-yellow-500 text-white';
 						var typeEmoji = risk.type === 'story' ? '📖' : '🐛';
 						return '<div class="rounded-xl p-4 border-2 ' + riskColor + '">' +
 							'<div class="flex items-center justify-between mb-2">' +
 							'<div class="flex items-center gap-2">' +
 							'<span class="text-lg">' + typeEmoji + '</span>' +
-							'<span class="font-bold text-slate-800">' + risk.key + '</span>' +
+							'<span class="font-bold text-white">' + risk.key + '</span>' +
 							'<span class="px-2 py-0.5 rounded text-xs font-bold ' + riskBadge + '">' + risk.riskLevel.toUpperCase() + '</span>' +
 							'</div>' +
-							'<span class="text-xs text-slate-500">⏰ ' + risk.daysLeft + ' days left</span>' +
+							'<span class="text-xs text-cyan-200">⏰ ' + risk.daysLeft + ' days left</span>' +
 							'</div>' +
-							'<p class="text-sm text-slate-700 mb-1">' + risk.title + '</p>' +
+							'<p class="text-sm text-white mb-1">' + risk.title + '</p>' +
 							'<div class="flex items-center gap-4 text-xs">' +
-							'<span class="text-orange-600">⚠️ ' + risk.reason + '</span>' +
-							'<span class="text-slate-500">👤 ' + (risk.assignee || 'Unassigned') + '</span>' +
+							'<span class="text-orange-300">⚠️ ' + risk.reason + '</span>' +
+							'<span class="text-cyan-200">👤 ' + (risk.assignee || 'Unassigned') + '</span>' +
 							'</div>' +
 							'</div>';
 					}).join('');
@@ -301,7 +301,7 @@ templ ScrumMasterDashboardContent(data models.ScrumMasterDashboardData) {
 templ VelocityChart(velocity models.VelocityData) {
 	<div class="glass rounded-2xl p-6 card-hover animate-fade-in" data-velocity={ marshalVelocityData(velocity) }>
 		<div class="flex items-center justify-between mb-4">
-			<h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+			<h3 class="text-lg font-bold text-white flex items-center gap-2">
 				<span class="text-2xl">📈</span>
 				<span>Team Velocity</span>
 			</h3>
@@ -310,17 +310,17 @@ templ VelocityChart(velocity models.VelocityData) {
 			</div>
 		</div>
 		<div class="grid grid-cols-3 gap-4 mb-4 text-center">
-			<div class="bg-blue-50 rounded-lg p-3">
-				<div class="text-2xl font-bold text-blue-600">{ fmt.Sprintf("%d", velocity.CurrentVelocity) }</div>
-				<div class="text-xs text-slate-600">Current</div>
+			<div class="bg-blue-500/20 rounded-lg p-3 border border-blue-400/30">
+				<div class="text-2xl font-bold text-blue-300">{ fmt.Sprintf("%d", velocity.CurrentVelocity) }</div>
+				<div class="text-xs text-cyan-200">Current</div>
 			</div>
-			<div class="bg-green-50 rounded-lg p-3">
-				<div class="text-2xl font-bold text-green-600">{ fmt.Sprintf("%d", velocity.AverageVelocity) }</div>
-				<div class="text-xs text-slate-600">Average</div>
+			<div class="bg-green-500/20 rounded-lg p-3 border border-green-400/30">
+				<div class="text-2xl font-bold text-green-300">{ fmt.Sprintf("%d", velocity.AverageVelocity) }</div>
+				<div class="text-xs text-cyan-200">Average</div>
 			</div>
-			<div class="bg-purple-50 rounded-lg p-3">
-				<div class="text-2xl font-bold text-purple-600">{ fmt.Sprintf("%d", velocity.PredictedNext) }</div>
-				<div class="text-xs text-slate-600">Predicted</div>
+			<div class="bg-purple-500/20 rounded-lg p-3 border border-purple-400/30">
+				<div class="text-2xl font-bold text-purple-300">{ fmt.Sprintf("%d", velocity.PredictedNext) }</div>
+				<div class="text-xs text-cyan-200">Predicted</div>
 			</div>
 		</div>
 		<div class="chart-container h-64">
@@ -348,7 +348,17 @@ templ VelocityChart(velocity models.VelocityData) {
 						{ label: 'Completed', data: completed, backgroundColor: 'rgba(16,185,129,0.7)', borderRadius: 8 }
 					]
 				},
-				options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
+				options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						plugins: {
+							legend: { position: 'top', labels: { color: '#fff' } }
+						},
+						scales: {
+							x: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+							y: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+						}
+					}
 			});
 		})();
 	</script>
@@ -357,7 +367,7 @@ templ VelocityChart(velocity models.VelocityData) {
 // BurndownChart shows sprint burndown
 templ BurndownChart(burndown []models.BurndownPoint, totalPoints int) {
 	<div class="glass rounded-2xl p-6 card-hover animate-fade-in" data-burndown={ marshalBurndownData(burndown) } data-total={ fmt.Sprintf("%d", totalPoints) }>
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">🔥</span>
 			<span>Sprint Burndown</span>
 		</h3>
@@ -386,7 +396,17 @@ templ BurndownChart(burndown []models.BurndownPoint, totalPoints int) {
 						{ label: 'Actual', data: actual, borderColor: 'rgba(239,68,68,0.8)', backgroundColor: 'rgba(239,68,68,0.1)', fill: true, tension: 0.3 }
 					]
 				},
-				options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
+				options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						plugins: {
+							legend: { position: 'top', labels: { color: '#fff' } }
+						},
+						scales: {
+							x: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } },
+							y: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } }
+						}
+					}
 			});
 		})();
 	</script>
@@ -395,33 +415,33 @@ templ BurndownChart(burndown []models.BurndownPoint, totalPoints int) {
 // TeamCapacityCard shows team capacity utilization
 templ TeamCapacityCard(userStats []models.UserStats, health models.TeamHealth, sprintName string) {
 	<div class="glass rounded-2xl p-6 card-hover animate-fade-in">
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">👥</span>
 			<span>Team Capacity</span>
 		</h3>
 		<div class="space-y-3 max-h-80 overflow-y-auto">
 			for _, us := range userStats {
-				<div class="flex items-center gap-3 p-3 bg-white/50 rounded-xl">
+				<div class="flex items-center gap-3 p-3 bg-white/10 rounded-xl border border-white/20">
 					<div class={ "w-10 h-10 rounded-full flex items-center justify-center text-white font-bold " + smGetAvatarColor(us.User.Name) }>
 						{ smGetInitials(us.User.Name) }
 					</div>
 					<div class="flex-1">
-						<div class="font-semibold text-slate-800">{ us.User.Name }</div>
+						<div class="font-semibold text-white">{ us.User.Name }</div>
 						<div class="flex items-center gap-2">
-							<div class="flex-1 h-2 bg-slate-200 rounded-full overflow-hidden">
+							<div class="flex-1 h-2 bg-white/20 rounded-full overflow-hidden">
 								<div class={ "h-full " + getLoadColor(us.AssignedPoints, 10) } style={ fmt.Sprintf("width: %d%%", minInt(us.AssignedPoints*10, 100)) }></div>
 							</div>
-							<span class="text-sm font-bold text-slate-600">{ fmt.Sprintf("%d pts", us.AssignedPoints) }</span>
+							<span class="text-sm font-bold text-cyan-200">{ fmt.Sprintf("%d pts", us.AssignedPoints) }</span>
 						</div>
 					</div>
 				</div>
 			}
 		</div>
 		if len(health.CapacityBalance.OverloadedMembers) > 0 {
-			<div class="mt-4 p-3 bg-red-50 rounded-xl border border-red-200">
-				<div class="text-sm font-bold text-red-700 mb-1">⚠️ Overloaded Members</div>
+			<div class="mt-4 p-3 bg-red-500/20 rounded-xl border border-red-400/50">
+				<div class="text-sm font-bold text-red-300 mb-1">⚠️ Overloaded Members</div>
 				for _, m := range health.CapacityBalance.OverloadedMembers {
-					<div class="text-sm text-red-600">{ m.Name } ({ fmt.Sprintf("%.0f%%", m.LoadPercentage) } load)</div>
+					<div class="text-sm text-red-200">{ m.Name } ({ fmt.Sprintf("%.0f%%", m.LoadPercentage) } load)</div>
 				}
 			</div>
 		}
@@ -431,14 +451,14 @@ templ TeamCapacityCard(userStats []models.UserStats, health models.TeamHealth, s
 // RiskIndicatorsCard shows risk indicators
 templ RiskIndicatorsCard(risks []models.RiskIndicator) {
 	<div class="glass rounded-2xl p-6 card-hover animate-fade-in">
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">⚠️</span>
 			<span>Risk Indicators</span>
 		</h3>
 		if len(risks) == 0 {
 			<div class="text-center py-8">
 				<div class="text-4xl mb-2">✅</div>
-				<div class="text-slate-600">No risks identified</div>
+				<div class="text-white">No risks identified</div>
 			</div>
 		} else {
 			<div class="space-y-3">
@@ -448,9 +468,9 @@ templ RiskIndicatorsCard(risks []models.RiskIndicator) {
 							<span class={ "px-2 py-0.5 rounded text-xs font-bold " + getRiskBadgeColor(risk.Severity) }>
 								{ risk.Severity }
 							</span>
-							<span class="font-bold text-slate-800">{ risk.Title }</span>
+							<span class="font-bold text-white">{ risk.Title }</span>
 						</div>
-						<div class="text-sm text-slate-600">{ risk.Description }</div>
+						<div class="text-sm text-white">{ risk.Description }</div>
 					</div>
 				}
 			</div>
@@ -461,16 +481,16 @@ templ RiskIndicatorsCard(risks []models.RiskIndicator) {
 // SprintHistoryCard shows past sprint performance
 templ SprintHistoryCard(history []models.SprintSummary) {
 	<div class="glass rounded-2xl p-6 card-hover animate-fade-in">
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">📜</span>
 			<span>Sprint History</span>
 		</h3>
 		<div class="space-y-2 max-h-80 overflow-y-auto">
 			for _, sprint := range history {
-				<div class="flex items-center justify-between p-3 bg-white/50 rounded-xl hover:bg-white/70 transition">
+				<div class="flex items-center justify-between p-3 bg-white/10 rounded-xl hover:bg-white/20 transition border border-white/20">
 					<div>
-						<div class="font-semibold text-slate-800">{ sprint.SprintName }</div>
-						<div class="text-xs text-slate-500">{ fmt.Sprintf("%d/%d pts completed", sprint.Completed, sprint.Committed) }</div>
+						<div class="font-semibold text-white">{ sprint.SprintName }</div>
+						<div class="text-xs text-cyan-200">{ fmt.Sprintf("%d/%d pts completed", sprint.Completed, sprint.Committed) }</div>
 					</div>
 					<div class={ "text-lg font-bold " + getCompletionColor(sprint.CompletionPct) }>
 						{ fmt.Sprintf("%.0f%%", sprint.CompletionPct) }
@@ -484,7 +504,7 @@ templ SprintHistoryCard(history []models.SprintSummary) {
 // BlockersCard shows active blockers
 templ BlockersCard(blockers []models.Blocker) {
 	<div class="glass rounded-2xl p-6 card-hover animate-fade-in">
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">🚫</span>
 			<span>Active Blockers</span>
 			if len(blockers) > 0 {
@@ -494,18 +514,18 @@ templ BlockersCard(blockers []models.Blocker) {
 		if len(blockers) == 0 {
 			<div class="text-center py-8">
 				<div class="text-4xl mb-2">🎉</div>
-				<div class="text-slate-600">No blockers! Team is running smoothly</div>
+				<div class="text-white">No blockers! Team is running smoothly</div>
 			</div>
 		} else {
 			<div class="space-y-3 max-h-80 overflow-y-auto">
 				for _, blocker := range blockers {
-					<div class="p-4 bg-red-50 rounded-xl border border-red-200">
+					<div class="p-4 bg-red-500/20 rounded-xl border border-red-400/50">
 						<div class="flex items-center justify-between mb-2">
-							<a href={ templ.SafeURL("https://jira-eng-sjc4.cisco.com/jira/browse/" + blocker.Key) } target="_blank" class="font-bold text-red-700 hover:underline">{ blocker.Key }</a>
-							<span class="text-xs text-red-500">{ fmt.Sprintf("%d days", blocker.AgeInDays) }</span>
+							<a href={ templ.SafeURL("https://jira-eng-sjc4.cisco.com/jira/browse/" + blocker.Key) } target="_blank" class="font-bold text-red-300 hover:underline">{ blocker.Key }</a>
+							<span class="text-xs text-red-200">{ fmt.Sprintf("%d days", blocker.AgeInDays) }</span>
 						</div>
-						<div class="text-sm text-slate-700">{ blocker.Title }</div>
-						<div class="text-xs text-slate-500 mt-1">Assigned: { blocker.AssignedTo }</div>
+						<div class="text-sm text-white">{ blocker.Title }</div>
+						<div class="text-xs text-cyan-200 mt-1">Assigned: { blocker.AssignedTo }</div>
 					</div>
 				}
 			</div>
@@ -531,9 +551,9 @@ func getRiskColor(count int) string {
 
 func getVelocityTrendClass(trend string) string {
 	switch trend {
-	case "up": return "bg-green-100 text-green-700"
-	case "down": return "bg-red-100 text-red-700"
-	default: return "bg-slate-100 text-slate-700"
+	case "up": return "bg-green-500/30 text-green-300"
+	case "down": return "bg-red-500/30 text-red-300"
+	default: return "bg-white/20 text-white"
 	}
 }
 
@@ -554,9 +574,9 @@ func getLoadColor(points, capacity int) string {
 
 func getRiskBorderColor(severity string) string {
 	switch severity {
-	case "high": return "border-red-500 bg-red-50"
-	case "medium": return "border-yellow-500 bg-yellow-50"
-	default: return "border-blue-500 bg-blue-50"
+	case "high": return "border-red-400 bg-red-500/20"
+	case "medium": return "border-yellow-400 bg-yellow-500/20"
+	default: return "border-blue-400 bg-blue-500/20"
 	}
 }
 
@@ -569,10 +589,10 @@ func getRiskBadgeColor(severity string) string {
 }
 
 func getCompletionColor(pct float64) string {
-	if pct >= 90 { return "text-green-600" }
-	if pct >= 70 { return "text-blue-600" }
-	if pct >= 50 { return "text-yellow-600" }
-	return "text-red-600"
+	if pct >= 90 { return "text-green-400" }
+	if pct >= 70 { return "text-blue-400" }
+	if pct >= 50 { return "text-yellow-400" }
+	return "text-red-400"
 }
 
 func minInt(a, b int) int {

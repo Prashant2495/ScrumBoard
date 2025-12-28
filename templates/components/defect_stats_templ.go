@@ -34,40 +34,40 @@ func DefectStatsCard(title string, value int, subtitle string, icon string, colo
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"glass rounded-2xl p-6 hover:shadow-lg transition-all animate-fade-in { colorClass }\"><div class=\"flex items-start justify-between\"><div class=\"flex-1\"><p class=\"text-sm text-slate-600 mb-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"glass rounded-2xl p-6 hover:shadow-lg transition-all animate-fade-in { colorClass }\"><div class=\"flex items-start justify-between\"><div class=\"flex-1\"><p class=\"text-sm text-cyan-200 mb-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_stats.templ`, Line: 12, Col: 50}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_stats.templ`, Line: 12, Col: 49}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</p><p class=\"text-3xl font-bold text-slate-800 mb-1\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</p><p class=\"text-3xl font-bold text-white mb-1\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var3 string
 		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", value))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_stats.templ`, Line: 13, Col: 80}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_stats.templ`, Line: 13, Col: 76}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</p><p class=\"text-xs text-slate-500\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</p><p class=\"text-xs text-cyan-200\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(subtitle)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_stats.templ`, Line: 14, Col: 48}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_stats.templ`, Line: 14, Col: 47}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -115,7 +115,7 @@ func SeverityBreakdownChart(breakdown []models.DefectBySeverity) templ.Component
 			templ_7745c5c3_Var6 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div class=\"glass rounded-2xl p-6 animate-fade-in\"><h3 class=\"text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2\"><span>🎯</span> <span>Severity Breakdown</span></h3><div class=\"space-y-3\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "<div class=\"glass rounded-2xl p-6 animate-fade-in\"><h3 class=\"text-lg font-semibold text-white mb-4 flex items-center gap-2\"><span>🎯</span> <span>Severity Breakdown</span></h3><div class=\"space-y-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -128,27 +128,27 @@ func SeverityBreakdownChart(breakdown []models.DefectBySeverity) templ.Component
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<span class=\"text-slate-600\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "<span class=\"text-cyan-200\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(item.Severity)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_stats.templ`, Line: 33, Col: 51}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_stats.templ`, Line: 33, Col: 50}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</span></div><span class=\"font-semibold text-slate-800\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</span></div><span class=\"font-semibold text-white\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", item.Count))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_stats.templ`, Line: 35, Col: 80}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_stats.templ`, Line: 35, Col: 76}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
@@ -234,7 +234,7 @@ func SeverityBreakdownChart(breakdown []models.DefectBySeverity) templ.Component
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</div><div class=\"flex items-center justify-between text-xs text-slate-500\"><span>Open: ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "</div><div class=\"flex items-center justify-between text-xs text-cyan-200\"><span>Open: ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -294,12 +294,12 @@ func DefectAssigneeStats(assigneeStats []models.DefectByAssignee) templ.Componen
 			templ_7745c5c3_Var17 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<div class=\"glass rounded-2xl p-6 animate-fade-in\"><h3 class=\"text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2\"><span>👥</span> <span>Defects by Assignee</span></h3><div class=\"space-y-3\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "<div class=\"glass rounded-2xl p-6 animate-fade-in\"><h3 class=\"text-lg font-semibold text-white mb-4 flex items-center gap-2\"><span>👥</span> <span>Defects by Assignee</span></h3><div class=\"space-y-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		for _, stats := range assigneeStats {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<div class=\"flex items-center justify-between p-3 bg-white/50 rounded-xl\"><div class=\"flex items-center gap-3\"><div class=\"w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-secondary-400 flex items-center justify-center text-white font-semibold\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<div class=\"flex items-center justify-between p-3 bg-white/10 rounded-xl\"><div class=\"flex items-center gap-3\"><div class=\"w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-secondary-400 flex items-center justify-center text-white font-semibold\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -312,20 +312,20 @@ func DefectAssigneeStats(assigneeStats []models.DefectByAssignee) templ.Componen
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</div><div><p class=\"font-medium text-slate-800 text-sm\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</div><div><p class=\"font-medium text-white text-sm\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var19 string
 			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(stats.User.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_stats.templ`, Line: 75, Col: 70}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_stats.templ`, Line: 75, Col: 66}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</p><p class=\"text-xs text-slate-500\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</p><p class=\"text-xs text-cyan-200\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -343,7 +343,7 @@ func DefectAssigneeStats(assigneeStats []models.DefectByAssignee) templ.Componen
 				return templ_7745c5c3_Err
 			}
 			if stats.CriticalDefects > 0 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "<span class=\"px-2 py-1 bg-red-100 text-red-700 rounded-lg text-xs font-semibold\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "<span class=\"px-2 py-1 bg-red-500/30 text-red-300 rounded-lg text-xs font-semibold\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -362,7 +362,7 @@ func DefectAssigneeStats(assigneeStats []models.DefectByAssignee) templ.Componen
 				}
 			}
 			if stats.HighDefects > 0 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<span class=\"px-2 py-1 bg-orange-100 text-orange-700 rounded-lg text-xs font-semibold\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "<span class=\"px-2 py-1 bg-orange-500/30 text-orange-300 rounded-lg text-xs font-semibold\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -414,7 +414,7 @@ func DefectMetricsCard(stats models.DefectStats) templ.Component {
 			templ_7745c5c3_Var23 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<div class=\"glass rounded-2xl p-6 animate-fade-in\"><h3 class=\"text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2\"><span>📊</span> <span>Defect Metrics</span></h3><div class=\"grid grid-cols-2 gap-4\"><div class=\"p-3 bg-white/50 rounded-xl\"><p class=\"text-xs text-slate-600 mb-1\">Avg Resolution Time</p><p class=\"text-2xl font-bold text-slate-800\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<div class=\"glass rounded-2xl p-6 animate-fade-in\"><h3 class=\"text-lg font-semibold text-white mb-4 flex items-center gap-2\"><span>📊</span> <span>Defect Metrics</span></h3><div class=\"grid grid-cols-2 gap-4\"><div class=\"p-3 bg-white/10 rounded-xl\"><p class=\"text-xs text-cyan-200 mb-1\">Avg Resolution Time</p><p class=\"text-2xl font-bold text-white\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -427,7 +427,7 @@ func DefectMetricsCard(stats models.DefectStats) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</p></div><div class=\"p-3 bg-white/50 rounded-xl\"><p class=\"text-xs text-slate-600 mb-1\">Oldest Defect</p><p class=\"text-2xl font-bold text-slate-800\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</p></div><div class=\"p-3 bg-white/10 rounded-xl\"><p class=\"text-xs text-cyan-200 mb-1\">Oldest Defect</p><p class=\"text-2xl font-bold text-white\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -440,7 +440,7 @@ func DefectMetricsCard(stats models.DefectStats) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "</p></div><div class=\"p-3 bg-amber-50 rounded-xl border border-amber-200\"><p class=\"text-xs text-amber-700 mb-1\">Aged &gt; 7 days</p><p class=\"text-2xl font-bold text-amber-800\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "</p></div><div class=\"p-3 bg-amber-500/20 rounded-xl border border-amber-400/50\"><p class=\"text-xs text-amber-300 mb-1\">Aged &gt; 7 days</p><p class=\"text-2xl font-bold text-amber-200\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -453,7 +453,7 @@ func DefectMetricsCard(stats models.DefectStats) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</p></div><div class=\"p-3 bg-red-50 rounded-xl border border-red-200\"><p class=\"text-xs text-red-700 mb-1\">Aged &gt; 30 days</p><p class=\"text-2xl font-bold text-red-800\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</p></div><div class=\"p-3 bg-red-500/20 rounded-xl border border-red-400/50\"><p class=\"text-xs text-red-300 mb-1\">Aged &gt; 30 days</p><p class=\"text-2xl font-bold text-red-200\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

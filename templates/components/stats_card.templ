@@ -6,9 +6,9 @@ templ StatsCard(title string, value int, subtitle string, icon string, colorClas
 	<div class={ "glass rounded-2xl p-6 card-hover animate-scale-in shadow-lg hover:shadow-2xl " + colorClass }>
 		<div class="flex items-center justify-between">
 			<div>
-				<p class="text-sm font-semibold text-slate-500 uppercase tracking-wide">{ title }</p>
-				<p class="text-4xl font-extrabold text-slate-800 mt-2 transition-all duration-300">{ fmt.Sprintf("%d", value) }</p>
-				<p class="text-sm text-slate-600 mt-1 font-medium">{ subtitle }</p>
+				<p class="text-sm font-semibold text-cyan-200 uppercase tracking-wide">{ title }</p>
+				<p class="text-4xl font-extrabold text-white mt-2 transition-all duration-300">{ fmt.Sprintf("%d", value) }</p>
+				<p class="text-sm text-cyan-200 mt-1 font-medium">{ subtitle }</p>
 			</div>
 			<div class={ "w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shadow-md transition-transform duration-300 hover:scale-110 " + getIconBg(colorClass) }>
 				{ icon }
@@ -28,14 +28,14 @@ func getIconBg(colorClass string) string {
 	case "border-l-4 border-emerald-500":
 		return "bg-emerald-100 text-emerald-600"
 	default:
-		return "bg-slate-100 text-slate-600"
+		return "bg-slate-100 text-cyan-200"
 	}
 }
 
 templ ProgressBar(completed int, total int) {
 	<div class="glass rounded-2xl p-6 card-hover animate-slide-left shadow-lg">
 		<div class="flex items-center justify-between mb-4">
-			<h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+			<h3 class="text-lg font-bold text-white flex items-center gap-2">
 				<span class="text-2xl">🚀</span>
 				<span>Sprint Progress</span>
 			</h3>
@@ -43,7 +43,7 @@ templ ProgressBar(completed int, total int) {
 				{ fmt.Sprintf("%d%%", getPercentage(completed, total)) }
 			</span>
 		</div>
-		<div class="w-full bg-slate-200 rounded-lg h-8 overflow-hidden shadow-inner relative">
+		<div class="w-full bg-white/20 rounded-lg h-8 overflow-hidden shadow-inner relative">
 			<div
 				class={ "h-full rounded-lg transition-all duration-1000 ease-out relative " + getProgressBarColor(getPercentage(completed, total)) }
 				style={ fmt.Sprintf("width: %d%%", getPercentage(completed, total)) }
@@ -55,7 +55,7 @@ templ ProgressBar(completed int, total int) {
 				</div>
 			</div>
 		</div>
-		<div class="flex justify-between mt-4 text-sm font-semibold text-slate-600">
+		<div class="flex justify-between mt-4 text-sm font-semibold text-cyan-200">
 			<span>✅ { fmt.Sprintf("%d points completed", completed) }</span>
 			<span>🎯 { fmt.Sprintf("%d points total", total) }</span>
 		</div>
@@ -85,15 +85,15 @@ func getProgressBarColor(percentage int) string {
 
 func getProgressTextColor(percentage int) string {
 	if percentage < 30 {
-		return "text-red-600"
+		return "text-red-400"
 	} else if percentage < 50 {
-		return "text-orange-600"
+		return "text-orange-400"
 	} else if percentage < 70 {
-		return "text-yellow-600"
+		return "text-yellow-400"
 	} else if percentage < 90 {
-		return "text-blue-600"
+		return "text-blue-400"
 	} else {
-		return "text-green-600"
+		return "text-green-400"
 	}
 }
 

@@ -49,40 +49,40 @@ func StatsCard(title string, value int, subtitle string, icon string, colorClass
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><div class=\"flex items-center justify-between\"><div><p class=\"text-sm font-semibold text-slate-500 uppercase tracking-wide\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><div class=\"flex items-center justify-between\"><div><p class=\"text-sm font-semibold text-cyan-200 uppercase tracking-wide\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/stats_card.templ`, Line: 9, Col: 83}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/stats_card.templ`, Line: 9, Col: 82}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</p><p class=\"text-4xl font-extrabold text-slate-800 mt-2 transition-all duration-300\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</p><p class=\"text-4xl font-extrabold text-white mt-2 transition-all duration-300\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", value))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/stats_card.templ`, Line: 10, Col: 113}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/stats_card.templ`, Line: 10, Col: 109}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</p><p class=\"text-sm text-slate-600 mt-1 font-medium\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</p><p class=\"text-sm text-cyan-200 mt-1 font-medium\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(subtitle)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/stats_card.templ`, Line: 11, Col: 65}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/stats_card.templ`, Line: 11, Col: 64}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -142,7 +142,7 @@ func getIconBg(colorClass string) string {
 	case "border-l-4 border-emerald-500":
 		return "bg-emerald-100 text-emerald-600"
 	default:
-		return "bg-slate-100 text-slate-600"
+		return "bg-slate-100 text-cyan-200"
 	}
 }
 
@@ -167,7 +167,7 @@ func ProgressBar(completed int, total int) templ.Component {
 			templ_7745c5c3_Var10 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"glass rounded-2xl p-6 card-hover animate-slide-left shadow-lg\"><div class=\"flex items-center justify-between mb-4\"><h3 class=\"text-lg font-bold text-slate-800 flex items-center gap-2\"><span class=\"text-2xl\">🚀</span> <span>Sprint Progress</span></h3>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"glass rounded-2xl p-6 card-hover animate-slide-left shadow-lg\"><div class=\"flex items-center justify-between mb-4\"><h3 class=\"text-lg font-bold text-white flex items-center gap-2\"><span class=\"text-2xl\">🚀</span> <span>Sprint Progress</span></h3>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -202,7 +202,7 @@ func ProgressBar(completed int, total int) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</span></div><div class=\"w-full bg-slate-200 rounded-lg h-8 overflow-hidden shadow-inner relative\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</span></div><div class=\"w-full bg-white/20 rounded-lg h-8 overflow-hidden shadow-inner relative\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -250,7 +250,7 @@ func ProgressBar(completed int, total int) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</span></div></div></div><div class=\"flex justify-between mt-4 text-sm font-semibold text-slate-600\"><span>✅ ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</span></div></div></div><div class=\"flex justify-between mt-4 text-sm font-semibold text-cyan-200\"><span>✅ ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -307,15 +307,15 @@ func getProgressBarColor(percentage int) string {
 
 func getProgressTextColor(percentage int) string {
 	if percentage < 30 {
-		return "text-red-600"
+		return "text-red-400"
 	} else if percentage < 50 {
-		return "text-orange-600"
+		return "text-orange-400"
 	} else if percentage < 70 {
-		return "text-yellow-600"
+		return "text-yellow-400"
 	} else if percentage < 90 {
-		return "text-blue-600"
+		return "text-blue-400"
 	} else {
-		return "text-green-600"
+		return "text-green-400"
 	}
 }
 

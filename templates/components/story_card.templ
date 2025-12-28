@@ -16,7 +16,7 @@ templ StoryCard(story models.Story) {
 			</span>
 		</div>
 
-		<h4 class="font-bold text-slate-800 text-sm leading-snug mb-3 hover:text-blue-600 transition-colors">
+		<h4 class="font-bold text-white text-sm leading-snug mb-3 hover:text-blue-400 transition-colors">
 			{ story.Title }
 		</h4>
 
@@ -26,17 +26,17 @@ templ StoryCard(story models.Story) {
 					<div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold shadow-md">
 						{ getInitials(story.Assignee.Name) }
 					</div>
-					<span class="text-xs font-medium text-slate-700 truncate max-w-[100px]">{ story.Assignee.Name }</span>
+					<span class="text-xs font-medium text-white truncate max-w-[100px]">{ story.Assignee.Name }</span>
 				} else {
-					<div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-400 text-xs shadow-sm">
+					<div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white/60 text-xs shadow-sm">
 						?
 					</div>
-					<span class="text-xs text-slate-400">Unassigned</span>
+					<span class="text-xs text-white/60">Unassigned</span>
 				}
 			</div>
 
 			<div class="flex items-center gap-2">
-				<div class="flex items-center gap-1 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 px-3 py-1 rounded-lg shadow-sm">
+				<div class="flex items-center gap-1 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-300 px-3 py-1 rounded-lg shadow-sm">
 					<span class="text-sm">⚡</span>
 					<span class="text-xs font-bold">{ fmt.Sprintf("%d", story.StoryPoints) }</span>
 				</div>
@@ -72,11 +72,11 @@ func getPriorityClass(priority string) string {
 func getPriorityBadge(priority string) string {
 	switch priority {
 	case "High", "Highest":
-		return "bg-red-100 text-red-700"
+		return "bg-red-500/30 text-red-300"
 	case "Medium":
 		return "bg-amber-100 text-amber-700"
 	default:
-		return "bg-green-100 text-green-700"
+		return "bg-green-500/30 text-green-300"
 	}
 }
 
@@ -119,10 +119,10 @@ func splitName(name string) []string {
 func getStatusBadge(statusCategory string) string {
 	switch statusCategory {
 	case "done":
-		return "bg-emerald-100 text-emerald-700"
+		return "bg-emerald-500/30 text-emerald-300"
 	case "indeterminate":
-		return "bg-blue-100 text-blue-700"
+		return "bg-blue-500/30 text-blue-300"
 	default: // "new" = To Do/Backlog
-		return "bg-slate-100 text-slate-700"
+		return "bg-white/20 text-white"
 	}
 }

@@ -100,7 +100,7 @@ func StoryCard(story models.Story) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</span></div><h4 class=\"font-bold text-slate-800 text-sm leading-snug mb-3 hover:text-blue-600 transition-colors\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</span></div><h4 class=\"font-bold text-white text-sm leading-snug mb-3 hover:text-blue-400 transition-colors\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -131,14 +131,14 @@ func StoryCard(story models.Story) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div><span class=\"text-xs font-medium text-slate-700 truncate max-w-[100px]\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div><span class=\"text-xs font-medium text-white truncate max-w-[100px]\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(story.Assignee.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/story_card.templ`, Line: 29, Col: 98}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/story_card.templ`, Line: 29, Col: 94}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -149,12 +149,12 @@ func StoryCard(story models.Story) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div class=\"w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-400 text-xs shadow-sm\">?</div><span class=\"text-xs text-slate-400\">Unassigned</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div class=\"w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white/60 text-xs shadow-sm\">?</div><span class=\"text-xs text-white/60\">Unassigned</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div><div class=\"flex items-center gap-2\"><div class=\"flex items-center gap-1 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 px-3 py-1 rounded-lg shadow-sm\"><span class=\"text-sm\">⚡</span> <span class=\"text-xs font-bold\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</div><div class=\"flex items-center gap-2\"><div class=\"flex items-center gap-1 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-300 px-3 py-1 rounded-lg shadow-sm\"><span class=\"text-sm\">⚡</span> <span class=\"text-xs font-bold\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -251,11 +251,11 @@ func getPriorityClass(priority string) string {
 func getPriorityBadge(priority string) string {
 	switch priority {
 	case "High", "Highest":
-		return "bg-red-100 text-red-700"
+		return "bg-red-500/30 text-red-300"
 	case "Medium":
 		return "bg-amber-100 text-amber-700"
 	default:
-		return "bg-green-100 text-green-700"
+		return "bg-green-500/30 text-green-300"
 	}
 }
 
@@ -298,11 +298,11 @@ func splitName(name string) []string {
 func getStatusBadge(statusCategory string) string {
 	switch statusCategory {
 	case "done":
-		return "bg-emerald-100 text-emerald-700"
+		return "bg-emerald-500/30 text-emerald-300"
 	case "indeterminate":
-		return "bg-blue-100 text-blue-700"
+		return "bg-blue-500/30 text-blue-300"
 	default: // "new" = To Do/Backlog
-		return "bg-slate-100 text-slate-700"
+		return "bg-white/20 text-white"
 	}
 }
 

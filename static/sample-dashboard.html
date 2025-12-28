@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample Dashboard - Style Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a1628 0%, #1e3a8a 50%, #2563eb 100%);
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="p-8">
+    <h1 class="text-3xl font-bold text-white mb-8 text-center">🎨 Dashboard Style Guide</h1>
+    
+    <!-- Text Transparency Examples -->
+    <div class="mb-12">
+        <h2 class="text-xl font-bold text-white/80 mb-4">📝 Text Transparency Levels</h2>
+        <div class="grid grid-cols-5 gap-4">
+            <div class="p-4 bg-white/10 rounded-xl text-center">
+                <p class="text-white text-lg font-bold">100%</p>
+                <p class="text-white text-sm">text-white</p>
+            </div>
+            <div class="p-4 bg-white/10 rounded-xl text-center">
+                <p class="text-white/80 text-lg font-bold">80%</p>
+                <p class="text-white/80 text-sm">text-white/80</p>
+            </div>
+            <div class="p-4 bg-white/10 rounded-xl text-center">
+                <p class="text-white/60 text-lg font-bold">60%</p>
+                <p class="text-white/60 text-sm">text-white/60</p>
+            </div>
+            <div class="p-4 bg-white/10 rounded-xl text-center">
+                <p class="text-white/40 text-lg font-bold">40%</p>
+                <p class="text-white/40 text-sm">text-white/40</p>
+            </div>
+            <div class="p-4 bg-white/10 rounded-xl text-center">
+                <p class="text-white/20 text-lg font-bold">20%</p>
+                <p class="text-white/20 text-sm">text-white/20</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Transparency Examples -->
+    <div class="mb-12">
+        <h2 class="text-xl font-bold text-white/80 mb-4">🎭 Background Transparency</h2>
+        <div class="grid grid-cols-5 gap-4">
+            <div class="p-4 bg-white/5 rounded-xl text-center border border-white/10">
+                <p class="text-white/80 text-sm">bg-white/5</p>
+            </div>
+            <div class="p-4 bg-white/10 rounded-xl text-center border border-white/20">
+                <p class="text-white/80 text-sm">bg-white/10</p>
+            </div>
+            <div class="p-4 bg-white/20 rounded-xl text-center border border-white/30">
+                <p class="text-white/80 text-sm">bg-white/20</p>
+            </div>
+            <div class="p-4 bg-white/30 rounded-xl text-center border border-white/40">
+                <p class="text-white/80 text-sm">bg-white/30</p>
+            </div>
+            <div class="p-4 bg-white/50 rounded-xl text-center border border-white/50">
+                <p class="text-slate-700 text-sm">bg-white/50</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Style Examples -->
+    <div class="mb-12">
+        <h2 class="text-xl font-bold text-white/80 mb-4">📌 Header Styles</h2>
+        
+        <!-- Style 1: Current -->
+        <div class="mb-4 p-6 bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl">
+            <h3 class="text-white/75 text-xl font-bold">Style 1: Current (75% opacity)</h3>
+            <p class="text-white/50 text-sm">Subtitle text here</p>
+        </div>
+        
+        <!-- Style 2: More visible -->
+        <div class="mb-4 p-6 bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl">
+            <h3 class="text-white/90 text-xl font-bold">Style 2: 90% opacity</h3>
+            <p class="text-white/70 text-sm">Subtitle text here</p>
+        </div>
+        
+        <!-- Style 3: Glassmorphism -->
+        <div class="mb-4 p-6 bg-white/10 backdrop-blur-lg rounded-xl border border-white/20">
+            <h3 class="text-white text-xl font-bold">Style 3: Glassmorphism</h3>
+            <p class="text-white/70 text-sm">Frosted glass effect</p>
+        </div>
+        
+        <!-- Style 4: Gradient text -->
+        <div class="mb-4 p-6 bg-slate-900/50 rounded-xl">
+            <h3 class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400 text-xl font-bold">Style 4: Gradient Text</h3>
+            <p class="text-cyan-200/60 text-sm">Colorful gradient</p>
+        </div>
+    </div>
+
+    <!-- Card Examples -->
+    <div class="mb-12">
+        <h2 class="text-xl font-bold text-white/80 mb-4">🃏 Card Styles</h2>
+        <div class="grid grid-cols-3 gap-6">
+            <div class="p-6 bg-white/10 rounded-2xl border border-white/20 backdrop-blur">
+                <div class="text-3xl mb-2">📊</div>
+                <h4 class="text-white/90 font-bold">Glass Card</h4>
+                <p class="text-white/60 text-sm">bg-white/10 + border</p>
+            </div>
+            <div class="p-6 bg-gradient-to-br from-purple-500/80 to-pink-500/80 rounded-2xl">
+                <div class="text-3xl mb-2">🚀</div>
+                <h4 class="text-white font-bold">Gradient Card</h4>
+                <p class="text-white/80 text-sm">Colorful gradient bg</p>
+            </div>
+            <div class="p-6 bg-slate-800/80 rounded-2xl shadow-xl">
+                <div class="text-3xl mb-2">⚡</div>
+                <h4 class="text-white font-bold">Dark Card</h4>
+                <p class="text-slate-400 text-sm">Dark theme card</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Reference -->
+    <div class="p-6 bg-slate-900/70 rounded-2xl border border-white/10">
+        <h2 class="text-xl font-bold text-white mb-4">📖 Quick Reference</h2>
+        <div class="grid grid-cols-2 gap-4 text-sm">
+            <div>
+                <p class="text-cyan-400 font-mono">text-white/75</p>
+                <p class="text-white/60">Title with 75% opacity</p>
+            </div>
+            <div>
+                <p class="text-cyan-400 font-mono">bg-white/10</p>
+                <p class="text-white/60">Light glass background</p>
+            </div>
+            <div>
+                <p class="text-cyan-400 font-mono">backdrop-blur-lg</p>
+                <p class="text-white/60">Frosted glass effect</p>
+            </div>
+            <div>
+                <p class="text-cyan-400 font-mono">border-white/20</p>
+                <p class="text-white/60">Subtle border</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

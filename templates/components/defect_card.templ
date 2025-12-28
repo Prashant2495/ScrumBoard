@@ -11,18 +11,18 @@ templ DefectCard(defect models.Defect) {
 		<div class="flex items-start justify-between mb-3">
 			<div class="flex-1">
 				<div class="flex items-center gap-2 mb-1">
-					<span class="text-xs font-mono text-slate-500">{ defect.Key }</span>
+					<span class="text-xs font-mono text-cyan-200">{ defect.Key }</span>
 					@SeverityBadge(defect.Severity)
 					@PriorityBadge(defect.Priority)
 				</div>
-				<h3 class="font-semibold text-slate-800 text-sm leading-tight">
+				<h3 class="font-semibold text-white text-sm leading-tight">
 					{ defect.Summary }
 				</h3>
 			</div>
 		</div>
 
 		<!-- Metadata -->
-		<div class="flex items-center gap-4 text-xs text-slate-600 mb-3">
+		<div class="flex items-center gap-4 text-xs text-cyan-200 mb-3">
 			if defect.Environment != "" {
 				<div class="flex items-center gap-1">
 					<span>🌍</span>
@@ -48,7 +48,7 @@ templ DefectCard(defect models.Defect) {
 					<div class="w-6 h-6 rounded-full bg-gradient-to-br from-primary-400 to-secondary-400 flex items-center justify-center text-white text-xs font-semibold">
 						{ string([]rune(defect.Assignee.Name)[0]) }
 					</div>
-					<span class="text-xs text-slate-600">{ defect.Assignee.Name }</span>
+					<span class="text-xs text-cyan-200">{ defect.Assignee.Name }</span>
 				</div>
 				if defect.Assignee.Email != "" {
 					<button
@@ -83,45 +83,45 @@ templ PriorityBadge(priority string) {
 func getSeverityClass(severity string) string {
 	switch severity {
 	case "Critical":
-		return "bg-red-100 text-red-700"
+		return "bg-red-500/30 text-red-300"
 	case "High":
-		return "bg-orange-100 text-orange-700"
+		return "bg-orange-500/30 text-orange-300"
 	case "Medium":
-		return "bg-yellow-100 text-yellow-700"
+		return "bg-yellow-500/30 text-yellow-300"
 	case "Low":
-		return "bg-green-100 text-green-700"
+		return "bg-green-500/30 text-green-300"
 	default:
-		return "bg-slate-100 text-slate-600"
+		return "bg-white/20 text-cyan-200"
 	}
 }
 
 func getSeverityBorderClass(severity string) string {
 	switch severity {
 	case "Critical":
-		return "border-red-500"
+		return "border-red-400"
 	case "High":
-		return "border-orange-500"
+		return "border-orange-400"
 	case "Medium":
-		return "border-yellow-500"
+		return "border-yellow-400"
 	case "Low":
-		return "border-green-500"
+		return "border-green-400"
 	default:
-		return "border-slate-300"
+		return "border-white/30"
 	}
 }
 
 func getDefectPriorityClass(priority string) string {
 	switch priority {
 	case "Blocker", "Highest":
-		return "bg-purple-100 text-purple-700"
+		return "bg-purple-500/30 text-purple-300"
 	case "Critical", "High":
-		return "bg-red-100 text-red-600"
+		return "bg-red-500/30 text-red-300"
 	case "Major", "Medium":
-		return "bg-blue-100 text-blue-600"
+		return "bg-blue-500/30 text-blue-300"
 	case "Minor", "Low":
-		return "bg-slate-100 text-slate-600"
+		return "bg-white/20 text-cyan-200"
 	default:
-		return "bg-slate-100 text-slate-500"
+		return "bg-white/20 text-white/60"
 	}
 }
 

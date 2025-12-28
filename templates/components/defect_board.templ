@@ -7,7 +7,7 @@ import (
 
 templ DefectBoard(openDefects, inProgressDefects, resolvedDefects []models.Defect) {
 	<div class="mt-8">
-		<h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+		<h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-2">
 			<span>🐛</span>
 			<span>Defect Board</span>
 		</h2>
@@ -27,9 +27,9 @@ templ DefectColumn(title string, defects []models.Defect, icon string, bgClass s
 			<div class="flex items-center justify-between">
 				<div class="flex items-center gap-2">
 					<span class="text-xl">{ icon }</span>
-					<h3 class="font-semibold text-slate-800">{ title }</h3>
+					<h3 class="font-semibold text-white">{ title }</h3>
 				</div>
-				<span class="px-3 py-1 bg-white rounded-full text-sm font-semibold text-slate-700">
+				<span class="px-3 py-1 bg-white rounded-full text-sm font-semibold text-white">
 					{ fmt.Sprintf("%d", count) }
 				</span>
 			</div>
@@ -38,7 +38,7 @@ templ DefectColumn(title string, defects []models.Defect, icon string, bgClass s
 		<!-- Column Content -->
 		<div class="glass rounded-b-2xl p-4 min-h-[400px] space-y-3">
 			if len(defects) == 0 {
-				<div class="flex items-center justify-center h-full text-slate-400">
+				<div class="flex items-center justify-center h-full text-white/60">
 					<p class="text-sm">No defects</p>
 				</div>
 			} else {

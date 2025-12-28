@@ -11,7 +11,7 @@ templ EngineerWorkDistribution(stories []models.Story, defects []models.Defect) 
 	<div class="glass rounded-2xl p-6 card-hover animate-scale-in"
 		data-story-points={ fmt.Sprintf("%d", calcEngTotalPoints(stories)) }
 		data-defect-count={ fmt.Sprintf("%d", len(defects)) }>
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">📊</span>
 			<span>Work Distribution</span>
 		</h3>
@@ -31,7 +31,7 @@ templ EngineerWorkDistribution(stories []models.Story, defects []models.Defect) 
 					labels: ['User Stories', 'Defects'],
 					datasets: [{ data: [storyPts, defectPts], backgroundColor: ['rgba(102,126,234,0.8)', 'rgba(239,68,68,0.8)'], borderWidth: 2 }]
 				},
-				options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+				options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#fff' } } } }
 			});
 		})();
 	</script>
@@ -41,7 +41,7 @@ templ EngineerWorkDistribution(stories []models.Story, defects []models.Defect) 
 templ StoryPointsProgress(completed, total int) {
 	<div class="glass rounded-2xl p-6 card-hover animate-slide-left shadow-lg">
 		<div class="flex items-center justify-between mb-4">
-			<h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+			<h3 class="text-lg font-bold text-white flex items-center gap-2">
 				<span class="text-2xl">🎯</span>
 				<span>Story Points Progress</span>
 			</h3>
@@ -57,7 +57,7 @@ templ StoryPointsProgress(completed, total int) {
 				</div>
 			</div>
 		</div>
-		<div class="flex justify-between mt-4 text-sm font-semibold text-slate-600">
+		<div class="flex justify-between mt-4 text-sm font-semibold text-cyan-200">
 			<span>✅ { fmt.Sprintf("%d completed", completed) }</span>
 			<span>🎯 { fmt.Sprintf("%d total", total) }</span>
 		</div>
@@ -67,7 +67,7 @@ templ StoryPointsProgress(completed, total int) {
 // EngineerStoryStatusPieChart shows story status distribution
 templ EngineerStoryStatusPieChart(stories []models.Story) {
 	<div class="glass rounded-2xl p-6 card-hover animate-scale-in" data-eng-stories={ marshalEngStories(stories) }>
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">📊</span>
 			<span>Story Status</span>
 		</h3>
@@ -92,7 +92,7 @@ templ EngineerStoryStatusPieChart(stories []models.Story) {
 					labels: ['To Do', 'In Progress', 'Done'],
 					datasets: [{ data: [counts.todo, counts.progress, counts.done], backgroundColor: ['rgba(148,163,184,0.8)', 'rgba(59,130,246,0.8)', 'rgba(16,185,129,0.8)'], borderWidth: 2 }]
 				},
-				options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+				options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#fff' } } } }
 			});
 		})();
 	</script>
@@ -101,7 +101,7 @@ templ EngineerStoryStatusPieChart(stories []models.Story) {
 // EngineerDefectStatusPieChart shows defect status distribution
 templ EngineerDefectStatusPieChart(defects []models.Defect) {
 	<div class="glass rounded-2xl p-6 card-hover animate-scale-in" data-eng-defects={ marshalEngDefects(defects) }>
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">🐛</span>
 			<span>Defect Status</span>
 		</h3>
@@ -126,7 +126,7 @@ templ EngineerDefectStatusPieChart(defects []models.Defect) {
 					labels: ['Open', 'In Progress', 'Resolved'],
 					datasets: [{ data: [counts.open, counts.progress, counts.resolved], backgroundColor: ['rgba(239,68,68,0.8)', 'rgba(251,191,36,0.8)', 'rgba(34,197,94,0.8)'], borderWidth: 2 }]
 				},
-				options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+				options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#fff' } } } }
 			});
 		})();
 	</script>
@@ -155,11 +155,11 @@ func getEngBarColor(p int) string {
 
 func getEngTextColor(p int) string {
 	switch {
-	case p < 30: return "text-red-600"
-	case p < 50: return "text-orange-600"
-	case p < 70: return "text-yellow-600"
-	case p < 90: return "text-blue-600"
-	default: return "text-green-600"
+	case p < 30: return "text-red-400"
+	case p < 50: return "text-orange-400"
+	case p < 70: return "text-yellow-400"
+	case p < 90: return "text-blue-400"
+	default: return "text-green-400"
 	}
 }
 

@@ -69,20 +69,20 @@ func BoardColumn(title string, stories []models.Story, colorClass string, icon s
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</span><h3 class=\"font-semibold text-slate-700\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</span><h3 class=\"font-semibold text-white\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/board_column.templ`, Line: 14, Col: 53}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/board_column.templ`, Line: 14, Col: 49}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</h3></div><span class=\"bg-white/80 text-slate-600 text-sm font-semibold px-3 py-1 rounded-full\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</h3></div><span class=\"bg-white/20 text-white text-sm font-semibold px-3 py-1 rounded-full\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -106,7 +106,7 @@ func BoardColumn(title string, stories []models.Story, colorClass string, icon s
 			}
 		}
 		if len(stories) == 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"text-center py-8 text-slate-400\"><p class=\"text-4xl mb-2\">📭</p><p class=\"text-sm\">No stories here</p></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"text-center py-8 text-white/60\"><p class=\"text-4xl mb-2\">📭</p><p class=\"text-sm\">No stories here</p></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -140,7 +140,7 @@ func SprintBoard(todo, inProgress, done []models.Story) templ.Component {
 			templ_7745c5c3_Var7 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"mt-8 animate-fade-in\"><h2 class=\"text-xl font-bold text-slate-800 mb-6 flex items-center gap-2\"><span class=\"text-2xl\">📋</span> Sprint Board</h2><div class=\"flex gap-6 overflow-x-auto pb-4\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"mt-8 animate-fade-in\"><h2 class=\"text-xl font-bold text-white mb-6 flex items-center gap-2\"><span class=\"text-2xl\">📋</span> Sprint Board</h2><div class=\"flex gap-6 overflow-x-auto pb-4\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -148,11 +148,11 @@ func SprintBoard(todo, inProgress, done []models.Story) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = BoardColumn("In Progress", inProgress, "bg-blue-100/80", "🔄").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = BoardColumn("In Progress", inProgress, "bg-blue-500/30/80", "🔄").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = BoardColumn("Done", done, "bg-green-100/80", "✅").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = BoardColumn("Done", done, "bg-green-500/30/80", "✅").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

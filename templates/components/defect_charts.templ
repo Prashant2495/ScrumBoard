@@ -15,7 +15,7 @@ templ DefectStatusPieChart(stats models.DefectStats) {
 		data-resolved={ fmt.Sprintf("%d", stats.ResolvedDefects) }
 		data-total={ fmt.Sprintf("%d", stats.TotalDefects) }
 	>
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">🎯</span>
 			<span>Defect Status Distribution</span>
 		</h3>
@@ -95,7 +95,7 @@ templ DefectSeverityDoughnutChart(stats models.DefectStats) {
 		data-medium={ fmt.Sprintf("%d", stats.MediumDefects) }
 		data-low={ fmt.Sprintf("%d", stats.LowDefects) }
 	>
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">🔥</span>
 			<span>Severity Breakdown</span>
 		</h3>
@@ -171,7 +171,7 @@ templ DefectSeverityDoughnutChart(stats models.DefectStats) {
 // DefectAssigneeBarChart shows defects by assignee
 templ DefectAssigneeBarChart(assigneeStats []models.DefectByAssignee) {
 	<div class="glass rounded-2xl p-6 card-hover animate-fade-in" data-assignee-stats={ marshalAssigneeStats(assigneeStats) }>
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">👥</span>
 			<span>Defects by Engineer</span>
 		</h3>
@@ -225,7 +225,8 @@ templ DefectAssigneeBarChart(assigneeStats []models.DefectByAssignee) {
 							position: 'top',
 							labels: {
 								padding: 15,
-								font: { size: 12, weight: 'bold' }
+								font: { size: 12, weight: 'bold' },
+								color: '#fff'
 							}
 						},
 						tooltip: {
@@ -237,11 +238,11 @@ templ DefectAssigneeBarChart(assigneeStats []models.DefectByAssignee) {
 						}
 					},
 					scales: {
+						x: { ticks: { color: '#fff' }, grid: { color: 'rgba(255,255,255,0.1)' } },
 						y: {
 							beginAtZero: true,
-							ticks: {
-								stepSize: 1
-							}
+							ticks: { stepSize: 1, color: '#fff' },
+							grid: { color: 'rgba(255,255,255,0.1)' }
 						}
 					}
 				}
@@ -254,7 +255,7 @@ templ DefectAssigneeBarChart(assigneeStats []models.DefectByAssignee) {
 templ DefectResolutionProgress(stats models.DefectStats) {
 	<div class="glass rounded-2xl p-6 card-hover animate-slide-left shadow-lg">
 		<div class="flex items-center justify-between mb-4">
-			<h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+			<h3 class="text-lg font-bold text-white flex items-center gap-2">
 				<span class="text-2xl">✅</span>
 				<span>Resolution Progress</span>
 			</h3>
@@ -274,7 +275,7 @@ templ DefectResolutionProgress(stats models.DefectStats) {
 				</div>
 			</div>
 		</div>
-		<div class="flex justify-between mt-4 text-sm font-semibold text-slate-600">
+		<div class="flex justify-between mt-4 text-sm font-semibold text-cyan-200">
 			<span>✅ { fmt.Sprintf("%d defects resolved", stats.ResolvedDefects) }</span>
 			<span>🎯 { fmt.Sprintf("%d defects total", stats.TotalDefects) }</span>
 		</div>
@@ -309,15 +310,15 @@ func getDefectProgressBarColor(percentage int) string {
 
 func getDefectProgressTextColor(percentage int) string {
 	if percentage < 30 {
-		return "text-red-600"
+		return "text-red-400"
 	} else if percentage < 50 {
-		return "text-orange-600"
+		return "text-orange-400"
 	} else if percentage < 70 {
-		return "text-yellow-600"
+		return "text-yellow-400"
 	} else if percentage < 90 {
-		return "text-blue-600"
+		return "text-blue-400"
 	} else {
-		return "text-green-600"
+		return "text-green-400"
 	}
 }
 
@@ -329,7 +330,7 @@ templ DefectAgingPieChart(stats models.DefectStats) {
 		data-aged7={ fmt.Sprintf("%d", stats.DefectsAgedOver7Days - stats.DefectsAgedOver30Days) }
 		data-aged30={ fmt.Sprintf("%d", stats.DefectsAgedOver30Days) }
 	>
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">⏰</span>
 			<span>Defect Aging</span>
 		</h3>
@@ -402,7 +403,7 @@ templ DefectAgingPieChart(stats models.DefectStats) {
 // DefectPriorityPieChart shows priority distribution
 templ DefectPriorityPieChart(assigneeStats []models.DefectByAssignee) {
 	<div class="glass rounded-2xl p-6 card-hover animate-scale-in" data-priority-stats={ marshalAssigneeStats(assigneeStats) }>
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">🎯</span>
 			<span>Critical vs Normal</span>
 		</h3>

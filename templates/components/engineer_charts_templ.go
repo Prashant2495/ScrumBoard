@@ -62,7 +62,7 @@ func EngineerWorkDistribution(stories []models.Story, defects []models.Defect) t
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><h3 class=\"text-lg font-bold text-slate-800 mb-4 flex items-center gap-2\"><span class=\"text-2xl\">📊</span> <span>Work Distribution</span></h3><div class=\"chart-container\"><canvas id=\"workDistributionChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst canvas = document.getElementById('workDistributionChart');\n\t\t\tif (!canvas) return;\n\t\t\tconst chartDiv = canvas.closest('[data-story-points]');\n\t\t\tif (!chartDiv) return;\n\t\t\tconst storyPts = parseInt(chartDiv.getAttribute('data-story-points'));\n\t\t\tconst defectPts = parseInt(chartDiv.getAttribute('data-defect-count')) * 2;\n\t\t\tnew Chart(canvas.getContext('2d'), {\n\t\t\t\ttype: 'doughnut',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['User Stories', 'Defects'],\n\t\t\t\t\tdatasets: [{ data: [storyPts, defectPts], backgroundColor: ['rgba(102,126,234,0.8)', 'rgba(239,68,68,0.8)'], borderWidth: 2 }]\n\t\t\t\t},\n\t\t\t\toptions: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }\n\t\t\t});\n\t\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><h3 class=\"text-lg font-bold text-white mb-4 flex items-center gap-2\"><span class=\"text-2xl\">📊</span> <span>Work Distribution</span></h3><div class=\"chart-container\"><canvas id=\"workDistributionChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst canvas = document.getElementById('workDistributionChart');\n\t\t\tif (!canvas) return;\n\t\t\tconst chartDiv = canvas.closest('[data-story-points]');\n\t\t\tif (!chartDiv) return;\n\t\t\tconst storyPts = parseInt(chartDiv.getAttribute('data-story-points'));\n\t\t\tconst defectPts = parseInt(chartDiv.getAttribute('data-defect-count')) * 2;\n\t\t\tnew Chart(canvas.getContext('2d'), {\n\t\t\t\ttype: 'doughnut',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['User Stories', 'Defects'],\n\t\t\t\t\tdatasets: [{ data: [storyPts, defectPts], backgroundColor: ['rgba(102,126,234,0.8)', 'rgba(239,68,68,0.8)'], borderWidth: 2 }]\n\t\t\t\t},\n\t\t\t\toptions: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#fff' } } } }\n\t\t\t});\n\t\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -92,7 +92,7 @@ func StoryPointsProgress(completed, total int) templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"glass rounded-2xl p-6 card-hover animate-slide-left shadow-lg\"><div class=\"flex items-center justify-between mb-4\"><h3 class=\"text-lg font-bold text-slate-800 flex items-center gap-2\"><span class=\"text-2xl\">🎯</span> <span>Story Points Progress</span></h3>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"glass rounded-2xl p-6 card-hover animate-slide-left shadow-lg\"><div class=\"flex items-center justify-between mb-4\"><h3 class=\"text-lg font-bold text-white flex items-center gap-2\"><span class=\"text-2xl\">🎯</span> <span>Story Points Progress</span></h3>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -175,7 +175,7 @@ func StoryPointsProgress(completed, total int) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</span></div></div></div><div class=\"flex justify-between mt-4 text-sm font-semibold text-slate-600\"><span>✅ ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</span></div></div></div><div class=\"flex justify-between mt-4 text-sm font-semibold text-cyan-200\"><span>✅ ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -244,7 +244,7 @@ func EngineerStoryStatusPieChart(stories []models.Story) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\"><h3 class=\"text-lg font-bold text-slate-800 mb-4 flex items-center gap-2\"><span class=\"text-2xl\">📊</span> <span>Story Status</span></h3><div class=\"chart-container\"><canvas id=\"engineerStoryStatusChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst div = document.querySelector('[data-eng-stories]');\n\t\t\tif (!div) return;\n\t\t\tconst stories = JSON.parse(div.getAttribute('data-eng-stories'));\n\t\t\tconst counts = { todo: 0, progress: 0, done: 0 };\n\t\t\tstories.forEach(s => {\n\t\t\t\tif (s.statusCategory === 'new' || s.statusCategory === 'todo') counts.todo++;\n\t\t\t\telse if (s.statusCategory === 'indeterminate') counts.progress++;\n\t\t\t\telse if (s.statusCategory === 'done') counts.done++;\n\t\t\t});\n\t\t\tconst ctx = document.getElementById('engineerStoryStatusChart');\n\t\t\tif (!ctx) return;\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'pie',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['To Do', 'In Progress', 'Done'],\n\t\t\t\t\tdatasets: [{ data: [counts.todo, counts.progress, counts.done], backgroundColor: ['rgba(148,163,184,0.8)', 'rgba(59,130,246,0.8)', 'rgba(16,185,129,0.8)'], borderWidth: 2 }]\n\t\t\t\t},\n\t\t\t\toptions: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }\n\t\t\t});\n\t\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "\"><h3 class=\"text-lg font-bold text-white mb-4 flex items-center gap-2\"><span class=\"text-2xl\">📊</span> <span>Story Status</span></h3><div class=\"chart-container\"><canvas id=\"engineerStoryStatusChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst div = document.querySelector('[data-eng-stories]');\n\t\t\tif (!div) return;\n\t\t\tconst stories = JSON.parse(div.getAttribute('data-eng-stories'));\n\t\t\tconst counts = { todo: 0, progress: 0, done: 0 };\n\t\t\tstories.forEach(s => {\n\t\t\t\tif (s.statusCategory === 'new' || s.statusCategory === 'todo') counts.todo++;\n\t\t\t\telse if (s.statusCategory === 'indeterminate') counts.progress++;\n\t\t\t\telse if (s.statusCategory === 'done') counts.done++;\n\t\t\t});\n\t\t\tconst ctx = document.getElementById('engineerStoryStatusChart');\n\t\t\tif (!ctx) return;\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'pie',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['To Do', 'In Progress', 'Done'],\n\t\t\t\t\tdatasets: [{ data: [counts.todo, counts.progress, counts.done], backgroundColor: ['rgba(148,163,184,0.8)', 'rgba(59,130,246,0.8)', 'rgba(16,185,129,0.8)'], borderWidth: 2 }]\n\t\t\t\t},\n\t\t\t\toptions: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#fff' } } } }\n\t\t\t});\n\t\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -287,7 +287,7 @@ func EngineerDefectStatusPieChart(defects []models.Defect) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\"><h3 class=\"text-lg font-bold text-slate-800 mb-4 flex items-center gap-2\"><span class=\"text-2xl\">🐛</span> <span>Defect Status</span></h3><div class=\"chart-container\"><canvas id=\"engineerDefectStatusChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst div = document.querySelector('[data-eng-defects]');\n\t\t\tif (!div) return;\n\t\t\tconst defects = JSON.parse(div.getAttribute('data-eng-defects'));\n\t\t\tconst counts = { open: 0, progress: 0, resolved: 0 };\n\t\t\tdefects.forEach(d => {\n\t\t\t\tif (d.statusCategory === 'new' || d.status === 'Open') counts.open++;\n\t\t\t\telse if (d.statusCategory === 'indeterminate') counts.progress++;\n\t\t\t\telse if (d.statusCategory === 'done' || d.status === 'Resolved') counts.resolved++;\n\t\t\t});\n\t\t\tconst ctx = document.getElementById('engineerDefectStatusChart');\n\t\t\tif (!ctx) return;\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'doughnut',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['Open', 'In Progress', 'Resolved'],\n\t\t\t\t\tdatasets: [{ data: [counts.open, counts.progress, counts.resolved], backgroundColor: ['rgba(239,68,68,0.8)', 'rgba(251,191,36,0.8)', 'rgba(34,197,94,0.8)'], borderWidth: 2 }]\n\t\t\t\t},\n\t\t\t\toptions: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }\n\t\t\t});\n\t\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "\"><h3 class=\"text-lg font-bold text-white mb-4 flex items-center gap-2\"><span class=\"text-2xl\">🐛</span> <span>Defect Status</span></h3><div class=\"chart-container\"><canvas id=\"engineerDefectStatusChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst div = document.querySelector('[data-eng-defects]');\n\t\t\tif (!div) return;\n\t\t\tconst defects = JSON.parse(div.getAttribute('data-eng-defects'));\n\t\t\tconst counts = { open: 0, progress: 0, resolved: 0 };\n\t\t\tdefects.forEach(d => {\n\t\t\t\tif (d.statusCategory === 'new' || d.status === 'Open') counts.open++;\n\t\t\t\telse if (d.statusCategory === 'indeterminate') counts.progress++;\n\t\t\t\telse if (d.statusCategory === 'done' || d.status === 'Resolved') counts.resolved++;\n\t\t\t});\n\t\t\tconst ctx = document.getElementById('engineerDefectStatusChart');\n\t\t\tif (!ctx) return;\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'doughnut',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['Open', 'In Progress', 'Resolved'],\n\t\t\t\t\tdatasets: [{ data: [counts.open, counts.progress, counts.resolved], backgroundColor: ['rgba(239,68,68,0.8)', 'rgba(251,191,36,0.8)', 'rgba(34,197,94,0.8)'], borderWidth: 2 }]\n\t\t\t\t},\n\t\t\t\toptions: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#fff' } } } }\n\t\t\t});\n\t\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -328,15 +328,15 @@ func getEngBarColor(p int) string {
 func getEngTextColor(p int) string {
 	switch {
 	case p < 30:
-		return "text-red-600"
+		return "text-red-400"
 	case p < 50:
-		return "text-orange-600"
+		return "text-orange-400"
 	case p < 70:
-		return "text-yellow-600"
+		return "text-yellow-400"
 	case p < 90:
-		return "text-blue-600"
+		return "text-blue-400"
 	default:
-		return "text-green-600"
+		return "text-green-400"
 	}
 }
 

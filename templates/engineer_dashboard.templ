@@ -8,15 +8,15 @@ templ EngineerDashboard(data models.EngineerDashboardData, engineers []models.En
 	@Layout("Engineer Dashboard") {
 		<div class="min-h-screen">
 			<!-- Header -->
-			<header class="gradient-bg text-white/90 py-6 px-8 shadow-lg backdrop-blur-sm">
+			<header class="bg-slate-900/80 backdrop-blur-lg text-white py-6 px-8 shadow-xl border-b border-slate-700/50">
 				<div class="w-full flex items-center justify-between">
 					<div class="flex items-center gap-4">
-						<div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center text-2xl backdrop-blur-md border border-white/20">
+						<div class="w-12 h-12 bg-slate-800/80 rounded-xl flex items-center justify-center text-2xl shadow-xl">
 							👨‍💻
 						</div>
 						<div>
-							<h1 class="text-2xl font-bold text-white/75">Engineer Dashboard</h1>
-							<p class="text-white/50 text-sm">Individual performance tracking</p>
+							<h1 class="text-2xl font-bold text-white">Engineer Dashboard</h1>
+							<p class="text-white/70 text-sm">Individual performance tracking</p>
 						</div>
 					</div>
 					
@@ -157,29 +157,29 @@ templ EngineerDashboard(data models.EngineerDashboardData, engineers []models.En
 						if (!pingList) return;
 
 						if (!data.pings || data.pings.length === 0) {
-							pingList.innerHTML = '<p class="text-slate-500 text-center py-4">No info requests yet</p>';
+							pingList.innerHTML = '<p class="text-cyan-200 text-center py-4">No info requests yet</p>';
 							return;
 						}
 
 						pingList.innerHTML = data.pings.map(function(ping) {
-							var borderClass = ping.status === 'responded' ? 'border-green-200' : 'border-yellow-200';
-							var statusClass = ping.status === 'responded' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700';
+							var borderClass = ping.status === 'responded' ? 'border-green-400' : 'border-yellow-400';
+							var statusClass = ping.status === 'responded' ? 'bg-green-500/30 text-green-300' : 'bg-yellow-500/30 text-yellow-300';
 							var statusText = ping.status === 'responded' ? '✅ Responded' : '⏳ Awaiting Reply';
 							var responseHtml = '';
 							if (ping.response) {
-								responseHtml = '<div class="mt-3 bg-green-50 rounded-lg p-3 border border-green-200">' +
-									'<p class="text-xs text-green-600 mb-1">📩 Response (' + ping.responded_at + '):</p>' +
-									'<p class="text-sm text-green-800">' + ping.response + '</p></div>';
+								responseHtml = '<div class="mt-3 bg-green-500/20 rounded-lg p-3 border border-green-400/50">' +
+									'<p class="text-xs text-green-300 mb-1">📩 Response (' + ping.responded_at + '):</p>' +
+									'<p class="text-sm text-green-200">' + ping.response + '</p></div>';
 							} else {
-								responseHtml = '<div class="mt-2 text-xs text-yellow-600 italic">💬 Reply via Webex to respond</div>';
+								responseHtml = '<div class="mt-2 text-xs text-yellow-300 italic">💬 Reply via Webex to respond</div>';
 							}
-							var itemHtml = ping.item_key ? '<p class="text-sm font-medium text-blue-600 mb-1">🎯 ' + ping.item_key + ': ' + (ping.item_title || '') + '</p>' : '';
-							return '<div class="bg-white/50 rounded-xl p-4 border ' + borderClass + '">' +
+							var itemHtml = ping.item_key ? '<p class="text-sm font-medium text-blue-300 mb-1">🎯 ' + ping.item_key + ': ' + (ping.item_title || '') + '</p>' : '';
+							return '<div class="bg-white/10 rounded-xl p-4 border border-white/20 ' + borderClass + '">' +
 								'<div class="flex items-center justify-between mb-2">' +
-								'<span class="text-xs text-slate-500">📤 Requested: ' + ping.sent_at + '</span>' +
+								'<span class="text-xs text-cyan-200">📤 Requested: ' + ping.sent_at + '</span>' +
 								'<span class="px-2 py-1 rounded-full text-xs ' + statusClass + '">' + statusText + '</span></div>' +
 								itemHtml +
-								'<p class="text-sm text-slate-700 mb-2">Sprint: <strong>' + ping.sprint_name + '</strong></p>' +
+								'<p class="text-sm text-white mb-2">Sprint: <strong>' + ping.sprint_name + '</strong></p>' +
 								responseHtml + '</div>';
 						}).join('');
 					})
@@ -263,15 +263,15 @@ templ EngineerDashboardContent(data models.EngineerDashboardData) {
 				{ getInitials(data.Engineer.Name) }
 			</div>
 			<div>
-				<h2 class="text-2xl font-bold text-slate-800">{ data.Engineer.Name }</h2>
-				<p class="text-sm text-slate-600">{ data.Engineer.Email }</p>
-				<p class="text-sm text-slate-500 mt-1">Sprint: { data.Sprint.Name }</p>
+				<h2 class="text-2xl font-bold text-white">{ data.Engineer.Name }</h2>
+				<p class="text-sm text-white">{ data.Engineer.Email }</p>
+				<p class="text-sm text-cyan-200 mt-1">Sprint: { data.Sprint.Name }</p>
 			</div>
 		</div>
 		<div class="flex items-center gap-4">
 			<div class="text-right">
-				<p class="text-xs text-slate-500 mb-1">Sprint Period</p>
-				<p class="text-sm font-semibold text-slate-700">
+				<p class="text-xs text-cyan-200 mb-1">Sprint Period</p>
+				<p class="text-sm font-semibold text-white">
 					if data.Sprint.StartDate != "" {
 						{ data.Sprint.StartDate } - { data.Sprint.EndDate }
 					} else {
@@ -285,13 +285,13 @@ templ EngineerDashboardContent(data models.EngineerDashboardData) {
 	<!-- Info Requests Section -->
 	if data.Engineer.Email != "" {
 		<div id="info-requests" class="glass rounded-2xl p-6 mb-8 animate-fade-in">
-			<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+			<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 				<span>📋</span>
 				<span>Info Requests</span>
-				<span class="text-xs text-slate-500 font-normal ml-2">(Reply via Webex)</span>
+				<span class="text-xs text-cyan-200 font-normal ml-2">(Reply via Webex)</span>
 			</h3>
 			<div id="info-request-list" class="space-y-3">
-				<p class="text-slate-500 text-center py-4">Loading info requests...</p>
+				<p class="text-cyan-200 text-center py-4">Loading info requests...</p>
 			</div>
 		</div>
 	}
@@ -318,7 +318,7 @@ templ EngineerDashboardContent(data models.EngineerDashboardData) {
 
 	<!-- Stories Section -->
 	<div class="mb-8">
-		<h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
 			<span>📖</span>
 			<span>Stories ({ fmt.Sprintf("%d", len(data.Stories)) })</span>
 		</h3>
@@ -330,13 +330,13 @@ templ EngineerDashboardContent(data models.EngineerDashboardData) {
 				}
 			</div>
 		} else {
-			<p class="text-slate-500 text-center py-8">No stories assigned in this sprint</p>
+			<p class="text-cyan-200 text-center py-8">No stories assigned in this sprint</p>
 		}
 	</div>
 
 	<!-- Defects Section -->
 	<div class="mb-8">
-		<h3 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
 			<span>🐛</span>
 			<span>Defects ({ fmt.Sprintf("%d", len(data.Defects)) })</span>
 		</h3>
@@ -348,7 +348,7 @@ templ EngineerDashboardContent(data models.EngineerDashboardData) {
 				}
 			</div>
 		} else {
-			<p class="text-slate-500 text-center py-8">No defects assigned in this sprint</p>
+			<p class="text-cyan-200 text-center py-8">No defects assigned in this sprint</p>
 		}
 	</div>
 }

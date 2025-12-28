@@ -9,7 +9,7 @@ import (
 // TeamWorkDistributionChart shows bar chart of engineer-wise story points
 templ TeamWorkDistributionChart(userStats []models.UserStats) {
 	<div class="glass rounded-2xl p-6 card-hover animate-fade-in" data-user-stats={ marshalUserStats(userStats) }>
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">📊</span>
 			<span>Team Work Distribution</span>
 		</h3>
@@ -77,8 +77,8 @@ templ TeamWorkDistributionChart(userStats []models.UserStats) {
 					scales: {
 						y: {
 							beginAtZero: true,
-							ticks: {
-								stepSize: 5
+							ticks: { color: '#fff',
+								stepSize: 5, color: '#fff'
 							}
 						}
 					}
@@ -97,7 +97,7 @@ templ SprintProgressPieChart(stats models.SprintStats) {
 		data-remaining={ fmt.Sprintf("%d", stats.RemainingPoints) }
 		data-total={ fmt.Sprintf("%d", stats.TotalPoints) }
 	>
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">🎯</span>
 			<span>Sprint Progress</span>
 		</h3>
@@ -181,7 +181,7 @@ templ SprintWorkloadChart(stats models.SprintStats) {
 		data-in-progress={ fmt.Sprintf("%d", stats.InProgressPoints) }
 		data-remaining={ fmt.Sprintf("%d", stats.RemainingPoints) }
 	>
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">📈</span>
 			<span>Sprint Workload</span>
 		</h3>
@@ -245,8 +245,8 @@ templ SprintWorkloadChart(stats models.SprintStats) {
 					scales: {
 						y: {
 							beginAtZero: true,
-							ticks: {
-								stepSize: 5
+							ticks: { color: '#fff',
+								stepSize: 5, color: '#fff'
 							}
 						}
 					}
@@ -259,7 +259,7 @@ templ SprintWorkloadChart(stats models.SprintStats) {
 // TeamCapacityChart shows team capacity vs actual work
 templ TeamCapacityChart(userStats []models.UserStats, totalPoints int) {
 	<div class="glass rounded-2xl p-6 card-hover animate-scale-in" data-capacity-stats={ marshalUserStats(userStats) } data-total={ fmt.Sprintf("%d", totalPoints) }>
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">⚡</span>
 			<span>Team Capacity</span>
 		</h3>
@@ -331,8 +331,8 @@ templ TeamCapacityChart(userStats []models.UserStats, totalPoints int) {
 					scales: {
 						y: {
 							beginAtZero: true,
-							ticks: {
-								stepSize: 5
+							ticks: { color: '#fff',
+								stepSize: 5, color: '#fff'
 							}
 						}
 					}
@@ -350,7 +350,7 @@ templ StoryStatusDistributionPieChart(todoStories, inProgress, doneStories []mod
 		data-progress={ fmt.Sprintf("%d", len(inProgress)) }
 		data-done={ fmt.Sprintf("%d", len(doneStories)) }
 	>
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">📋</span>
 			<span>Story Distribution</span>
 		</h3>
@@ -423,7 +423,7 @@ templ StoryStatusDistributionPieChart(todoStories, inProgress, doneStories []mod
 // TeamWorkloadPieChart shows team workload distribution
 templ TeamWorkloadPieChart(userStats []models.UserStats) {
 	<div class="glass rounded-2xl p-6 card-hover animate-scale-in" data-workload-stats={ marshalUserStats(userStats) }>
-		<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
 			<span class="text-2xl">👥</span>
 			<span>Team Workload Share</span>
 		</h3>
