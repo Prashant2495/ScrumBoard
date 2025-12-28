@@ -45,7 +45,7 @@ func Dashboard(data models.DashboardData) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"min-h-screen\"><!-- Header --><header class=\"bg-slate-900/80 backdrop-blur-lg text-white py-6 px-8 shadow-xl border-b border-slate-700/50\"><div class=\"w-full flex items-center justify-between\"><div class=\"flex items-center gap-4\"><div class=\"w-12 h-12 bg-slate-800/80 rounded-xl flex items-center justify-center text-2xl shadow-xl\">🚀</div><div><h1 class=\"text-2xl font-bold text-white\">Sprint Dashboard</h1><p class=\"text-white/70 text-sm\">Track sprint progress and team velocity</p></div></div><div class=\"flex items-center gap-4\"><!-- Sprint Selector --><div class=\"glass-dark px-4 py-2 rounded-xl\"><p class=\"text-xs text-white/70 mb-1\">Sprint</p><select id=\"sprint-selector\" class=\"bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30\"><option value=\"0\">Loading...</option></select></div><a href=\"/defects\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2\"><span>🐛</span> <span>Defects</span></a> <a href=\"/engineer\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2\"><span>👨\u200d💻</span> <span>Engineers</span></a></div></div></header><!-- Main Content --><main id=\"dashboard-content\" class=\"w-full px-6 py-8\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"min-h-screen\"><!-- Header --><header class=\"bg-slate-900/80 backdrop-blur-lg text-white py-6 px-8 shadow-xl border-b border-slate-700/50\"><div class=\"w-full flex items-center justify-between\"><div class=\"flex items-center gap-4\"><div class=\"w-12 h-12 bg-slate-800/80 rounded-xl flex items-center justify-center text-2xl shadow-xl\">🚀</div><div><h1 class=\"text-2xl font-bold text-white\">Sprint Dashboard</h1><p class=\"text-white/70 text-sm\">Track sprint progress and team velocity</p></div></div><div class=\"flex items-center gap-4\"><!-- Sprint Selector --><div class=\"glass-dark px-4 py-2 rounded-xl\"><p class=\"text-xs text-white/70 mb-1\">Sprint</p><select id=\"sprint-selector\" class=\"bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30\"><option value=\"0\">Loading...</option></select></div><a href=\"/\" class=\"bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shadow-lg\"><span>🏠</span> <span>Home</span></a> <a href=\"/defects\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2\"><span>🐛</span> <span>Defects</span></a> <a href=\"/engineer\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2\"><span>👨\u200d💻</span> <span>Engineers</span></a></div></div></header><!-- Main Content --><main id=\"dashboard-content\" class=\"w-full px-6 py-8\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -95,7 +95,7 @@ func DashboardContent(data models.DashboardData) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 204, Col: 64}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 209, Col: 64}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -108,7 +108,7 @@ func DashboardContent(data models.DashboardData) templ.Component {
 		var templ_7745c5c3_Var5 string
 		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.Goal)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 205, Col: 57}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 210, Col: 57}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
@@ -121,7 +121,7 @@ func DashboardContent(data models.DashboardData) templ.Component {
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.StartDate)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 209, Col: 71}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 214, Col: 71}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -134,7 +134,7 @@ func DashboardContent(data models.DashboardData) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.EndDate)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 209, Col: 97}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/dashboard.templ`, Line: 214, Col: 97}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
