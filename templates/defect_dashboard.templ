@@ -103,6 +103,51 @@ templ DefectDashboard(data models.DefectDashboardData) {
 				window.location.href = `/defects?sprint=${sprintId}`;
 			});
 
+			// Load info requests function for defects
+			function loadDefectInfoRequests() {
+				fetch('/engineer/api/pings')
+					.then(function(res) { return res.json(); })
+					.then(function(data) {
+						var reqList = document.getElementById('defect-info-request-list');
+						if (!reqList) return;
+
+						if (!data.pings || data.pings.length === 0) {
+							reqList.innerHTML = '<p class="text-cyan-200 text-center py-4">No info requests yet. Use 📋 button on defects to request info.</p>';
+							return;
+						}
+
+						reqList.innerHTML = data.pings.map(function(ping) {
+							var borderClass = ping.status === 'responded' ? 'border-green-400' : 'border-yellow-400';
+							var statusClass = ping.status === 'responded' ? 'bg-green-500/30 text-green-300' : 'bg-yellow-500/30 text-yellow-300';
+							var statusText = ping.status === 'responded' ? '✅ Responded' : '⏳ Awaiting Reply';
+							var responseHtml = '';
+							if (ping.response) {
+								responseHtml = '<div class="mt-3 bg-green-500/20 rounded-lg p-3 border border-green-400/50">' +
+									'<p class="text-xs text-green-300 mb-1">📩 Response (' + ping.responded_at + '):</p>' +
+									'<p class="text-sm text-green-200 font-medium">' + ping.response + '</p></div>';
+							}
+							var itemHtml = ping.item_key ? '<p class="text-sm font-bold text-blue-300 mb-1">🎯 ' + ping.item_key + ': ' + (ping.item_title || '') + '</p>' : '';
+							return '<div class="glass rounded-xl p-4 border-l-4 ' + borderClass + '">' +
+								'<div class="flex items-center justify-between mb-2">' +
+								'<div class="flex items-center gap-2">' +
+								'<span class="font-bold text-white">' + ping.engineer_name + '</span>' +
+								'<span class="text-xs text-cyan-200">(' + ping.engineer_email + ')</span></div>' +
+								'<span class="px-2 py-1 rounded-full text-xs font-semibold ' + statusClass + '">' + statusText + '</span></div>' +
+								itemHtml +
+								'<div class="flex items-center gap-4 text-xs text-cyan-200 mb-2">' +
+								'<span>📤 Requested: ' + ping.sent_at + '</span></div>' +
+								responseHtml + '</div>';
+						}).join('');
+					})
+					.catch(function(err) {
+						console.error('Error loading info requests:', err);
+						document.getElementById('defect-info-request-list').innerHTML = '<p class="text-red-400 text-center py-4">Error loading info requests</p>';
+					});
+			}
+
+			// Load info requests on page load
+			loadDefectInfoRequests();
+
 			// Request Info button handler for defects
 			document.querySelectorAll('.request-info-btn').forEach(btn => {
 				btn.addEventListener('click', async function(e) {
@@ -194,6 +239,20 @@ templ DefectDashboardContent(data models.DefectDashboardData) {
 		@components.DefectStatusPieChart(data.Stats)
 		@components.DefectSeverityDoughnutChart(data.Stats)
 		@components.DefectAgingPieChart(data.Stats)
+	</div>
+
+	<!-- Info Requests & Responses Section -->
+	<div class="glass rounded-2xl p-6 mb-8 animate-fade-in">
+		<h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+			<span class="text-2xl">📩</span>
+			<span>Info Requests & Responses</span>
+			<button onclick="loadDefectInfoRequests()" class="ml-auto px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold rounded-lg transition-all">
+				🔄 Refresh
+			</button>
+		</h3>
+		<div id="defect-info-request-list" class="space-y-3 max-h-96 overflow-y-auto">
+			<p class="text-cyan-200 text-center py-4">Loading info requests...</p>
+		</div>
 	</div>
 
 	<!-- Defect Board -->
