@@ -40,8 +40,13 @@ templ StoryCard(story models.Story) {
 					<span class="text-sm">⚡</span>
 					<span class="text-xs font-bold">{ fmt.Sprintf("%d", story.StoryPoints) }</span>
 				</div>
+				if len(story.Subtasks) > 0 {
+					<span class="px-2 py-1 bg-purple-500/30 text-purple-300 text-xs font-semibold rounded-lg">
+						📝 { fmt.Sprintf("%d", len(story.Subtasks)) }
+					</span>
+				}
 				<a
-					href={ templ.SafeURL("https://miggbo.atlassian.net/browse/" + story.Key) }
+					href={ templ.SafeURL("https://jira-eng-gpk1.cisco.com/jira/browse/" + story.Key) }
 					target="_blank"
 					class="px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold rounded-lg transition-all shadow-sm"
 					title="Open in Jira"
@@ -63,7 +68,47 @@ templ StoryCard(story models.Story) {
 				}
 			</div>
 		</div>
+
+		<!-- Subtasks Section -->
+		if len(story.Subtasks) > 0 {
+			<div class="mt-3 pt-3 border-t border-white/20">
+				<div class="text-xs font-bold text-purple-300 mb-2 flex items-center gap-1">
+					<span>📝</span>
+					<span>Subtasks ({ fmt.Sprintf("%d", len(story.Subtasks)) })</span>
+				</div>
+				<div class="space-y-1.5 max-h-32 overflow-y-auto">
+					for _, subtask := range story.Subtasks {
+						<div class="flex items-center justify-between bg-white/10 rounded-lg px-2 py-1.5 text-xs">
+							<div class="flex items-center gap-2 flex-1 min-w-0">
+								<a
+									href={ templ.SafeURL("https://jira-eng-gpk1.cisco.com/jira/browse/" + subtask.Key) }
+									target="_blank"
+									class="text-blue-300 hover:text-blue-400 font-semibold shrink-0"
+								>
+									{ subtask.Key }
+								</a>
+								<span class="text-white truncate">{ subtask.Title }</span>
+							</div>
+							<span class={ "shrink-0 ml-2 px-1.5 py-0.5 rounded text-xs font-semibold " + getSubtaskStatusBadge(subtask.StatusCategory) }>
+								{ subtask.Status }
+							</span>
+						</div>
+					}
+				</div>
+			</div>
+		}
 	</div>
+}
+
+func getSubtaskStatusBadge(statusCategory string) string {
+	switch statusCategory {
+	case "done":
+		return "bg-emerald-500/30 text-emerald-300"
+	case "indeterminate":
+		return "bg-blue-500/30 text-blue-300"
+	default:
+		return "bg-white/20 text-white"
+	}
 }
 
 func getPriorityClass(priority string) string {

@@ -151,11 +151,11 @@ func (d *DashboardService) GetDashboardDataForSprint(boardID string, sprintID in
 		log.Printf("✅ Sprint: %s (ID: %d)", sprint.Name, sprint.ID)
 	}
 
-	// Fetch AMF team issues using JQL with AMFDEVFT label (works for all sprints)
-	allStories, err := d.jira.GetSprintIssuesByJQL(sprint.ID)
+	// Fetch AMF team issues using JQL with AMFDEVFT label + subtasks (works for all sprints)
+	allStories, err := d.jira.GetSprintIssuesWithSubtasks(sprint.ID)
 	if err != nil {
-		log.Printf("⚠️  Error fetching stories via JQL: %v", err)
-		// Fallback to board-based fetching
+		log.Printf("⚠️  Error fetching stories with subtasks via JQL: %v", err)
+		// Fallback to board-based fetching (without subtasks)
 		allStories = []models.Story{}
 		for _, board := range amfBoards {
 			stories, err := d.jira.GetSprintIssues(board, sprint.ID)

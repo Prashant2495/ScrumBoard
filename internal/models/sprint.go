@@ -7,20 +7,33 @@ type Board struct {
 	Type string `json:"type"` // scrum, kanban
 }
 
+// Subtask represents a subtask of a story
+type Subtask struct {
+	ID             string `json:"id"`
+	Key            string `json:"key"`
+	Title          string `json:"title"`
+	Status         string `json:"status"`
+	StatusCategory string `json:"statusCategory"`
+	Assignee       User   `json:"assignee"`
+	CreatedAt      string `json:"createdAt"`
+	UpdatedAt      string `json:"updatedAt"`
+}
+
 // Story represents a user story/issue from Jira
 type Story struct {
-	ID             string   `json:"id"`
-	Key            string   `json:"key"`
-	Title          string   `json:"title"`
-	Description    string   `json:"description"`
-	Status         string   `json:"status"`         // Actual status name: Accepted, In Progress, Backlog, etc.
-	StatusCategory string   `json:"statusCategory"` // Category: done, indeterminate, new
-	StoryPoints    int      `json:"storyPoints"`
-	Priority       string   `json:"priority"` // High, Medium, Low
-	Assignee       User     `json:"assignee"`
-	Labels         []string `json:"labels"`
-	CreatedAt      string   `json:"createdAt"`
-	UpdatedAt      string   `json:"updatedAt"`
+	ID             string    `json:"id"`
+	Key            string    `json:"key"`
+	Title          string    `json:"title"`
+	Description    string    `json:"description"`
+	Status         string    `json:"status"`         // Actual status name: Accepted, In Progress, Backlog, etc.
+	StatusCategory string    `json:"statusCategory"` // Category: done, indeterminate, new
+	StoryPoints    int       `json:"storyPoints"`
+	Priority       string    `json:"priority"` // High, Medium, Low
+	Assignee       User      `json:"assignee"`
+	Labels         []string  `json:"labels"`
+	CreatedAt      string    `json:"createdAt"`
+	UpdatedAt      string    `json:"updatedAt"`
+	Subtasks       []Subtask `json:"subtasks"` // Subtasks of this story
 }
 
 // User represents a team member

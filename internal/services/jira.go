@@ -477,7 +477,7 @@ func (j *JiraService) GetSprintIssuesByJQL(sprintID int) ([]models.Story, error)
 	requestBody := map[string]interface{}{
 		"jql":        jql,
 		"maxResults": 500,
-		"fields":     []string{"summary", "status", "assignee", "priority", "customfield_10028", "customfield_10001", "labels", "created", "updated", "description"},
+		"fields":     []string{"summary", "status", "assignee", "priority", "customfield_10028", "customfield_10001", "labels", "created", "updated", "description", "subtasks"},
 	}
 
 	bodyBytes, err := json.Marshal(requestBody)
@@ -540,6 +540,19 @@ func (j *JiraService) GetSprintIssuesByJQL(sprintID int) ([]models.Story, error)
 				Labels      []string `json:"labels"`
 				Created     string   `json:"created"`
 				Updated     string   `json:"updated"`
+				Subtasks    []struct {
+					ID     string `json:"id"`
+					Key    string `json:"key"`
+					Fields struct {
+						Summary string `json:"summary"`
+						Status  struct {
+							Name           string `json:"name"`
+							StatusCategory struct {
+								Key string `json:"key"`
+							} `json:"statusCategory"`
+						} `json:"status"`
+					} `json:"fields"`
+				} `json:"subtasks"`
 			} `json:"fields"`
 		} `json:"issues"`
 	}
@@ -590,11 +603,29 @@ func (j *JiraService) GetSprintIssuesByJQL(sprintID int) ([]models.Story, error)
 			}
 		}
 
+		// Add subtasks
+		for _, st := range issue.Fields.Subtasks {
+			subtask := models.Subtask{
+				ID:             st.ID,
+				Key:            st.Key,
+				Title:          st.Fields.Summary,
+				Status:         st.Fields.Status.Name,
+				StatusCategory: st.Fields.Status.StatusCategory.Key,
+			}
+			story.Subtasks = append(story.Subtasks, subtask)
+		}
+
 		stories = append(stories, story)
 	}
 
+	// Count subtasks
+	totalSubtasks := 0
+	for _, s := range stories {
+		totalSubtasks += len(s.Subtasks)
+	}
+
 	// Log results
-	log.Printf("🔍 Sprint %d: Found %d AMF team issues via JQL", sprintID, len(stories))
+	log.Printf("🔍 Sprint %d: Found %d AMF team issues with %d subtasks via JQL", sprintID, len(stories), totalSubtasks)
 	if len(teamMap) > 0 {
 		log.Printf("👥 AMF Teams:")
 		for team, count := range teamMap {
@@ -603,6 +634,104 @@ func (j *JiraService) GetSprintIssuesByJQL(sprintID int) ([]models.Story, error)
 	}
 
 	return stories, nil
+}
+
+// GetSprintIssuesWithSubtasks fetches AMF team issues with their subtasks
+// Now subtasks are fetched in the same API call via "subtasks" field
+func (j *JiraService) GetSprintIssuesWithSubtasks(sprintID int) ([]models.Story, error) {
+	// GetSprintIssuesByJQL now includes subtasks in the response
+	return j.GetSprintIssuesByJQL(sprintID)
+}
+
+// GetSubtasksForIssue fetches all subtasks for a given parent issue
+func (j *JiraService) GetSubtasksForIssue(issueKey string) ([]models.Subtask, error) {
+	// Use JQL to find subtasks where parent = issueKey
+	jql := fmt.Sprintf("parent = %s ORDER BY created ASC", issueKey)
+
+	// Use API v2 for Cisco Jira Server
+	url := fmt.Sprintf("%s/rest/api/2/search", j.BaseURL)
+
+	requestBody := map[string]interface{}{
+		"jql":        jql,
+		"maxResults": 100,
+		"fields":     []string{"summary", "status", "assignee", "created", "updated", "issuetype"},
+	}
+
+	jsonBody, err := json.Marshal(requestBody)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonBody))
+	if err != nil {
+		return nil, err
+	}
+
+	auth := base64.StdEncoding.EncodeToString([]byte(j.Email + ":" + j.APIToken))
+	req.Header.Set("Authorization", "Basic "+auth)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := j.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var result struct {
+		Issues []struct {
+			ID     string `json:"id"`
+			Key    string `json:"key"`
+			Fields struct {
+				Summary string `json:"summary"`
+				Status  struct {
+					Name           string `json:"name"`
+					StatusCategory struct {
+						Key string `json:"key"`
+					} `json:"statusCategory"`
+				} `json:"status"`
+				Assignee *struct {
+					DisplayName  string `json:"displayName"`
+					EmailAddress string `json:"emailAddress"`
+				} `json:"assignee"`
+				Created string `json:"created"`
+				Updated string `json:"updated"`
+			} `json:"fields"`
+		} `json:"issues"`
+	}
+
+	if err := json.Unmarshal(data, &result); err != nil {
+		return nil, err
+	}
+
+	subtasks := make([]models.Subtask, 0, len(result.Issues))
+
+	for _, issue := range result.Issues {
+		subtask := models.Subtask{
+			ID:             issue.ID,
+			Key:            issue.Key,
+			Title:          issue.Fields.Summary,
+			Status:         issue.Fields.Status.Name,
+			StatusCategory: issue.Fields.Status.StatusCategory.Key,
+			CreatedAt:      issue.Fields.Created,
+			UpdatedAt:      issue.Fields.Updated,
+		}
+
+		if issue.Fields.Assignee != nil {
+			subtask.Assignee = models.User{
+				Name:  issue.Fields.Assignee.DisplayName,
+				Email: issue.Fields.Assignee.EmailAddress,
+			}
+		}
+
+		subtasks = append(subtasks, subtask)
+	}
+
+	return subtasks, nil
 }
 
 // GetSprintIssues fetches all PARENT stories (not subtasks) for a specific sprint filtered by team name containing "AMF"

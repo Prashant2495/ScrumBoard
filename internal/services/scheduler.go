@@ -109,13 +109,18 @@ func (s *Scheduler) trackStateChanges() {
 	}
 
 	sprint, _ := s.jiraService.GetSprintByID(sprintID)
-	stories, _ := s.jiraService.GetSprintIssuesByJQL(sprintID)
+	stories, _ := s.jiraService.GetSprintIssuesWithSubtasks(sprintID)
 	defects, _ := s.jiraService.GetSprintDefects(s.config.BoardID, sprintID)
 
 	tracker := GetStateTracker()
 
 	for _, story := range stories {
 		tracker.CheckAndRecordTransition(story.Key, story.Title, "story", story.Status, story.Assignee.Name, sprint.Name)
+
+		// Track subtask state changes too
+		for _, subtask := range story.Subtasks {
+			tracker.CheckAndRecordTransition(subtask.Key, subtask.Title, "subtask", subtask.Status, subtask.Assignee.Name, sprint.Name)
+		}
 	}
 	for _, defect := range defects {
 		tracker.CheckAndRecordTransition(defect.Key, defect.Summary, "defect", defect.Status, defect.Assignee.Name, sprint.Name)
@@ -138,13 +143,19 @@ func (s *Scheduler) runConsolidatedReport() {
 	}
 	log.Printf("📊 Daily Report for sprint: %s (ID: %d)", sprint.Name, sprint.ID)
 
-	// Get stories using JQL (AMFDEVFT label) - works regardless of board
-	stories, err := s.jiraService.GetSprintIssuesByJQL(sprint.ID)
+	// Get stories with subtasks using JQL (AMFDEVFT label) - works regardless of board
+	stories, err := s.jiraService.GetSprintIssuesWithSubtasks(sprint.ID)
 	if err != nil {
 		log.Printf("⚠️ Error fetching stories: %v", err)
 		stories = []models.Story{}
 	}
-	log.Printf("📊 Found %d stories for sprint %s", len(stories), sprint.Name)
+
+	// Count total subtasks
+	totalSubtasks := 0
+	for _, story := range stories {
+		totalSubtasks += len(story.Subtasks)
+	}
+	log.Printf("📊 Found %d stories with %d subtasks for sprint %s", len(stories), totalSubtasks, sprint.Name)
 
 	defects, _ := s.jiraService.GetSprintDefects(s.config.BoardID, sprint.ID)
 
@@ -223,31 +234,70 @@ func (s *Scheduler) sendConsolidatedReport(sprint models.Sprint, stats models.Sp
 		completionPct,
 		openDefects, resolvedDefects, totalDefects)
 
-	// Build transitions section
+	// Build transitions section - group by type (stories, subtasks, defects)
 	transitionSection := ""
 	if len(transitions) == 0 {
 		transitionSection = "   _No state changes today_\n"
 	} else {
 		doneCount := 0
 		inProgressCount := 0
+		subtaskCount := 0
+
+		// Group transitions by type
+		storyTransitions := []StateTransition{}
+		subtaskTransitions := []StateTransition{}
+		defectTransitions := []StateTransition{}
+
 		for _, t := range transitions {
-			emoji := "🔄"
 			if t.ToState == "Done" || t.ToState == "Closed" || t.ToState == "Accepted" {
-				emoji = "✅"
 				doneCount++
 			} else if t.ToState == "In Progress" || t.ToState == "In Development" {
-				emoji = "🚧"
 				inProgressCount++
 			}
-			typeEmoji := "📖"
-			if t.ItemType == "defect" {
-				typeEmoji = "🐛"
+
+			switch t.ItemType {
+			case "subtask":
+				subtaskTransitions = append(subtaskTransitions, t)
+				subtaskCount++
+			case "defect":
+				defectTransitions = append(defectTransitions, t)
+			default:
+				storyTransitions = append(storyTransitions, t)
 			}
-			transitionSection += fmt.Sprintf("   %s %s **%s**: %s → %s (👤 %s)\n",
-				emoji, typeEmoji, t.ItemKey, t.FromState, t.ToState, t.Assignee)
 		}
-		transitionSection = fmt.Sprintf("   ✅ %d completed | 🚧 %d in progress | 🔄 %d total\n\n%s",
-			doneCount, inProgressCount, len(transitions), transitionSection)
+
+		transitionSection = fmt.Sprintf("   ✅ %d completed | 🚧 %d in progress | 📝 %d subtasks | 🔄 %d total\n\n",
+			doneCount, inProgressCount, subtaskCount, len(transitions))
+
+		// Add story transitions
+		if len(storyTransitions) > 0 {
+			transitionSection += "   **📖 Stories:**\n"
+			for _, t := range storyTransitions {
+				emoji := getTransitionEmoji(t.ToState)
+				transitionSection += fmt.Sprintf("      %s **%s**: %s → %s (👤 %s)\n",
+					emoji, t.ItemKey, t.FromState, t.ToState, t.Assignee)
+			}
+		}
+
+		// Add subtask transitions
+		if len(subtaskTransitions) > 0 {
+			transitionSection += "\n   **📝 Subtasks:**\n"
+			for _, t := range subtaskTransitions {
+				emoji := getTransitionEmoji(t.ToState)
+				transitionSection += fmt.Sprintf("      %s **%s**: %s → %s (👤 %s)\n",
+					emoji, t.ItemKey, t.FromState, t.ToState, t.Assignee)
+			}
+		}
+
+		// Add defect transitions
+		if len(defectTransitions) > 0 {
+			transitionSection += "\n   **🐛 Defects:**\n"
+			for _, t := range defectTransitions {
+				emoji := getTransitionEmoji(t.ToState)
+				transitionSection += fmt.Sprintf("      %s **%s**: %s → %s (👤 %s)\n",
+					emoji, t.ItemKey, t.FromState, t.ToState, t.Assignee)
+			}
+		}
 	}
 
 	// Build risks section
@@ -424,4 +474,20 @@ func (s *Scheduler) getCurrentSprintByDate() (models.Sprint, error) {
 	}
 
 	return models.Sprint{}, fmt.Errorf("no sprint found for current date")
+}
+
+// getTransitionEmoji returns an emoji based on the state transition
+func getTransitionEmoji(toState string) string {
+	switch toState {
+	case "Done", "Closed", "Accepted", "Resolved":
+		return "✅"
+	case "In Progress", "In Development", "In Review":
+		return "🚧"
+	case "Blocked", "On Hold":
+		return "🚫"
+	case "To Do", "Open", "Backlog":
+		return "📋"
+	default:
+		return "🔄"
+	}
 }

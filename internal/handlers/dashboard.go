@@ -32,6 +32,20 @@ func (h *DashboardHandler) Index(c *fiber.Ctx) error {
 	boardID := h.dashboardService.GetBoardID() // Always use default board
 	sprintID := c.QueryInt("sprint", 0)        // 0 = active sprint
 
+	// If sprintName is provided but sprint ID is 0, search for sprint by name
+	sprintName := c.Query("sprintName")
+	if sprintID == 0 && sprintName != "" {
+		sprints, err := h.dashboardService.GetAllSprints(boardID)
+		if err == nil {
+			for _, sprint := range sprints {
+				if strings.EqualFold(sprint.Name, sprintName) {
+					sprintID = sprint.ID
+					break
+				}
+			}
+		}
+	}
+
 	data, err := h.dashboardService.GetDashboardDataForSprint(boardID, sprintID)
 	if err != nil {
 		return c.Status(500).SendString("Error fetching dashboard data: " + err.Error())
