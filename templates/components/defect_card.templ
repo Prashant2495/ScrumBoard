@@ -11,7 +11,7 @@ templ DefectCard(defect models.Defect) {
 		<div class="flex items-start justify-between mb-3">
 			<div class="flex-1">
 				<div class="flex items-center gap-2 mb-1">
-					<span class="text-xs font-mono text-cyan-200">{ defect.Key }</span>
+					<span class="text-xs font-mono text-white">{ defect.Key }</span>
 					@SeverityBadge(defect.Severity)
 					@PriorityBadge(defect.Priority)
 				</div>
@@ -22,7 +22,7 @@ templ DefectCard(defect models.Defect) {
 		</div>
 
 		<!-- Metadata -->
-		<div class="flex items-center gap-4 text-xs text-cyan-200 mb-3">
+		<div class="flex items-center gap-4 text-xs text-white mb-3">
 			if defect.Environment != "" {
 				<div class="flex items-center gap-1">
 					<span>🌍</span>
@@ -48,7 +48,7 @@ templ DefectCard(defect models.Defect) {
 					<div class="w-6 h-6 rounded-full bg-gradient-to-br from-primary-400 to-secondary-400 flex items-center justify-center text-white text-xs font-semibold">
 						{ string([]rune(defect.Assignee.Name)[0]) }
 					</div>
-					<span class="text-xs text-cyan-200">{ defect.Assignee.Name }</span>
+					<span class="text-xs text-white">{ defect.Assignee.Name }</span>
 				</div>
 				<div class="flex items-center gap-2">
 					<a
@@ -113,7 +113,7 @@ func getSeverityClass(severity string) string {
 	case "Low":
 		return "bg-green-500/30 text-green-300"
 	default:
-		return "bg-white/20 text-cyan-200"
+		return "bg-white/20 text-white"
 	}
 }
 
@@ -141,9 +141,9 @@ func getDefectPriorityClass(priority string) string {
 	case "Major", "Medium":
 		return "bg-blue-500/30 text-blue-300"
 	case "Minor", "Low":
-		return "bg-white/20 text-cyan-200"
+		return "bg-white/20 text-white"
 	default:
-		return "bg-white/20 text-white/60"
+		return "bg-white/20 text-white"
 	}
 }
 

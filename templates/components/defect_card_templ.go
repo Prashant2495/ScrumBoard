@@ -34,14 +34,14 @@ func DefectCard(defect models.Defect) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"glass rounded-xl p-4 hover:shadow-lg transition-all animate-fade-in border-l-4 { getSeverityBorderClass(defect.Severity) }\"><!-- Header --><div class=\"flex items-start justify-between mb-3\"><div class=\"flex-1\"><div class=\"flex items-center gap-2 mb-1\"><span class=\"text-xs font-mono text-cyan-200\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"glass rounded-xl p-4 hover:shadow-lg transition-all animate-fade-in border-l-4 { getSeverityBorderClass(defect.Severity) }\"><!-- Header --><div class=\"flex items-start justify-between mb-3\"><div class=\"flex-1\"><div class=\"flex items-center gap-2 mb-1\"><span class=\"text-xs font-mono text-white\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(defect.Key)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_card.templ`, Line: 14, Col: 63}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_card.templ`, Line: 14, Col: 60}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -72,7 +72,7 @@ func DefectCard(defect models.Defect) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</h3></div></div><!-- Metadata --><div class=\"flex items-center gap-4 text-xs text-cyan-200 mb-3\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</h3></div></div><!-- Metadata --><div class=\"flex items-center gap-4 text-xs text-white mb-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -149,14 +149,14 @@ func DefectCard(defect models.Defect) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div><span class=\"text-xs text-cyan-200\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 13, "</div><span class=\"text-xs text-white\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(defect.Assignee.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_card.templ`, Line: 51, Col: 63}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_card.templ`, Line: 51, Col: 60}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
@@ -399,7 +399,7 @@ func getSeverityClass(severity string) string {
 	case "Low":
 		return "bg-green-500/30 text-green-300"
 	default:
-		return "bg-white/20 text-cyan-200"
+		return "bg-white/20 text-white"
 	}
 }
 
@@ -427,9 +427,9 @@ func getDefectPriorityClass(priority string) string {
 	case "Major", "Medium":
 		return "bg-blue-500/30 text-blue-300"
 	case "Minor", "Low":
-		return "bg-white/20 text-cyan-200"
+		return "bg-white/20 text-white"
 	default:
-		return "bg-white/20 text-white/60"
+		return "bg-white/20 text-white"
 	}
 }
 

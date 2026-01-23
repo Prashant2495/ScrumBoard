@@ -106,7 +106,7 @@ func BoardColumn(title string, stories []models.Story, colorClass string, icon s
 			}
 		}
 		if len(stories) == 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"text-center py-8 text-white/60\"><p class=\"text-4xl mb-2\">📭</p><p class=\"text-sm\">No stories here</p></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "<div class=\"text-center py-8 text-white\"><p class=\"text-4xl mb-2\">📭</p><p class=\"text-sm\">No stories here</p></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

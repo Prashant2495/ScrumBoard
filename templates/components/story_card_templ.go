@@ -149,7 +149,7 @@ func StoryCard(story models.Story) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div class=\"w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white/60 text-xs shadow-sm\">?</div><span class=\"text-xs text-white/60\">Unassigned</span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "<div class=\"w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white text-xs shadow-sm\">?</div><span class=\"text-xs text-white\">Unassigned</span>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

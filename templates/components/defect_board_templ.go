@@ -38,15 +38,15 @@ func DefectBoard(openDefects, inProgressDefects, resolvedDefects []models.Defect
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = DefectColumn("Open", openDefects, "🔴", "bg-red-50", len(openDefects)).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = DefectColumn("Open", openDefects, "🔴", "bg-red-600/80", len(openDefects)).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = DefectColumn("In Progress", inProgressDefects, "🟡", "bg-yellow-50", len(inProgressDefects)).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = DefectColumn("In Progress", inProgressDefects, "🟡", "bg-yellow-600/80", len(inProgressDefects)).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = DefectColumn("Resolved", resolvedDefects, "🟢", "bg-green-50", len(resolvedDefects)).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = DefectColumn("Resolved", resolvedDefects, "🟢", "bg-green-600/80", len(resolvedDefects)).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -127,7 +127,7 @@ func DefectColumn(title string, defects []models.Defect, icon string, bgClass st
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</h3></div><span class=\"px-3 py-1 bg-white rounded-full text-sm font-semibold text-white\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</h3></div><span class=\"px-3 py-1 bg-white/20 rounded-full text-sm font-semibold text-white\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -145,7 +145,7 @@ func DefectColumn(title string, defects []models.Defect, icon string, bgClass st
 			return templ_7745c5c3_Err
 		}
 		if len(defects) == 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"flex items-center justify-center h-full text-white/60\"><p class=\"text-sm\">No defects</p></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"flex items-center justify-center h-full text-white\"><p class=\"text-sm\">No defects</p></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
