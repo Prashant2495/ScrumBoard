@@ -63,7 +63,8 @@ templ TeamWorkDistributionChart(userStats []models.UserStats) {
 							position: 'top',
 							labels: {
 								padding: 15,
-								font: { size: 12, weight: 'bold' }
+								font: { size: 12, weight: 'bold' },
+								color: '#fff'
 							}
 						},
 						tooltip: {
@@ -75,11 +76,12 @@ templ TeamWorkDistributionChart(userStats []models.UserStats) {
 						}
 					},
 					scales: {
+						x: {
+							ticks: { color: '#fff' }
+						},
 						y: {
 							beginAtZero: true,
-							ticks: { color: '#fff',
-								stepSize: 5, color: '#fff'
-							}
+							ticks: { color: '#fff', stepSize: 5 }
 						}
 					}
 				}
@@ -148,7 +150,8 @@ templ SprintProgressPieChart(stats models.SprintStats) {
 							position: 'bottom',
 							labels: {
 								padding: 15,
-								font: { size: 12, weight: 'bold' }
+								font: { size: 12, weight: 'bold' },
+								color: '#fff'
 							}
 						},
 						tooltip: {
@@ -243,11 +246,12 @@ templ SprintWorkloadChart(stats models.SprintStats) {
 						}
 					},
 					scales: {
+						x: {
+							ticks: { color: '#fff' }
+						},
 						y: {
 							beginAtZero: true,
-							ticks: { color: '#fff',
-								stepSize: 5, color: '#fff'
-							}
+							ticks: { color: '#fff', stepSize: 5 }
 						}
 					}
 				}
@@ -317,7 +321,8 @@ templ TeamCapacityChart(userStats []models.UserStats, totalPoints int) {
 							position: 'top',
 							labels: {
 								padding: 15,
-								font: { size: 12, weight: 'bold' }
+								font: { size: 12, weight: 'bold' },
+								color: '#fff'
 							}
 						},
 						tooltip: {
@@ -329,11 +334,12 @@ templ TeamCapacityChart(userStats []models.UserStats, totalPoints int) {
 						}
 					},
 					scales: {
+						x: {
+							ticks: { color: '#fff' }
+						},
 						y: {
 							beginAtZero: true,
-							ticks: { color: '#fff',
-								stepSize: 5, color: '#fff'
-							}
+							ticks: { color: '#fff', stepSize: 5 }
 						}
 					}
 				}
@@ -400,7 +406,8 @@ templ StoryStatusDistributionPieChart(todoStories, inProgress, doneStories []mod
 							position: 'bottom',
 							labels: {
 								padding: 15,
-								font: { size: 12, weight: 'bold' }
+								font: { size: 12, weight: 'bold' },
+								color: '#fff'
 							}
 						},
 						tooltip: {
@@ -487,7 +494,8 @@ templ TeamWorkloadPieChart(userStats []models.UserStats) {
 							position: 'bottom',
 							labels: {
 								padding: 15,
-								font: { size: 12, weight: 'bold' }
+								font: { size: 12, weight: 'bold' },
+								color: '#fff'
 							}
 						},
 						tooltip: {

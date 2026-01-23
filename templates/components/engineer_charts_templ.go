@@ -175,7 +175,7 @@ func StoryPointsProgress(completed, total int) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</span></div></div></div><div class=\"flex justify-between mt-4 text-sm font-semibold text-cyan-200\"><span>✅ ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</span></div></div></div><div class=\"flex justify-between mt-4 text-sm font-semibold text-white\"><span>✅ ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

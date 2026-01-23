@@ -88,7 +88,7 @@ func DefectStatusPieChart(stats models.DefectStats) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\"><h3 class=\"text-lg font-bold text-white mb-4 flex items-center gap-2\"><span class=\"text-2xl\">🎯</span> <span>Defect Status Distribution</span></h3><div class=\"chart-container\"><canvas id=\"defectStatusChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst ctx = document.getElementById('defectStatusChart');\n\t\t\tif (!ctx) return;\n\t\t\t\n\t\t\tconst chartDiv = ctx.closest('[data-open]');\n\t\t\tif (!chartDiv) return;\n\t\t\t\n\t\t\tconst data = {\n\t\t\t\topen: parseInt(chartDiv.getAttribute('data-open')),\n\t\t\t\tinProgress: parseInt(chartDiv.getAttribute('data-in-progress')),\n\t\t\t\tresolved: parseInt(chartDiv.getAttribute('data-resolved')),\n\t\t\t\ttotal: parseInt(chartDiv.getAttribute('data-total'))\n\t\t\t};\n\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'pie',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['Open', 'In Progress', 'Resolved'],\n\t\t\t\t\tdatasets: [{\n\t\t\t\t\t\tdata: [data.open, data.inProgress, data.resolved],\n\t\t\t\t\t\tbackgroundColor: [\n\t\t\t\t\t\t\t'rgba(239, 68, 68, 0.8)',\n\t\t\t\t\t\t\t'rgba(251, 191, 36, 0.8)',\n\t\t\t\t\t\t\t'rgba(34, 197, 94, 0.8)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderColor: [\n\t\t\t\t\t\t\t'rgba(239, 68, 68, 1)',\n\t\t\t\t\t\t\t'rgba(251, 191, 36, 1)',\n\t\t\t\t\t\t\t'rgba(34, 197, 94, 1)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderWidth: 2\n\t\t\t\t\t}]\n\t\t\t\t},\n\t\t\t\toptions: {\n\t\t\t\t\tresponsive: true,\n\t\t\t\t\tmaintainAspectRatio: false,\n\t\t\t\t\tplugins: {\n\t\t\t\t\t\tlegend: {\n\t\t\t\t\t\t\tposition: 'bottom',\n\t\t\t\t\t\t\tlabels: {\n\t\t\t\t\t\t\t\tpadding: 15,\n\t\t\t\t\t\t\t\tfont: { size: 12, weight: 'bold' }\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\ttooltip: {\n\t\t\t\t\t\t\tcallbacks: {\n\t\t\t\t\t\t\t\tlabel: function(context) {\n\t\t\t\t\t\t\t\t\tconst total = data.total;\n\t\t\t\t\t\t\t\t\tconst value = context.parsed || 0;\n\t\t\t\t\t\t\t\t\tconst percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;\n\t\t\t\t\t\t\t\t\treturn context.label + ': ' + value + ' defects (' + percentage + '%)';\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\t\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "\"><h3 class=\"text-lg font-bold text-white mb-4 flex items-center gap-2\"><span class=\"text-2xl\">🎯</span> <span>Defect Status Distribution</span></h3><div class=\"chart-container\"><canvas id=\"defectStatusChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst ctx = document.getElementById('defectStatusChart');\n\t\t\tif (!ctx) return;\n\t\t\t\n\t\t\tconst chartDiv = ctx.closest('[data-open]');\n\t\t\tif (!chartDiv) return;\n\t\t\t\n\t\t\tconst data = {\n\t\t\t\topen: parseInt(chartDiv.getAttribute('data-open')),\n\t\t\t\tinProgress: parseInt(chartDiv.getAttribute('data-in-progress')),\n\t\t\t\tresolved: parseInt(chartDiv.getAttribute('data-resolved')),\n\t\t\t\ttotal: parseInt(chartDiv.getAttribute('data-total'))\n\t\t\t};\n\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'pie',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['Open', 'In Progress', 'Resolved'],\n\t\t\t\t\tdatasets: [{\n\t\t\t\t\t\tdata: [data.open, data.inProgress, data.resolved],\n\t\t\t\t\t\tbackgroundColor: [\n\t\t\t\t\t\t\t'rgba(239, 68, 68, 0.8)',\n\t\t\t\t\t\t\t'rgba(251, 191, 36, 0.8)',\n\t\t\t\t\t\t\t'rgba(34, 197, 94, 0.8)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderColor: [\n\t\t\t\t\t\t\t'rgba(239, 68, 68, 1)',\n\t\t\t\t\t\t\t'rgba(251, 191, 36, 1)',\n\t\t\t\t\t\t\t'rgba(34, 197, 94, 1)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderWidth: 2\n\t\t\t\t\t}]\n\t\t\t\t},\n\t\t\t\toptions: {\n\t\t\t\t\tresponsive: true,\n\t\t\t\t\tmaintainAspectRatio: false,\n\t\t\t\t\tplugins: {\n\t\t\t\t\t\tlegend: {\n\t\t\t\t\t\t\tposition: 'bottom',\n\t\t\t\t\t\t\tlabels: {\n\t\t\t\t\t\t\t\tpadding: 15,\n\t\t\t\t\t\t\t\tfont: { size: 12, weight: 'bold' },\n\t\t\t\t\t\t\t\tcolor: '#fff'\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\ttooltip: {\n\t\t\t\t\t\t\tcallbacks: {\n\t\t\t\t\t\t\t\tlabel: function(context) {\n\t\t\t\t\t\t\t\t\tconst total = data.total;\n\t\t\t\t\t\t\t\t\tconst value = context.parsed || 0;\n\t\t\t\t\t\t\t\t\tconst percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;\n\t\t\t\t\t\t\t\t\treturn context.label + ': ' + value + ' defects (' + percentage + '%)';\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\t\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -125,7 +125,7 @@ func DefectSeverityDoughnutChart(stats models.DefectStats) templ.Component {
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", stats.CriticalDefects))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 93, Col: 58}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 94, Col: 58}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -138,7 +138,7 @@ func DefectSeverityDoughnutChart(stats models.DefectStats) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", stats.HighDefects))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 94, Col: 50}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 95, Col: 50}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -151,7 +151,7 @@ func DefectSeverityDoughnutChart(stats models.DefectStats) templ.Component {
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", stats.MediumDefects))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 95, Col: 54}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 96, Col: 54}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
@@ -164,13 +164,13 @@ func DefectSeverityDoughnutChart(stats models.DefectStats) templ.Component {
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", stats.LowDefects))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 96, Col: 48}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 97, Col: 48}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\"><h3 class=\"text-lg font-bold text-white mb-4 flex items-center gap-2\"><span class=\"text-2xl\">🔥</span> <span>Severity Breakdown</span></h3><div class=\"chart-container\"><canvas id=\"severityChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst ctx = document.getElementById('severityChart');\n\t\t\tif (!ctx) return;\n\t\t\t\n\t\t\tconst chartDiv = ctx.closest('[data-critical]');\n\t\t\tif (!chartDiv) return;\n\t\t\t\n\t\t\tconst data = {\n\t\t\t\tcritical: parseInt(chartDiv.getAttribute('data-critical')),\n\t\t\t\thigh: parseInt(chartDiv.getAttribute('data-high')),\n\t\t\t\tmedium: parseInt(chartDiv.getAttribute('data-medium')),\n\t\t\t\tlow: parseInt(chartDiv.getAttribute('data-low'))\n\t\t\t};\n\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'doughnut',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['Critical', 'High', 'Medium', 'Low'],\n\t\t\t\t\tdatasets: [{\n\t\t\t\t\t\tdata: [data.critical, data.high, data.medium, data.low],\n\t\t\t\t\t\tbackgroundColor: [\n\t\t\t\t\t\t\t'rgba(220, 38, 38, 0.8)',\n\t\t\t\t\t\t\t'rgba(249, 115, 22, 0.8)',\n\t\t\t\t\t\t\t'rgba(234, 179, 8, 0.8)',\n\t\t\t\t\t\t\t'rgba(34, 197, 94, 0.8)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderColor: [\n\t\t\t\t\t\t\t'rgba(220, 38, 38, 1)',\n\t\t\t\t\t\t\t'rgba(249, 115, 22, 1)',\n\t\t\t\t\t\t\t'rgba(234, 179, 8, 1)',\n\t\t\t\t\t\t\t'rgba(34, 197, 94, 1)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderWidth: 2\n\t\t\t\t\t}]\n\t\t\t\t},\n\t\t\t\toptions: {\n\t\t\t\t\tresponsive: true,\n\t\t\t\t\tmaintainAspectRatio: false,\n\t\t\t\t\tplugins: {\n\t\t\t\t\t\tlegend: {\n\t\t\t\t\t\t\tposition: 'bottom',\n\t\t\t\t\t\t\tlabels: {\n\t\t\t\t\t\t\t\tpadding: 15,\n\t\t\t\t\t\t\t\tfont: { size: 12, weight: 'bold' }\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\ttooltip: {\n\t\t\t\t\t\t\tcallbacks: {\n\t\t\t\t\t\t\t\tlabel: function(context) {\n\t\t\t\t\t\t\t\t\tconst total = data.critical + data.high + data.medium + data.low;\n\t\t\t\t\t\t\t\t\tconst value = context.parsed || 0;\n\t\t\t\t\t\t\t\t\tconst percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;\n\t\t\t\t\t\t\t\t\treturn context.label + ': ' + value + ' (' + percentage + '%)';\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\t\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\"><h3 class=\"text-lg font-bold text-white mb-4 flex items-center gap-2\"><span class=\"text-2xl\">🔥</span> <span>Severity Breakdown</span></h3><div class=\"chart-container\"><canvas id=\"severityChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst ctx = document.getElementById('severityChart');\n\t\t\tif (!ctx) return;\n\t\t\t\n\t\t\tconst chartDiv = ctx.closest('[data-critical]');\n\t\t\tif (!chartDiv) return;\n\t\t\t\n\t\t\tconst data = {\n\t\t\t\tcritical: parseInt(chartDiv.getAttribute('data-critical')),\n\t\t\t\thigh: parseInt(chartDiv.getAttribute('data-high')),\n\t\t\t\tmedium: parseInt(chartDiv.getAttribute('data-medium')),\n\t\t\t\tlow: parseInt(chartDiv.getAttribute('data-low'))\n\t\t\t};\n\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'doughnut',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['Critical', 'High', 'Medium', 'Low'],\n\t\t\t\t\tdatasets: [{\n\t\t\t\t\t\tdata: [data.critical, data.high, data.medium, data.low],\n\t\t\t\t\t\tbackgroundColor: [\n\t\t\t\t\t\t\t'rgba(220, 38, 38, 0.8)',\n\t\t\t\t\t\t\t'rgba(249, 115, 22, 0.8)',\n\t\t\t\t\t\t\t'rgba(234, 179, 8, 0.8)',\n\t\t\t\t\t\t\t'rgba(34, 197, 94, 0.8)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderColor: [\n\t\t\t\t\t\t\t'rgba(220, 38, 38, 1)',\n\t\t\t\t\t\t\t'rgba(249, 115, 22, 1)',\n\t\t\t\t\t\t\t'rgba(234, 179, 8, 1)',\n\t\t\t\t\t\t\t'rgba(34, 197, 94, 1)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderWidth: 2\n\t\t\t\t\t}]\n\t\t\t\t},\n\t\t\t\toptions: {\n\t\t\t\t\tresponsive: true,\n\t\t\t\t\tmaintainAspectRatio: false,\n\t\t\t\t\tplugins: {\n\t\t\t\t\t\tlegend: {\n\t\t\t\t\t\t\tposition: 'bottom',\n\t\t\t\t\t\t\tlabels: {\n\t\t\t\t\t\t\t\tpadding: 15,\n\t\t\t\t\t\t\t\tfont: { size: 12, weight: 'bold' },\n\t\t\t\t\t\t\t\tcolor: '#fff'\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\ttooltip: {\n\t\t\t\t\t\t\tcallbacks: {\n\t\t\t\t\t\t\t\tlabel: function(context) {\n\t\t\t\t\t\t\t\t\tconst total = data.critical + data.high + data.medium + data.low;\n\t\t\t\t\t\t\t\t\tconst value = context.parsed || 0;\n\t\t\t\t\t\t\t\t\tconst percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;\n\t\t\t\t\t\t\t\t\treturn context.label + ': ' + value + ' (' + percentage + '%)';\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\t\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -207,7 +207,7 @@ func DefectAssigneeBarChart(assigneeStats []models.DefectByAssignee) templ.Compo
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(marshalAssigneeStats(assigneeStats))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 173, Col: 120}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 175, Col: 120}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
@@ -272,7 +272,7 @@ func DefectResolutionProgress(stats models.DefectStats) templ.Component {
 		var templ_7745c5c3_Var16 string
 		templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d%%", getDefectPercentage(stats.ResolvedDefects, stats.TotalDefects)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 263, Col: 89}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 265, Col: 89}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 		if templ_7745c5c3_Err != nil {
@@ -307,7 +307,7 @@ func DefectResolutionProgress(stats models.DefectStats) templ.Component {
 		var templ_7745c5c3_Var19 string
 		templ_7745c5c3_Var19, templ_7745c5c3_Err = templruntime.SanitizeStyleAttributeValues(fmt.Sprintf("width: %d%%", getDefectPercentage(stats.ResolvedDefects, stats.TotalDefects)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 269, Col: 102}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 271, Col: 102}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 		if templ_7745c5c3_Err != nil {
@@ -320,20 +320,20 @@ func DefectResolutionProgress(stats models.DefectStats) templ.Component {
 		var templ_7745c5c3_Var20 string
 		templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d / %d defects", stats.ResolvedDefects, stats.TotalDefects))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 273, Col: 81}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 275, Col: 81}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</span></div></div></div><div class=\"flex justify-between mt-4 text-sm font-semibold text-cyan-200\"><span>✅ ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</span></div></div></div><div class=\"flex justify-between mt-4 text-sm font-semibold text-white\"><span>✅ ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var21 string
 		templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d defects resolved", stats.ResolvedDefects))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 279, Col: 72}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 281, Col: 72}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 		if templ_7745c5c3_Err != nil {
@@ -346,7 +346,7 @@ func DefectResolutionProgress(stats models.DefectStats) templ.Component {
 		var templ_7745c5c3_Var22 string
 		templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d defects total", stats.TotalDefects))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 280, Col: 67}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 282, Col: 67}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 		if templ_7745c5c3_Err != nil {
@@ -429,7 +429,7 @@ func DefectAgingPieChart(stats models.DefectStats) templ.Component {
 		var templ_7745c5c3_Var24 string
 		templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", stats.TotalDefects-stats.DefectsAgedOver7Days))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 329, Col: 81}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 331, Col: 81}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
 		if templ_7745c5c3_Err != nil {
@@ -442,7 +442,7 @@ func DefectAgingPieChart(stats models.DefectStats) templ.Component {
 		var templ_7745c5c3_Var25 string
 		templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", stats.DefectsAgedOver7Days-stats.DefectsAgedOver30Days))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 330, Col: 90}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 332, Col: 90}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
 		if templ_7745c5c3_Err != nil {
@@ -455,13 +455,13 @@ func DefectAgingPieChart(stats models.DefectStats) templ.Component {
 		var templ_7745c5c3_Var26 string
 		templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", stats.DefectsAgedOver30Days))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 331, Col: 62}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 333, Col: 62}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "\"><h3 class=\"text-lg font-bold text-white mb-4 flex items-center gap-2\"><span class=\"text-2xl\">⏰</span> <span>Defect Aging</span></h3><div class=\"chart-container\"><canvas id=\"defectAgingChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst chartDiv = document.querySelector('[data-fresh][data-aged7][data-aged30]');\n\t\t\tif (!chartDiv) return;\n\n\t\t\tconst data = {\n\t\t\t\tfresh: parseInt(chartDiv.getAttribute('data-fresh')),\n\t\t\t\taged7: parseInt(chartDiv.getAttribute('data-aged7')),\n\t\t\t\taged30: parseInt(chartDiv.getAttribute('data-aged30'))\n\t\t\t};\n\n\t\t\tconst ctx = document.getElementById('defectAgingChart');\n\t\t\tif (!ctx) return;\n\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'doughnut',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['< 7 days', '7-30 days', '> 30 days'],\n\t\t\t\t\tdatasets: [{\n\t\t\t\t\t\tdata: [data.fresh, data.aged7, data.aged30],\n\t\t\t\t\t\tbackgroundColor: [\n\t\t\t\t\t\t\t'rgba(34, 197, 94, 0.8)',\n\t\t\t\t\t\t\t'rgba(251, 191, 36, 0.8)',\n\t\t\t\t\t\t\t'rgba(239, 68, 68, 0.8)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderColor: [\n\t\t\t\t\t\t\t'rgba(34, 197, 94, 1)',\n\t\t\t\t\t\t\t'rgba(251, 191, 36, 1)',\n\t\t\t\t\t\t\t'rgba(239, 68, 68, 1)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderWidth: 2\n\t\t\t\t\t}]\n\t\t\t\t},\n\t\t\t\toptions: {\n\t\t\t\t\tresponsive: true,\n\t\t\t\t\tmaintainAspectRatio: false,\n\t\t\t\t\tplugins: {\n\t\t\t\t\t\tlegend: {\n\t\t\t\t\t\t\tposition: 'bottom',\n\t\t\t\t\t\t\tlabels: {\n\t\t\t\t\t\t\t\tpadding: 15,\n\t\t\t\t\t\t\t\tfont: { size: 12, weight: 'bold' }\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\ttooltip: {\n\t\t\t\t\t\t\tcallbacks: {\n\t\t\t\t\t\t\t\tlabel: function(context) {\n\t\t\t\t\t\t\t\t\tconst total = data.fresh + data.aged7 + data.aged30;\n\t\t\t\t\t\t\t\t\tconst value = context.parsed || 0;\n\t\t\t\t\t\t\t\t\tconst percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;\n\t\t\t\t\t\t\t\t\treturn context.label + ': ' + value + ' defects (' + percentage + '%)';\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\t\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "\"><h3 class=\"text-lg font-bold text-white mb-4 flex items-center gap-2\"><span class=\"text-2xl\">⏰</span> <span>Defect Aging</span></h3><div class=\"chart-container\"><canvas id=\"defectAgingChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst chartDiv = document.querySelector('[data-fresh][data-aged7][data-aged30]');\n\t\t\tif (!chartDiv) return;\n\n\t\t\tconst data = {\n\t\t\t\tfresh: parseInt(chartDiv.getAttribute('data-fresh')),\n\t\t\t\taged7: parseInt(chartDiv.getAttribute('data-aged7')),\n\t\t\t\taged30: parseInt(chartDiv.getAttribute('data-aged30'))\n\t\t\t};\n\n\t\t\tconst ctx = document.getElementById('defectAgingChart');\n\t\t\tif (!ctx) return;\n\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'doughnut',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['< 7 days', '7-30 days', '> 30 days'],\n\t\t\t\t\tdatasets: [{\n\t\t\t\t\t\tdata: [data.fresh, data.aged7, data.aged30],\n\t\t\t\t\t\tbackgroundColor: [\n\t\t\t\t\t\t\t'rgba(34, 197, 94, 0.8)',\n\t\t\t\t\t\t\t'rgba(251, 191, 36, 0.8)',\n\t\t\t\t\t\t\t'rgba(239, 68, 68, 0.8)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderColor: [\n\t\t\t\t\t\t\t'rgba(34, 197, 94, 1)',\n\t\t\t\t\t\t\t'rgba(251, 191, 36, 1)',\n\t\t\t\t\t\t\t'rgba(239, 68, 68, 1)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderWidth: 2\n\t\t\t\t\t}]\n\t\t\t\t},\n\t\t\t\toptions: {\n\t\t\t\t\tresponsive: true,\n\t\t\t\t\tmaintainAspectRatio: false,\n\t\t\t\t\tplugins: {\n\t\t\t\t\t\tlegend: {\n\t\t\t\t\t\t\tposition: 'bottom',\n\t\t\t\t\t\t\tlabels: {\n\t\t\t\t\t\t\t\tpadding: 15,\n\t\t\t\t\t\t\t\tfont: { size: 12, weight: 'bold' },\n\t\t\t\t\t\t\t\tcolor: '#fff'\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\ttooltip: {\n\t\t\t\t\t\t\tcallbacks: {\n\t\t\t\t\t\t\t\tlabel: function(context) {\n\t\t\t\t\t\t\t\t\tconst total = data.fresh + data.aged7 + data.aged30;\n\t\t\t\t\t\t\t\t\tconst value = context.parsed || 0;\n\t\t\t\t\t\t\t\t\tconst percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;\n\t\t\t\t\t\t\t\t\treturn context.label + ': ' + value + ' defects (' + percentage + '%)';\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\t\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -498,13 +498,13 @@ func DefectPriorityPieChart(assigneeStats []models.DefectByAssignee) templ.Compo
 		var templ_7745c5c3_Var28 string
 		templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(marshalAssigneeStats(assigneeStats))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 405, Col: 121}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/components/defect_charts.templ`, Line: 408, Col: 121}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "\"><h3 class=\"text-lg font-bold text-white mb-4 flex items-center gap-2\"><span class=\"text-2xl\">🎯</span> <span>Critical vs Normal</span></h3><div class=\"chart-container\"><canvas id=\"defectPriorityChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst chartDiv = document.querySelector('[data-priority-stats]');\n\t\t\tif (!chartDiv) return;\n\n\t\t\tconst assigneeData = JSON.parse(chartDiv.getAttribute('data-priority-stats'));\n\n\t\t\tlet critical = 0;\n\t\t\tlet high = 0;\n\t\t\tlet normal = 0;\n\n\t\t\tassigneeData.forEach(a => {\n\t\t\t\tcritical += a.criticalDefects || 0;\n\t\t\t\thigh += a.highDefects || 0;\n\t\t\t\tnormal += (a.totalDefects - (a.criticalDefects || 0) - (a.highDefects || 0));\n\t\t\t});\n\n\t\t\tconst ctx = document.getElementById('defectPriorityChart');\n\t\t\tif (!ctx) return;\n\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'pie',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['Critical', 'High', 'Medium/Low'],\n\t\t\t\t\tdatasets: [{\n\t\t\t\t\t\tdata: [critical, high, normal],\n\t\t\t\t\t\tbackgroundColor: [\n\t\t\t\t\t\t\t'rgba(220, 38, 38, 0.8)',\n\t\t\t\t\t\t\t'rgba(249, 115, 22, 0.8)',\n\t\t\t\t\t\t\t'rgba(34, 197, 94, 0.8)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderColor: [\n\t\t\t\t\t\t\t'rgba(220, 38, 38, 1)',\n\t\t\t\t\t\t\t'rgba(249, 115, 22, 1)',\n\t\t\t\t\t\t\t'rgba(34, 197, 94, 1)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderWidth: 2\n\t\t\t\t\t}]\n\t\t\t\t},\n\t\t\t\toptions: {\n\t\t\t\t\tresponsive: true,\n\t\t\t\t\tmaintainAspectRatio: false,\n\t\t\t\t\tplugins: {\n\t\t\t\t\t\tlegend: {\n\t\t\t\t\t\t\tposition: 'bottom',\n\t\t\t\t\t\t\tlabels: {\n\t\t\t\t\t\t\t\tpadding: 15,\n\t\t\t\t\t\t\t\tfont: { size: 12, weight: 'bold' }\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\ttooltip: {\n\t\t\t\t\t\t\tcallbacks: {\n\t\t\t\t\t\t\t\tlabel: function(context) {\n\t\t\t\t\t\t\t\t\tconst total = critical + high + normal;\n\t\t\t\t\t\t\t\t\tconst value = context.parsed || 0;\n\t\t\t\t\t\t\t\t\tconst percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;\n\t\t\t\t\t\t\t\t\treturn context.label + ': ' + value + ' (' + percentage + '%)';\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\t\t})();\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "\"><h3 class=\"text-lg font-bold text-white mb-4 flex items-center gap-2\"><span class=\"text-2xl\">🎯</span> <span>Critical vs Normal</span></h3><div class=\"chart-container\"><canvas id=\"defectPriorityChart\"></canvas></div></div><script type=\"text/javascript\">\n\t\t(function() {\n\t\t\tconst chartDiv = document.querySelector('[data-priority-stats]');\n\t\t\tif (!chartDiv) return;\n\n\t\t\tconst assigneeData = JSON.parse(chartDiv.getAttribute('data-priority-stats'));\n\n\t\t\tlet critical = 0;\n\t\t\tlet high = 0;\n\t\t\tlet normal = 0;\n\n\t\t\tassigneeData.forEach(a => {\n\t\t\t\tcritical += a.criticalDefects || 0;\n\t\t\t\thigh += a.highDefects || 0;\n\t\t\t\tnormal += (a.totalDefects - (a.criticalDefects || 0) - (a.highDefects || 0));\n\t\t\t});\n\n\t\t\tconst ctx = document.getElementById('defectPriorityChart');\n\t\t\tif (!ctx) return;\n\n\t\t\tnew Chart(ctx.getContext('2d'), {\n\t\t\t\ttype: 'pie',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: ['Critical', 'High', 'Medium/Low'],\n\t\t\t\t\tdatasets: [{\n\t\t\t\t\t\tdata: [critical, high, normal],\n\t\t\t\t\t\tbackgroundColor: [\n\t\t\t\t\t\t\t'rgba(220, 38, 38, 0.8)',\n\t\t\t\t\t\t\t'rgba(249, 115, 22, 0.8)',\n\t\t\t\t\t\t\t'rgba(34, 197, 94, 0.8)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderColor: [\n\t\t\t\t\t\t\t'rgba(220, 38, 38, 1)',\n\t\t\t\t\t\t\t'rgba(249, 115, 22, 1)',\n\t\t\t\t\t\t\t'rgba(34, 197, 94, 1)'\n\t\t\t\t\t\t],\n\t\t\t\t\t\tborderWidth: 2\n\t\t\t\t\t}]\n\t\t\t\t},\n\t\t\t\toptions: {\n\t\t\t\t\tresponsive: true,\n\t\t\t\t\tmaintainAspectRatio: false,\n\t\t\t\t\tplugins: {\n\t\t\t\t\t\tlegend: {\n\t\t\t\t\t\t\tposition: 'bottom',\n\t\t\t\t\t\t\tlabels: {\n\t\t\t\t\t\t\t\tpadding: 15,\n\t\t\t\t\t\t\t\tfont: { size: 12, weight: 'bold' },\n\t\t\t\t\t\t\t\tcolor: '#fff'\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\ttooltip: {\n\t\t\t\t\t\t\tcallbacks: {\n\t\t\t\t\t\t\t\tlabel: function(context) {\n\t\t\t\t\t\t\t\t\tconst total = critical + high + normal;\n\t\t\t\t\t\t\t\t\tconst value = context.parsed || 0;\n\t\t\t\t\t\t\t\t\tconst percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;\n\t\t\t\t\t\t\t\t\treturn context.label + ': ' + value + ' (' + percentage + '%)';\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\t\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -28,18 +28,18 @@ templ UserStatRow(us models.UserStats) {
 			</div>
 			<div>
 				<p class="font-medium text-white">{ us.User.Name }</p>
-				<p class="text-xs text-cyan-200">{ fmt.Sprintf("%d stories assigned", us.AssignedStories) }</p>
+				<p class="text-xs text-white">{ fmt.Sprintf("%d stories assigned", us.AssignedStories) }</p>
 			</div>
 		</div>
-		
+
 		<div class="flex items-center gap-4">
 			<div class="text-center">
 				<p class="text-lg font-bold text-white">{ fmt.Sprintf("%d", us.AssignedPoints) }</p>
-				<p class="text-xs text-cyan-200">Points</p>
+				<p class="text-xs text-white">Points</p>
 			</div>
 			<div class="text-center">
 				<p class="text-lg font-bold text-green-400">{ fmt.Sprintf("%d", us.CompletedPoints) }</p>
-				<p class="text-xs text-cyan-200">Done</p>
+				<p class="text-xs text-white">Done</p>
 			</div>
 			<div class="w-20">
 				<div class="w-full bg-white/20 rounded-full h-2">

@@ -66,7 +66,8 @@ templ DefectStatusPieChart(stats models.DefectStats) {
 							position: 'bottom',
 							labels: {
 								padding: 15,
-								font: { size: 12, weight: 'bold' }
+								font: { size: 12, weight: 'bold' },
+								color: '#fff'
 							}
 						},
 						tooltip: {
@@ -148,7 +149,8 @@ templ DefectSeverityDoughnutChart(stats models.DefectStats) {
 							position: 'bottom',
 							labels: {
 								padding: 15,
-								font: { size: 12, weight: 'bold' }
+								font: { size: 12, weight: 'bold' },
+								color: '#fff'
 							}
 						},
 						tooltip: {
@@ -275,7 +277,7 @@ templ DefectResolutionProgress(stats models.DefectStats) {
 				</div>
 			</div>
 		</div>
-		<div class="flex justify-between mt-4 text-sm font-semibold text-cyan-200">
+		<div class="flex justify-between mt-4 text-sm font-semibold text-white">
 			<span>✅ { fmt.Sprintf("%d defects resolved", stats.ResolvedDefects) }</span>
 			<span>🎯 { fmt.Sprintf("%d defects total", stats.TotalDefects) }</span>
 		</div>
@@ -380,7 +382,8 @@ templ DefectAgingPieChart(stats models.DefectStats) {
 							position: 'bottom',
 							labels: {
 								padding: 15,
-								font: { size: 12, weight: 'bold' }
+								font: { size: 12, weight: 'bold' },
+								color: '#fff'
 							}
 						},
 						tooltip: {
@@ -459,7 +462,8 @@ templ DefectPriorityPieChart(assigneeStats []models.DefectByAssignee) {
 							position: 'bottom',
 							labels: {
 								padding: 15,
-								font: { size: 12, weight: 'bold' }
+								font: { size: 12, weight: 'bold' },
+								color: '#fff'
 							}
 						},
 						tooltip: {
