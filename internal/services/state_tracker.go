@@ -7,22 +7,24 @@ import (
 
 // StateTransition represents a state change for an item
 type StateTransition struct {
-	ItemKey      string    `json:"itemKey"`
-	ItemTitle    string    `json:"itemTitle"`
-	ItemType     string    `json:"itemType"` // "story" or "defect"
-	FromState    string    `json:"fromState"`
-	ToState      string    `json:"toState"`
-	Assignee     string    `json:"assignee"`
-	ChangedAt    time.Time `json:"changedAt"`
-	SprintName   string    `json:"sprintName"`
+	ItemKey         string    `json:"itemKey"`
+	ItemTitle       string    `json:"itemTitle"`
+	ItemType        string    `json:"itemType"` // "story", "subtask", or "defect"
+	FromState       string    `json:"fromState"`
+	ToState         string    `json:"toState"`
+	Assignee        string    `json:"assignee"`
+	ChangedAt       time.Time `json:"changedAt"`
+	SprintName      string    `json:"sprintName"`
+	ParentStoryKey  string    `json:"parentStoryKey"`  // For subtasks: parent story key
+	ParentStoryName string    `json:"parentStoryName"` // For subtasks: parent story title
 }
 
 // StateTracker tracks state changes for items
 type StateTracker struct {
-	mu           sync.RWMutex
-	transitions  []StateTransition
-	lastStates   map[string]string // itemKey -> last known state
-	lastCleared  time.Time
+	mu          sync.RWMutex
+	transitions []StateTransition
+	lastStates  map[string]string // itemKey -> last known state
+	lastCleared time.Time
 }
 
 var stateTrackerInstance *StateTracker
@@ -42,22 +44,29 @@ func GetStateTracker() *StateTracker {
 
 // CheckAndRecordTransition checks if state changed and records it
 func (s *StateTracker) CheckAndRecordTransition(itemKey, itemTitle, itemType, currentState, assignee, sprintName string) {
+	s.CheckAndRecordTransitionWithParent(itemKey, itemTitle, itemType, currentState, assignee, sprintName, "", "")
+}
+
+// CheckAndRecordTransitionWithParent checks if state changed and records it with parent story info
+func (s *StateTracker) CheckAndRecordTransitionWithParent(itemKey, itemTitle, itemType, currentState, assignee, sprintName, parentKey, parentName string) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	lastState, exists := s.lastStates[itemKey]
-	
+
 	// If state changed, record transition
 	if exists && lastState != currentState {
 		transition := StateTransition{
-			ItemKey:    itemKey,
-			ItemTitle:  itemTitle,
-			ItemType:   itemType,
-			FromState:  lastState,
-			ToState:    currentState,
-			Assignee:   assignee,
-			ChangedAt:  time.Now(),
-			SprintName: sprintName,
+			ItemKey:         itemKey,
+			ItemTitle:       itemTitle,
+			ItemType:        itemType,
+			FromState:       lastState,
+			ToState:         currentState,
+			Assignee:        assignee,
+			ChangedAt:       time.Now(),
+			SprintName:      sprintName,
+			ParentStoryKey:  parentKey,
+			ParentStoryName: parentName,
 		}
 		s.transitions = append(s.transitions, transition)
 	}
@@ -118,12 +127,12 @@ func (s *StateTracker) ClearOldTransitions() {
 // GetTransitionStats returns stats about transitions
 func (s *StateTracker) GetTransitionStats() map[string]int {
 	transitions := s.GetTodaysTransitions()
-	
+
 	stats := map[string]int{
-		"total":       len(transitions),
-		"toDone":      0,
+		"total":        len(transitions),
+		"toDone":       0,
 		"toInProgress": 0,
-		"toBlocked":   0,
+		"toBlocked":    0,
 	}
 
 	for _, t := range transitions {
@@ -139,4 +148,3 @@ func (s *StateTracker) GetTransitionStats() map[string]int {
 
 	return stats
 }
-

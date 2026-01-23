@@ -98,6 +98,12 @@ func main() {
 		return c.JSON(fiber.Map{"success": true, "message": "Daily risk report triggered"})
 	})
 
+	// Test endpoint to send sample report with mock transitions
+	app.Post("/api/risk/sample-report", func(c *fiber.Ctx) error {
+		scheduler.RunSampleReport()
+		return c.JSON(fiber.Map{"success": true, "message": "Sample report with mock transitions sent"})
+	})
+
 	// Get port from env or default
 	port := os.Getenv("PORT")
 	if port == "" {

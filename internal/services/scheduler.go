@@ -117,9 +117,9 @@ func (s *Scheduler) trackStateChanges() {
 	for _, story := range stories {
 		tracker.CheckAndRecordTransition(story.Key, story.Title, "story", story.Status, story.Assignee.Name, sprint.Name)
 
-		// Track subtask state changes too
+		// Track subtask state changes with parent story info
 		for _, subtask := range story.Subtasks {
-			tracker.CheckAndRecordTransition(subtask.Key, subtask.Title, "subtask", subtask.Status, subtask.Assignee.Name, sprint.Name)
+			tracker.CheckAndRecordTransitionWithParent(subtask.Key, subtask.Title, "subtask", subtask.Status, subtask.Assignee.Name, sprint.Name, story.Key, story.Title)
 		}
 	}
 	for _, defect := range defects {
@@ -132,6 +132,85 @@ func (s *Scheduler) RunNow() {
 	log.Println("🔄 Running immediate consolidated report...")
 	s.trackStateChanges() // Update state tracking first
 	s.runConsolidatedReport()
+}
+
+// RunSampleReport sends a sample report with mock transitions to demonstrate the format
+func (s *Scheduler) RunSampleReport() {
+	log.Println("🧪 Sending sample report with mock transitions...")
+
+	// Get current sprint
+	sprint, err := s.getCurrentSprintByDate()
+	if err != nil {
+		log.Printf("❌ Failed to get current sprint: %v", err)
+		return
+	}
+
+	// Create sample transitions to demonstrate the format
+	sampleTransitions := []StateTransition{
+		{
+			ItemKey:   "PMOB-228621",
+			ItemTitle: "FT analysis for behaviour change in AMF",
+			ItemType:  "story",
+			FromState: "To Do",
+			ToState:   "In Progress",
+			Assignee:  "Kamini Bais",
+		},
+		{
+			ItemKey:         "PMOB-228622",
+			ItemTitle:       "Write test cases for FT analysis",
+			ItemType:        "subtask",
+			FromState:       "To Do",
+			ToState:         "Done",
+			Assignee:        "Prashant Dewangan",
+			ParentStoryKey:  "PMOB-228621",
+			ParentStoryName: "FT analysis for behaviour change in AMF",
+		},
+		{
+			ItemKey:         "PMOB-228623",
+			ItemTitle:       "Review code changes",
+			ItemType:        "subtask",
+			FromState:       "To Do",
+			ToState:         "In Progress",
+			Assignee:        "Vaibhav Singh",
+			ParentStoryKey:  "PMOB-228621",
+			ParentStoryName: "FT analysis for behaviour change in AMF",
+		},
+		{
+			ItemKey:   "PMOB-228601",
+			ItemTitle: "Customer Escalation Support - Jan 2026",
+			ItemType:  "story",
+			FromState: "In Progress",
+			ToState:   "Done",
+			Assignee:  "Ganesh Waghmare",
+		},
+		{
+			ItemKey:         "PMOB-228602",
+			ItemTitle:       "Debug customer issue",
+			ItemType:        "subtask",
+			FromState:       "In Progress",
+			ToState:         "Done",
+			Assignee:        "Shashikant Hirugade",
+			ParentStoryKey:  "PMOB-228601",
+			ParentStoryName: "Customer Escalation Support - Jan 2026",
+		},
+		{
+			ItemKey:   "BUG-926223",
+			ItemTitle: "PWS-IWF AMF decoding issue",
+			ItemType:  "defect",
+			FromState: "In Progress",
+			ToState:   "Resolved",
+			Assignee:  "Prashant Dewangan",
+		},
+	}
+
+	// Get sprint stats
+	stories, _ := s.jiraService.GetSprintIssuesWithSubtasks(sprint.ID)
+	dashboardService := NewDashboardService(s.jiraService)
+	stats := dashboardService.CalculateStats(stories)
+
+	// Send sample report
+	s.sendConsolidatedReport(sprint, stats, sampleTransitions, []AtRiskItem{}, []ReportedBlocker{}, len(stories), 0, 0, 0)
+	log.Println("✅ Sample report sent!")
 }
 
 func (s *Scheduler) runConsolidatedReport() {
@@ -234,19 +313,24 @@ func (s *Scheduler) sendConsolidatedReport(sprint models.Sprint, stats models.Sp
 		completionPct,
 		openDefects, resolvedDefects, totalDefects)
 
-	// Build transitions section - group by type (stories, subtasks, defects)
+	// Build transitions section - group subtasks under parent stories (box format)
 	transitionSection := ""
 	if len(transitions) == 0 {
-		transitionSection = "   _No state changes today_\n"
+		transitionSection = "```\n┌─────────────────────────────────────┐\n│  📭 No state changes today          │\n└─────────────────────────────────────┘\n```\n"
 	} else {
 		doneCount := 0
 		inProgressCount := 0
 		subtaskCount := 0
-
-		// Group transitions by type
-		storyTransitions := []StateTransition{}
-		subtaskTransitions := []StateTransition{}
 		defectTransitions := []StateTransition{}
+
+		// Build parent story map with their subtasks
+		type storyGroup struct {
+			StoryKey        string
+			StoryTitle      string
+			StoryTransition *StateTransition
+			Subtasks        []StateTransition
+		}
+		parentStoryMap := make(map[string]*storyGroup)
 
 		for _, t := range transitions {
 			if t.ToState == "Done" || t.ToState == "Closed" || t.ToState == "Accepted" {
@@ -257,45 +341,81 @@ func (s *Scheduler) sendConsolidatedReport(sprint models.Sprint, stats models.Sp
 
 			switch t.ItemType {
 			case "subtask":
-				subtaskTransitions = append(subtaskTransitions, t)
 				subtaskCount++
+				if t.ParentStoryKey != "" {
+					if _, exists := parentStoryMap[t.ParentStoryKey]; !exists {
+						parentStoryMap[t.ParentStoryKey] = &storyGroup{
+							StoryKey:   t.ParentStoryKey,
+							StoryTitle: t.ParentStoryName,
+							Subtasks:   []StateTransition{},
+						}
+					}
+					parentStoryMap[t.ParentStoryKey].Subtasks = append(parentStoryMap[t.ParentStoryKey].Subtasks, t)
+				}
 			case "defect":
 				defectTransitions = append(defectTransitions, t)
 			default:
-				storyTransitions = append(storyTransitions, t)
+				if _, exists := parentStoryMap[t.ItemKey]; !exists {
+					parentStoryMap[t.ItemKey] = &storyGroup{
+						StoryKey:   t.ItemKey,
+						StoryTitle: t.ItemTitle,
+						Subtasks:   []StateTransition{},
+					}
+				}
+				parentStoryMap[t.ItemKey].StoryTransition = &t
 			}
 		}
 
-		transitionSection = fmt.Sprintf("   ✅ %d completed | 🚧 %d in progress | 📝 %d subtasks | 🔄 %d total\n\n",
+		// Summary
+		transitionSection = fmt.Sprintf("📊 **Summary:** ✅ %d completed | 🚧 %d in progress | 📝 %d subtasks | 🔄 %d total\n\n",
 			doneCount, inProgressCount, subtaskCount, len(transitions))
 
-		// Add story transitions
-		if len(storyTransitions) > 0 {
-			transitionSection += "   **📖 Stories:**\n"
-			for _, t := range storyTransitions {
-				emoji := getTransitionEmoji(t.ToState)
-				transitionSection += fmt.Sprintf("      %s **%s**: %s → %s (👤 %s)\n",
-					emoji, t.ItemKey, t.FromState, t.ToState, t.Assignee)
+		// Stories section
+		if len(parentStoryMap) > 0 {
+			transitionSection += "**📖 STORIES & SUBTASKS**\n\n"
+			storyNum := 1
+			for _, group := range parentStoryMap {
+				title := group.StoryTitle
+				if len(title) > 50 {
+					title = title[:47] + "..."
+				}
+
+				if group.StoryTransition != nil {
+					emoji := getTransitionEmoji(group.StoryTransition.ToState)
+					transitionSection += fmt.Sprintf("%s **Story #%d:** %s - %s\n", emoji, storyNum, group.StoryKey, title)
+					transitionSection += fmt.Sprintf("   🔄 %s → %s | 👤 %s\n", group.StoryTransition.FromState, group.StoryTransition.ToState, group.StoryTransition.Assignee)
+				} else if len(group.Subtasks) > 0 {
+					transitionSection += fmt.Sprintf("📖 **Story #%d:** %s - %s\n", storyNum, group.StoryKey, title)
+				}
+
+				// Subtasks
+				if len(group.Subtasks) > 0 {
+					for _, st := range group.Subtasks {
+						stTitle := st.ItemTitle
+						if len(stTitle) > 45 {
+							stTitle = stTitle[:42] + "..."
+						}
+						emoji := getTransitionEmoji(st.ToState)
+						transitionSection += fmt.Sprintf("   ↳ %s %s - %s\n", emoji, st.ItemKey, stTitle)
+						transitionSection += fmt.Sprintf("      %s → %s | 👤 %s\n", st.FromState, st.ToState, st.Assignee)
+					}
+				}
+				transitionSection += "\n"
+				storyNum++
 			}
 		}
 
-		// Add subtask transitions
-		if len(subtaskTransitions) > 0 {
-			transitionSection += "\n   **📝 Subtasks:**\n"
-			for _, t := range subtaskTransitions {
-				emoji := getTransitionEmoji(t.ToState)
-				transitionSection += fmt.Sprintf("      %s **%s**: %s → %s (👤 %s)\n",
-					emoji, t.ItemKey, t.FromState, t.ToState, t.Assignee)
-			}
-		}
-
-		// Add defect transitions
+		// Defects section
 		if len(defectTransitions) > 0 {
-			transitionSection += "\n   **🐛 Defects:**\n"
-			for _, t := range defectTransitions {
+			transitionSection += "**🐛 DEFECTS**\n\n"
+			for i, t := range defectTransitions {
+				title := t.ItemTitle
+				if len(title) > 50 {
+					title = title[:47] + "..."
+				}
 				emoji := getTransitionEmoji(t.ToState)
-				transitionSection += fmt.Sprintf("      %s **%s**: %s → %s (👤 %s)\n",
-					emoji, t.ItemKey, t.FromState, t.ToState, t.Assignee)
+				transitionSection += fmt.Sprintf("%s **Defect #%d:** %s - %s\n", emoji, i+1, t.ItemKey, title)
+				transitionSection += fmt.Sprintf("   🔄 %s → %s | 👤 %s\n", t.FromState, t.ToState, t.Assignee)
 			}
 		}
 	}
