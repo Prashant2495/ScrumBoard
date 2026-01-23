@@ -230,10 +230,7 @@ func (h *ScrumMasterHandler) RequestInfo(c *fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "Email and item key are required"})
 	}
 
-	// For testing: redirect all requests to Prashant Dewangan
-	testEmail := "prdewang@cisco.com"
-	log.Printf("📋 Requesting info from %s (%s) for %s: %s [redirected to %s for testing]", req.Name, req.Email, req.ItemKey, req.ItemTitle, testEmail)
-	req.Email = testEmail
+	log.Printf("📋 Requesting info from %s (%s) for %s: %s", req.Name, req.Email, req.ItemKey, req.ItemTitle)
 
 	// Check if Webex is configured
 	if !h.webexService.IsConfigured() {

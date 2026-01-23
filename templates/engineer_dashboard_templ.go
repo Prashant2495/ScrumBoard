@@ -45,7 +45,7 @@ func EngineerDashboard(data models.EngineerDashboardData, engineers []models.Eng
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"min-h-screen\"><!-- Header --><header class=\"bg-slate-900/80 backdrop-blur-lg text-white py-6 px-8 shadow-xl border-b border-slate-700/50\"><div class=\"w-full flex items-center justify-between\"><div class=\"flex items-center gap-4\"><div class=\"w-12 h-12 bg-slate-800/80 rounded-xl flex items-center justify-center text-2xl shadow-xl\">👨\u200d💻</div><div><h1 class=\"text-2xl font-bold text-white\">Engineer Dashboard</h1><p class=\"text-white/70 text-sm\">Individual performance tracking</p></div></div><div class=\"flex items-center gap-4\"><!-- Engineer Selector --><div class=\"glass-dark px-4 py-2 rounded-xl\"><p class=\"text-xs text-white/70 mb-1\">Engineer</p><select id=\"engineer-selector\" class=\"bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30\"><option value=\"\">Select Engineer</option> <option value=\"prdewang@cisco.com\">Prashant Dewangan</option> <option value=\"amitksi3@cisco.com\">Amit Kumar Singh</option> <option value=\"surasin2@cisco.com\">Suraj Singh</option> <option value=\"akbhat2@cisco.com\">Akshay Bhat</option> <option value=\"shabhart@cisco.com\">Shashi Kiran Bharti</option></select></div><!-- Sprint Input --><div class=\"glass-dark px-4 py-2 rounded-xl\"><p class=\"text-xs text-white/70 mb-1\">Sprint (e.g. NM-2601)</p><div class=\"flex items-center gap-2\"><input type=\"text\" id=\"sprint-input\" placeholder=\"NM-2601\" class=\"bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30 w-28\" maxlength=\"10\"> <button id=\"sprint-go-btn\" class=\"bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg text-sm font-medium transition-all\">Go</button></div></div><a href=\"/\" class=\"bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shadow-lg\"><span>🏠</span> <span>Home</span></a> <a href=\"/sprint\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2\"><span>📊</span> <span>Sprint</span></a> <a href=\"/defects\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2\"><span>🐛</span> <span>Defects</span></a></div></div></header><!-- Main Content --><main id=\"engineer-content\" class=\"w-full px-6 py-8\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"min-h-screen\"><!-- Header --><header class=\"bg-slate-900/80 backdrop-blur-lg text-white py-6 px-8 shadow-xl border-b border-slate-700/50\"><div class=\"w-full flex items-center justify-between\"><div class=\"flex items-center gap-4\"><div class=\"w-12 h-12 bg-slate-800/80 rounded-xl flex items-center justify-center text-2xl shadow-xl\">👨\u200d💻</div><div><h1 class=\"text-2xl font-bold text-white\">Engineer Dashboard</h1><p class=\"text-white/70 text-sm\">Individual performance tracking</p></div></div><div class=\"flex items-center gap-4\"><!-- Engineer Selector --><div class=\"glass-dark px-4 py-2 rounded-xl\"><p class=\"text-xs text-white/70 mb-1\">Engineer</p><select id=\"engineer-selector\" class=\"bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30\"><option value=\"\">Select Engineer</option> <option value=\"prdewang@cisco.com\">Prashant Dewangan</option> <option value=\"amitksi3@cisco.com\">Amit Kumar Singh</option> <option value=\"shabhart@cisco.com\">Shashi Kiran Bharti</option> <option value=\"ksudarsh@cisco.com\">Kamini Bais</option> <option value=\"ganagraw@cisco.com\">Ganesh Agrawal</option> <option value=\"vavaidya@cisco.com\">Vaibhav Vaidya</option> <option value=\"surasin2@cisco.com\">Suraj Singh</option> <option value=\"akbhat2@cisco.com\">Akshay Bhat</option></select></div><!-- Sprint Input --><div class=\"glass-dark px-4 py-2 rounded-xl\"><p class=\"text-xs text-white/70 mb-1\">Sprint (e.g. NM-2601)</p><div class=\"flex items-center gap-2\"><input type=\"text\" id=\"sprint-input\" placeholder=\"NM-2601\" class=\"bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30 w-28\" maxlength=\"10\"> <button id=\"sprint-go-btn\" class=\"bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg text-sm font-medium transition-all\">Go</button></div></div><a href=\"/\" class=\"bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shadow-lg\"><span>🏠</span> <span>Home</span></a> <a href=\"/sprint\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2\"><span>📊</span> <span>Sprint</span></a> <a href=\"/defects\" class=\"bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl transition-all flex items-center gap-2\"><span>🐛</span> <span>Defects</span></a></div></div></header><!-- Main Content --><main id=\"engineer-content\" class=\"w-full px-6 py-8\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -117,7 +117,7 @@ func EngineerDashboardContent(data models.EngineerDashboardData) templ.Component
 		var templ_7745c5c3_Var6 string
 		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(getInitials(data.Engineer.Name))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 298, Col: 37}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 301, Col: 37}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
@@ -130,7 +130,7 @@ func EngineerDashboardContent(data models.EngineerDashboardData) templ.Component
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(data.Engineer.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 301, Col: 66}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 304, Col: 66}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -143,7 +143,7 @@ func EngineerDashboardContent(data models.EngineerDashboardData) templ.Component
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(data.Engineer.Email)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 302, Col: 55}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 305, Col: 55}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -156,7 +156,7 @@ func EngineerDashboardContent(data models.EngineerDashboardData) templ.Component
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 303, Col: 65}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 306, Col: 65}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
@@ -170,7 +170,7 @@ func EngineerDashboardContent(data models.EngineerDashboardData) templ.Component
 			var templ_7745c5c3_Var10 string
 			templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.StartDate)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 311, Col: 29}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 314, Col: 29}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 			if templ_7745c5c3_Err != nil {
@@ -183,7 +183,7 @@ func EngineerDashboardContent(data models.EngineerDashboardData) templ.Component
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(data.Sprint.EndDate)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 311, Col: 55}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 314, Col: 55}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
@@ -256,7 +256,7 @@ func EngineerDashboardContent(data models.EngineerDashboardData) templ.Component
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(data.Stories)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 358, Col: 56}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 361, Col: 56}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
@@ -294,7 +294,7 @@ func EngineerDashboardContent(data models.EngineerDashboardData) templ.Component
 		var templ_7745c5c3_Var13 string
 		templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(data.Defects)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 376, Col: 56}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/engineer_dashboard.templ`, Line: 379, Col: 56}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 		if templ_7745c5c3_Err != nil {
