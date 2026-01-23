@@ -130,42 +130,23 @@ func (s *Scheduler) RunNow() {
 }
 
 func (s *Scheduler) runConsolidatedReport() {
-	// Get active sprint
-	sprintID := s.config.ActiveSprint
-	if sprintID == 0 {
-		sprint, err := s.jiraService.GetActiveSprint(s.config.BoardID)
-		if err != nil {
-			log.Printf("❌ Failed to get active sprint: %v", err)
-			return
-		}
-		sprintID = sprint.ID
-	}
-
-	sprint, err := s.jiraService.GetSprintByID(sprintID)
+	// Get current sprint based on today's date
+	sprint, err := s.getCurrentSprintByDate()
 	if err != nil {
-		log.Printf("❌ Failed to get sprint: %v", err)
+		log.Printf("❌ Failed to get current sprint: %v", err)
 		return
 	}
+	log.Printf("📊 Daily Report for sprint: %s (ID: %d)", sprint.Name, sprint.ID)
 
-	// Get data from both AMF boards (6991 and 6992)
-	stories6991, _ := s.jiraService.GetSprintIssues("6991", sprintID)
-	stories6992, _ := s.jiraService.GetSprintIssues("6992", sprintID)
+	// Get stories using JQL (AMFDEVFT label) - works regardless of board
+	stories, err := s.jiraService.GetSprintIssuesByJQL(sprint.ID)
+	if err != nil {
+		log.Printf("⚠️ Error fetching stories: %v", err)
+		stories = []models.Story{}
+	}
+	log.Printf("📊 Found %d stories for sprint %s", len(stories), sprint.Name)
 
-	// Combine stories from both boards (dedupe by key)
-	storyMap := make(map[string]models.Story)
-	for _, s := range stories6991 {
-		storyMap[s.Key] = s
-	}
-	for _, s := range stories6992 {
-		storyMap[s.Key] = s
-	}
-	stories := make([]models.Story, 0, len(storyMap))
-	for _, s := range storyMap {
-		stories = append(stories, s)
-	}
-	log.Printf("📊 Combined stories: %d from board 6991, %d from board 6992, %d total unique", len(stories6991), len(stories6992), len(stories))
-
-	defects, _ := s.jiraService.GetSprintDefects(s.config.BoardID, sprintID)
+	defects, _ := s.jiraService.GetSprintDefects(s.config.BoardID, sprint.ID)
 
 	// 1. Get state transitions
 	stateTracker := GetStateTracker()
@@ -180,15 +161,67 @@ func (s *Scheduler) runConsolidatedReport() {
 
 	log.Printf("📊 Daily Report: %d transitions, %d risks, %d blockers", len(transitions), len(risks), len(reportedBlockers))
 
-	// Send consolidated report
-	s.sendConsolidatedReport(sprint.Name, transitions, risks, reportedBlockers, len(stories), len(defects))
+	// Calculate sprint stats
+	dashboardService := NewDashboardService(s.jiraService)
+	stats := dashboardService.CalculateStats(stories)
+
+	// Calculate defect stats
+	openDefects := 0
+	resolvedDefects := 0
+	for _, d := range defects {
+		if d.Status == "Closed" || d.Status == "Resolved" || d.Status == "Accepted" || d.Status == "Done" {
+			resolvedDefects++
+		} else {
+			openDefects++
+		}
+	}
+
+	// Send consolidated report with full sprint details
+	s.sendConsolidatedReport(sprint, stats, transitions, risks, reportedBlockers, len(stories), len(defects), openDefects, resolvedDefects)
 }
 
-func (s *Scheduler) sendConsolidatedReport(sprintName string, transitions []StateTransition, risks []AtRiskItem, blockers []ReportedBlocker, totalStories, totalDefects int) {
+func (s *Scheduler) sendConsolidatedReport(sprint models.Sprint, stats models.SprintStats, transitions []StateTransition, risks []AtRiskItem, blockers []ReportedBlocker, totalStories, totalDefects, openDefects, resolvedDefects int) {
 	if !s.webexService.IsConfigured() {
 		log.Println("❌ Webex not configured, skipping notification")
 		return
 	}
+
+	// Calculate completion percentage
+	completionPct := 0
+	if stats.TotalPoints > 0 {
+		completionPct = (stats.CompletedPoints * 100) / stats.TotalPoints
+	}
+
+	// Calculate days remaining
+	daysRemaining := 0
+	if sprint.EndDate != "" {
+		endTime, err := time.Parse("2006-01-02", sprint.EndDate[:10])
+		if err == nil {
+			daysRemaining = int(time.Until(endTime).Hours() / 24)
+			if daysRemaining < 0 {
+				daysRemaining = 0
+			}
+		}
+	}
+
+	// Build sprint summary section
+	sprintSummary := fmt.Sprintf(`📊 **Story Points Summary**
+   ✅ Completed: **%d pts** (%d stories)
+   🚧 In Progress: **%d pts** (%d stories)
+   📋 To Do: **%d pts** (%d stories)
+   📈 Total: **%d pts** (%d stories)
+   🎯 Completion: **%d%%**
+
+🐛 **Defect Summary**
+   🔴 Open: **%d defects**
+   ✅ Resolved: **%d defects**
+   📈 Total: **%d defects**`,
+		stats.CompletedPoints, stats.CompletedStories,
+		stats.InProgressPoints, stats.InProgressStories,
+		stats.RemainingPoints, stats.TodoStories,
+		stats.TotalPoints, stats.TotalStories,
+		completionPct,
+		openDefects, resolvedDefects, totalDefects)
 
 	// Build transitions section
 	transitionSection := ""
@@ -250,8 +283,13 @@ func (s *Scheduler) sendConsolidatedReport(sprintName string, transitions []Stat
 	markdown := fmt.Sprintf(`📊 **Daily Sprint Summary**
 
 🏃 **Sprint:** %s
-📅 **Date:** %s
-📈 **Items:** %d stories, %d defects
+📅 **Duration:** %s → %s
+⏰ **Days Remaining:** %d days
+📅 **Report Date:** %s
+
+---
+
+%s
 
 ---
 
@@ -267,8 +305,11 @@ func (s *Scheduler) sendConsolidatedReport(sprintName string, transitions []Stat
 %s
 ---
 _Evening report from Scrum Insights_
-`, sprintName, time.Now().Format("Mon, 02 Jan 2006"),
-		totalStories, totalDefects,
+`, sprint.Name,
+		formatDate(sprint.StartDate), formatDate(sprint.EndDate),
+		daysRemaining,
+		time.Now().Format("Mon, 02 Jan 2006"),
+		sprintSummary,
 		transitionSection,
 		len(risks), riskSection,
 		len(blockers), blockerSection)
@@ -279,6 +320,18 @@ _Evening report from Scrum Insights_
 	} else {
 		log.Printf("✅ Daily consolidated report sent to %s", s.config.NotifyEmail)
 	}
+}
+
+// formatDate formats ISO date to readable format
+func formatDate(isoDate string) string {
+	if len(isoDate) < 10 {
+		return isoDate
+	}
+	t, err := time.Parse("2006-01-02", isoDate[:10])
+	if err != nil {
+		return isoDate
+	}
+	return t.Format("02 Jan 2006")
 }
 
 func truncate(s string, maxLen int) string {
@@ -306,4 +359,69 @@ func GetSchedulerConfig() SchedulerConfig {
 		ActiveSprint: 0,
 		BoardID:      "6991",
 	}
+}
+
+// getCurrentSprintByDate finds the sprint that covers today's date
+// Sprint naming convention: NM-XXYY where XX=year (26=2026) and YY=week number
+func (s *Scheduler) getCurrentSprintByDate() (models.Sprint, error) {
+	// Get all sprints
+	sprints, err := s.jiraService.GetAllSprints(s.config.BoardID)
+	if err != nil {
+		return models.Sprint{}, err
+	}
+
+	today := time.Now()
+	log.Printf("🔍 Looking for sprint covering date: %s", today.Format("2006-01-02"))
+
+	// Find sprint where today falls between start and end date
+	for _, sprint := range sprints {
+		if sprint.StartDate == "" || sprint.EndDate == "" {
+			continue
+		}
+
+		// Parse dates (format: 2026-01-13T...)
+		startDate, err := time.Parse("2006-01-02", sprint.StartDate[:10])
+		if err != nil {
+			continue
+		}
+		endDate, err := time.Parse("2006-01-02", sprint.EndDate[:10])
+		if err != nil {
+			continue
+		}
+
+		// Check if today is within sprint dates (inclusive)
+		if (today.After(startDate) || today.Equal(startDate)) && (today.Before(endDate) || today.Equal(endDate)) {
+			log.Printf("✅ Found current sprint: %s (ID: %d) - %s to %s",
+				sprint.Name, sprint.ID, sprint.StartDate[:10], sprint.EndDate[:10])
+			return sprint, nil
+		}
+	}
+
+	// Fallback: find sprint by name pattern NM-26XX (current year 2026)
+	currentYear := today.Year() % 100 // 2026 -> 26
+	_, currentWeek := today.ISOWeek()
+	expectedName := fmt.Sprintf("NM-%d%02d", currentYear, currentWeek)
+	log.Printf("🔍 Fallback: looking for sprint %s", expectedName)
+
+	for _, sprint := range sprints {
+		if sprint.Name == expectedName {
+			log.Printf("✅ Found sprint by name: %s (ID: %d)", sprint.Name, sprint.ID)
+			return sprint, nil
+		}
+	}
+
+	// Last fallback: return most recent sprint
+	if len(sprints) > 0 {
+		// Sort by ID descending to get most recent
+		mostRecent := sprints[0]
+		for _, sprint := range sprints {
+			if sprint.ID > mostRecent.ID {
+				mostRecent = sprint
+			}
+		}
+		log.Printf("⚠️ Using most recent sprint as fallback: %s (ID: %d)", mostRecent.Name, mostRecent.ID)
+		return mostRecent, nil
+	}
+
+	return models.Sprint{}, fmt.Errorf("no sprint found for current date")
 }
