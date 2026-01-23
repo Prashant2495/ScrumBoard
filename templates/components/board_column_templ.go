@@ -144,15 +144,15 @@ func SprintBoard(todo, inProgress, done []models.Story) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = BoardColumn("To Do", todo, "bg-slate-100/80", "📝").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = BoardColumn("To Do", todo, "bg-slate-600/80", "📝").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = BoardColumn("In Progress", inProgress, "bg-blue-500/30/80", "🔄").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = BoardColumn("In Progress", inProgress, "bg-blue-600/80", "🔄").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = BoardColumn("Done", done, "bg-green-500/30/80", "✅").Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = BoardColumn("Done", done, "bg-green-600/80", "✅").Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

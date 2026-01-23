@@ -151,15 +151,20 @@ func (d *DashboardService) GetDashboardDataForSprint(boardID string, sprintID in
 		log.Printf("✅ Sprint: %s (ID: %d)", sprint.Name, sprint.ID)
 	}
 
-	// Fetch AMF team issues from all known boards
-	var allStories []models.Story
-	for _, board := range amfBoards {
-		stories, err := d.jira.GetSprintIssues(board, sprint.ID)
-		if err != nil {
-			log.Printf("⚠️  Error fetching from board %s: %v", board, err)
-			continue
+	// Fetch AMF team issues using JQL with AMFDEVFT label (works for all sprints)
+	allStories, err := d.jira.GetSprintIssuesByJQL(sprint.ID)
+	if err != nil {
+		log.Printf("⚠️  Error fetching stories via JQL: %v", err)
+		// Fallback to board-based fetching
+		allStories = []models.Story{}
+		for _, board := range amfBoards {
+			stories, err := d.jira.GetSprintIssues(board, sprint.ID)
+			if err != nil {
+				log.Printf("⚠️  Error fetching from board %s: %v", board, err)
+				continue
+			}
+			allStories = append(allStories, stories...)
 		}
-		allStories = append(allStories, stories...)
 	}
 
 	log.Printf("📊 Total AMF team stories: %d for sprint %s (ID: %d)", len(allStories), sprint.Name, sprint.ID)

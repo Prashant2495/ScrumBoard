@@ -55,6 +55,7 @@ func main() {
 	app.Get("/api/refresh", dashboardHandler.Refresh)
 	app.Get("/api/boards", dashboardHandler.GetBoards)
 	app.Get("/api/sprints", dashboardHandler.GetSprints)
+	app.Get("/api/sprint/search", dashboardHandler.SearchSprint)
 
 	// Defect Dashboard Routes
 	app.Get("/defects", defectHandler.Index)
@@ -87,6 +88,9 @@ func main() {
 
 	// Webex Webhook for receiving replies
 	app.Post("/api/webex/webhook", scrumMasterHandler.WebexWebhook)
+	app.Head("/api/webex/webhook", func(c *fiber.Ctx) error {
+		return c.SendStatus(200)
+	})
 
 	// Manual trigger for daily risk report (for testing)
 	app.Post("/api/risk/daily-report", func(c *fiber.Ctx) error {

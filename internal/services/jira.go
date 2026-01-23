@@ -129,13 +129,14 @@ func (j *JiraService) GetActiveSprint(boardID string) (*models.Sprint, error) {
 	return nil, fmt.Errorf("no active sprint found")
 }
 
-// GetAllSprints fetches all sprints that have AMFDEVFT bugs (board-independent)
+// GetAllSprints fetches all NM- prefix sprints (includes 2024, 2025, 2026 series)
 func (j *JiraService) GetAllSprints(boardID string) ([]models.Sprint, error) {
-	// Fetch all AMFDEVFT bugs to get unique sprints
+	// Fetch issues from NM- sprints (covers all years: NM-24xx, NM-25xx, NM-26xx)
 	apiURL := fmt.Sprintf("%s/rest/api/3/search/jql", j.BaseURL)
 
+	// Search for any issues in NM- sprints (no label filter)
 	requestBody := map[string]interface{}{
-		"jql":        "type=Bug AND labels=AMFDEVFT AND sprint is not EMPTY",
+		"jql":        "sprint is not EMPTY AND project = PMOB ORDER BY updated DESC",
 		"maxResults": 1000,
 		"fields":     []string{"customfield_10020"}, // Sprint field
 	}
@@ -175,11 +176,14 @@ func (j *JiraService) GetAllSprints(boardID string) ([]models.Sprint, error) {
 		return nil, err
 	}
 
-	// Extract unique sprints
+	// Extract unique sprints with NM- prefix only
 	sprintMap := make(map[int]models.Sprint)
 	for _, issue := range result.Issues {
 		for _, sprint := range issue.Fields.Sprint {
-			sprintMap[sprint.ID] = sprint
+			// Only include NM- prefix sprints
+			if strings.HasPrefix(sprint.Name, "NM-") {
+				sprintMap[sprint.ID] = sprint
+			}
 		}
 	}
 
@@ -461,9 +465,10 @@ func (j *JiraService) GetDefectsByEngineerAndSprint(engineerEmail string, sprint
 
 // GetSprintIssuesByJQL fetches AMF team issues using direct JQL search (no board number needed)
 func (j *JiraService) GetSprintIssuesByJQL(sprintID int) ([]models.Story, error) {
-	// Use labels=AMFDEVFT to filter AMF team issues (works across boards 6991, 6992)
-	// Exclude Bug type to get only stories/tasks
-	jql := fmt.Sprintf("sprint = %d AND labels = AMFDEVFT AND type != Bug ORDER BY created DESC", sprintID)
+	// Fetch both Avengers and Interstellar team issues (stories + bugs)
+	// Uses AMFDEVFT label to identify AMF team issues
+	// Includes all issue types (stories, tasks, bugs)
+	jql := fmt.Sprintf("sprint = %d AND labels = AMFDEVFT ORDER BY created DESC", sprintID)
 
 	log.Printf("🔍 JQL Query: %s", jql)
 

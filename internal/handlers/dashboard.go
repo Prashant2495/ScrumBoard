@@ -3,6 +3,7 @@ package handlers
 import (
 	"ScrumBoard/internal/services"
 	"ScrumBoard/templates"
+	"strings"
 
 	"github.com/a-h/templ"
 	"github.com/gofiber/fiber/v2"
@@ -72,4 +73,32 @@ func (h *DashboardHandler) GetSprints(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(sprints)
+}
+
+// SearchSprint searches for a sprint by name
+func (h *DashboardHandler) SearchSprint(c *fiber.Ctx) error {
+	name := c.Query("name")
+	if name == "" {
+		return c.Status(400).JSON(fiber.Map{"error": "Sprint name is required"})
+	}
+
+	boardID := c.Query("board", h.dashboardService.GetBoardID())
+	sprints, err := h.dashboardService.GetAllSprints(boardID)
+	if err != nil {
+		return c.Status(500).JSON(fiber.Map{"error": "Failed to fetch sprints"})
+	}
+
+	// Search for matching sprint (case-insensitive)
+	nameUpper := strings.ToUpper(name)
+	for _, sprint := range sprints {
+		if strings.ToUpper(sprint.Name) == nameUpper {
+			return c.JSON(fiber.Map{
+				"id":    sprint.ID,
+				"name":  sprint.Name,
+				"state": sprint.State,
+			})
+		}
+	}
+
+	return c.JSON(fiber.Map{"error": "Sprint not found", "name": name})
 }

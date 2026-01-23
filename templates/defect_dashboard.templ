@@ -20,12 +20,17 @@ templ DefectDashboard(data models.DefectDashboardData) {
 					</div>
 					
 					<div class="flex items-center gap-4">
-						<!-- Sprint Selector -->
+						<!-- Sprint Input -->
 						<div class="glass-dark px-4 py-2 rounded-xl">
-							<p class="text-xs text-white/70 mb-1">Sprint</p>
-							<select id="sprint-selector" class="bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30">
-								<option value="0">Loading...</option>
-							</select>
+							<p class="text-xs text-white/70 mb-1">Sprint (e.g. NM-2601)</p>
+							<div class="flex items-center gap-2">
+								<input type="text" id="sprint-input" placeholder="NM-2601"
+									class="bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30 w-28"
+									maxlength="10" />
+								<button id="sprint-go-btn" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg text-sm font-medium transition-all">
+									Go
+								</button>
+							</div>
 						</div>
 						<a href="/" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shadow-lg">
 							<span>🏠</span>
@@ -55,45 +60,78 @@ templ DefectDashboard(data models.DefectDashboardData) {
 		<script>
 			const jiraBaseUrl = 'https://jira-eng-gpk1.cisco.com/jira';
 			const urlParams = new URLSearchParams(window.location.search);
-			const currentSprintId = parseInt(urlParams.get('sprint') || '0');
+			const currentSprintName = urlParams.get('sprintName') || '';
+
+			// Sprint name to ID mapping
+			let sprintMap = {};
 
 			// Update Jira link for defects
-			function updateJiraDefectLink(sprintId) {
+			function updateJiraDefectLink(sprintName) {
 				const jiraLink = document.getElementById('jira-defect-link');
-				if (sprintId && sprintId !== '0') {
-					const jql = `type=Bug AND labels=AMFDEVFT AND sprint=${sprintId}`;
+				if (!jiraLink) return;
+				if (sprintName) {
+					const jql = `type=Bug AND sprint="${sprintName}"`;
 					jiraLink.href = `${jiraBaseUrl}/issues/?jql=${encodeURIComponent(jql)}`;
 				} else {
-					const jql = 'type=Bug AND labels=AMFDEVFT AND sprint in openSprints()';
+					const jql = 'type=Bug AND sprint in openSprints()';
 					jiraLink.href = `${jiraBaseUrl}/issues/?jql=${encodeURIComponent(jql)}`;
 				}
 			}
 
 			// Set initial Jira link
-			updateJiraDefectLink(currentSprintId);
+			updateJiraDefectLink(currentSprintName);
 
-			// Load sprints
-			fetch('/defects/api/sprints')
+			// Load sprints to build name->ID map
+			fetch('/api/sprints')
 				.then(res => res.json())
 				.then(sprints => {
-					const selector = document.getElementById('sprint-selector');
-					selector.innerHTML = '<option value="0">🟢 Active Sprint</option>';
-
-					sprints.sort((a, b) => b.id - a.id).forEach(sprint => {
-						const option = document.createElement('option');
-						option.value = sprint.id;
-						const stateEmoji = sprint.state === 'active' ? '🟢' : '🔴';
-						option.textContent = `${stateEmoji} ${sprint.name}`;
-						if (sprint.id === currentSprintId) option.selected = true;
-						selector.appendChild(option);
+					sprints.forEach(sprint => {
+						sprintMap[sprint.name.toUpperCase()] = sprint.id;
 					});
-				});
+					console.log('Sprint map loaded:', Object.keys(sprintMap).length, 'sprints');
+				})
+				.catch(err => console.error('Error loading sprints:', err));
 
-			// Handle sprint change
-			document.getElementById('sprint-selector').addEventListener('change', function() {
-				const sprintId = this.value;
-				updateJiraDefectLink(sprintId);
-				window.location.href = `/defects?sprint=${sprintId}`;
+			// Set current sprint name in input
+			if (currentSprintName) {
+				document.getElementById('sprint-input').value = currentSprintName;
+			}
+
+			// Go to sprint function
+			function goToSprint(sprintName) {
+				if (!sprintName) {
+					window.location.href = '/defects?sprint=0';
+					return;
+				}
+
+				const sprintId = sprintMap[sprintName.toUpperCase()];
+				if (sprintId) {
+					window.location.href = `/defects?sprint=${sprintId}&sprintName=${encodeURIComponent(sprintName)}`;
+				} else {
+					fetch(`/api/sprint/search?name=${encodeURIComponent(sprintName)}`)
+						.then(res => res.json())
+						.then(data => {
+							if (data.id) {
+								window.location.href = `/defects?sprint=${data.id}&sprintName=${encodeURIComponent(sprintName)}`;
+							} else {
+								alert('Sprint not found: ' + sprintName);
+							}
+						})
+						.catch(() => alert('Sprint not found: ' + sprintName));
+				}
+			}
+
+			// Handle Go button click
+			document.getElementById('sprint-go-btn').addEventListener('click', function() {
+				const sprintName = document.getElementById('sprint-input').value.trim();
+				goToSprint(sprintName);
+			});
+
+			// Handle Enter key in sprint input
+			document.getElementById('sprint-input').addEventListener('keypress', function(e) {
+				if (e.key === 'Enter') {
+					goToSprint(this.value.trim());
+				}
 			});
 
 			// Load info requests function for defects

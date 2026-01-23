@@ -34,12 +34,17 @@ templ EngineerDashboard(data models.EngineerDashboardData, engineers []models.En
 							</select>
 						</div>
 						
-						<!-- Sprint Selector -->
+						<!-- Sprint Input -->
 						<div class="glass-dark px-4 py-2 rounded-xl">
-							<p class="text-xs text-white/70 mb-1">Sprint</p>
-							<select id="sprint-selector" class="bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30">
-								<option value="0">Loading...</option>
-							</select>
+							<p class="text-xs text-white/70 mb-1">Sprint (e.g. NM-2601)</p>
+							<div class="flex items-center gap-2">
+								<input type="text" id="sprint-input" placeholder="NM-2601"
+									class="bg-white/10 text-white border border-white/20 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-white/30 w-28"
+									maxlength="10" />
+								<button id="sprint-go-btn" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg text-sm font-medium transition-all">
+									Go
+								</button>
+							</div>
 						</div>
 						
 						<a href="/" class="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shadow-lg">
@@ -71,68 +76,104 @@ templ EngineerDashboard(data models.EngineerDashboardData, engineers []models.En
 			const jiraBaseUrl = 'https://jira-eng-gpk1.cisco.com/jira';
 			const urlParams = new URLSearchParams(window.location.search);
 			const currentEngineer = urlParams.get('email');
-			const currentSprintId = parseInt(urlParams.get('sprint') || '0');
+			const currentSprintName = urlParams.get('sprintName') || '';
+
+			// Sprint name to ID mapping (will be loaded from API)
+			let sprintMap = {};
 
 			// Update Jira link for engineer
-			function updateJiraEngineerLink(engineer, sprintId) {
+			function updateJiraEngineerLink(engineer, sprintName) {
 				const jiraLink = document.getElementById('jira-engineer-link');
+				if (!jiraLink) return;
 				if (engineer) {
-					// Extract name from email (e.g., prdewang@cisco.com -> prdewang)
 					const username = engineer.split('@')[0];
-					
-					if (sprintId && sprintId !== '0') {
-						// JQL query for engineer's work in specific sprint
-						const jql = `assignee=${username} AND sprint=${sprintId}`;
+					if (sprintName) {
+						const jql = `assignee=${username} AND sprint="${sprintName}"`;
 						jiraLink.href = `${jiraBaseUrl}/issues/?jql=${encodeURIComponent(jql)}`;
 					} else {
-						// JQL query for engineer's work in active sprint
 						const jql = `assignee=${username} AND sprint in openSprints()`;
 						jiraLink.href = `${jiraBaseUrl}/issues/?jql=${encodeURIComponent(jql)}`;
 					}
 				} else {
-					// Default to board view
 					jiraLink.href = `${jiraBaseUrl}/secure/RapidBoard.jspa?rapidView=6991`;
 				}
 			}
 
 			// Set initial Jira link
-			updateJiraEngineerLink(currentEngineer, currentSprintId);
+			updateJiraEngineerLink(currentEngineer, currentSprintName);
 
-			// Load sprints
-			fetch('/defects/api/sprints')
+			// Load sprints to build name->ID map
+			fetch('/api/sprints')
 				.then(res => res.json())
 				.then(sprints => {
-					const selector = document.getElementById('sprint-selector');
-
-					selector.innerHTML = '<option value="0">🟢 Active Sprint</option>';
-
-					sprints.sort((a, b) => b.id - a.id).forEach(sprint => {
-						const option = document.createElement('option');
-						option.value = sprint.id;
-						const stateEmoji = sprint.state === 'active' ? '🟢' : '🔴';
-						option.textContent = `${stateEmoji} ${sprint.name}`;
-						if (sprint.id === currentSprintId) option.selected = true;
-						selector.appendChild(option);
+					sprints.forEach(sprint => {
+						sprintMap[sprint.name.toUpperCase()] = sprint.id;
 					});
-				});
+					console.log('Sprint map loaded:', Object.keys(sprintMap).length, 'sprints');
+				})
+				.catch(err => console.error('Error loading sprints:', err));
+
+			// Set current sprint name in input
+			if (currentSprintName) {
+				document.getElementById('sprint-input').value = currentSprintName;
+			}
 
 			// Handle engineer change
 			document.getElementById('engineer-selector').addEventListener('change', function() {
 				const engineer = this.value;
-				const sprint = document.getElementById('sprint-selector').value;
-				updateJiraEngineerLink(engineer, sprint);
+				const sprintName = document.getElementById('sprint-input').value.trim();
+				updateJiraEngineerLink(engineer, sprintName);
 				if (engineer) {
-					window.location.href = `/engineer?email=${engineer}&sprint=${sprint}`;
+					goToSprint(engineer, sprintName);
 				}
 			});
 
-			// Handle sprint change
-			document.getElementById('sprint-selector').addEventListener('change', function() {
+			// Go to sprint function
+			function goToSprint(engineer, sprintName) {
+				if (!engineer) {
+					alert('Please select an engineer first');
+					return;
+				}
+
+				if (!sprintName) {
+					window.location.href = `/engineer?email=${engineer}&sprint=0`;
+					return;
+				}
+
+				// Look up sprint ID from name
+				const sprintId = sprintMap[sprintName.toUpperCase()];
+				if (sprintId) {
+					window.location.href = `/engineer?email=${engineer}&sprint=${sprintId}&sprintName=${encodeURIComponent(sprintName)}`;
+				} else {
+					// Try direct API search by name
+					fetch(`/api/sprint/search?name=${encodeURIComponent(sprintName)}`)
+						.then(res => res.json())
+						.then(data => {
+							if (data.id) {
+								window.location.href = `/engineer?email=${engineer}&sprint=${data.id}&sprintName=${encodeURIComponent(sprintName)}`;
+							} else {
+								alert('Sprint not found: ' + sprintName);
+							}
+						})
+						.catch(() => {
+							alert('Sprint not found: ' + sprintName);
+						});
+				}
+			}
+
+			// Handle Go button click
+			document.getElementById('sprint-go-btn').addEventListener('click', function() {
 				const engineer = document.getElementById('engineer-selector').value;
-				const sprint = this.value;
-				updateJiraEngineerLink(engineer, sprint);
-				if (engineer) {
-					window.location.href = `/engineer?email=${engineer}&sprint=${sprint}`;
+				const sprintName = document.getElementById('sprint-input').value.trim();
+				goToSprint(engineer, sprintName);
+			});
+
+			// Handle Enter key in sprint input
+			document.getElementById('sprint-input').addEventListener('keypress', function(e) {
+				if (e.key === 'Enter') {
+					const engineer = document.getElementById('engineer-selector').value;
+					const sprintName = this.value.trim();
+					goToSprint(engineer, sprintName);
 				}
 			});
 

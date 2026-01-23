@@ -42,9 +42,9 @@ templ SprintBoard(todo, inProgress, done []models.Story) {
 		</h2>
 		
 		<div class="flex gap-6 overflow-x-auto pb-4">
-			@BoardColumn("To Do", todo, "bg-slate-100/80", "📝")
-			@BoardColumn("In Progress", inProgress, "bg-blue-500/30/80", "🔄")
-			@BoardColumn("Done", done, "bg-green-500/30/80", "✅")
+			@BoardColumn("To Do", todo, "bg-slate-600/80", "📝")
+			@BoardColumn("In Progress", inProgress, "bg-blue-600/80", "🔄")
+			@BoardColumn("Done", done, "bg-green-600/80", "✅")
 		</div>
 	</div>
 }
